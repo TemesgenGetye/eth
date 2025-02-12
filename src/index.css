@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: proxima-nova, sans-serif;
+  font-style: halcom-medium;
+  font-weight: 100;
+}
