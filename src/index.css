@@ -7,3 +7,25 @@ body {
   font-style: halcom-medium;
   font-weight: 100;
 }
+
+.dropdown-pointer::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  right: 23px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #0000f6;
+}
+
+.dropdown-pointer-menu::before {
+  content: '';
+  position: absolute;
+  top: 0px;
+  left: 10px;
+  width: 50px;
+  height: 2px; /* Adjust the height as needed */
+  background-color: #0000f6; /* Adjust the color as needed */
+}

@@ -83,8 +83,8 @@ function Community() {
             "url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=2832&auto=format&fit=crop')",
         }}
       >
-        <div className="absolute inset-0  bg-opacity-50"></div>
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 z-10 backdrop-brightness-50"></div>
+        <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="shadow-4xl text-2xl font-bold text-primary-900 opacity-80 sm:text-5xl">
               Join Your Community

@@ -58,13 +58,13 @@ function Property() {
             "url('https://images.unsplash.com/photo-1512654458600-cf5387bd9428?q=80&w=3456&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
         }}
       >
-        <div className="absolute inset-0  bg-opacity-50"></div>
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 z-10 backdrop-brightness-50"></div>
+        <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-primary-900 opacity-80 shadow-2xl sm:text-5xl">
               Every one is in ETH
             </h1>
-            <p className="mt-3 text-lg  text-gray-100 shadow-2xl shadow-black">
+            <p className="mb-3 mt-3  text-lg text-gray-100 shadow-2xl shadow-black">
               The largest marketplace in the country
             </p>
           </div>

@@ -83,8 +83,8 @@ function Classified() {
             "url('https://images.unsplash.com/photo-1484502249930-e1da807099a5?q=80&w=3474&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
         }}
       >
-        <div className="absolute inset-0  bg-opacity-50"></div>
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 z-10 backdrop-brightness-50 "></div>
+        <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="shadow-4xl text-2xl font-bold text-primary-900 opacity-80 sm:text-5xl">
               Your favorite place
