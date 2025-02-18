@@ -1,6 +1,8 @@
 import { Heart, Share2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface CarListingProps {
+  id: string;
   image: string;
   price: string;
   title: string;
@@ -13,6 +15,7 @@ interface CarListingProps {
 }
 
 export default function CarListing({
+  id,
   image,
   price,
   title,
@@ -24,7 +27,10 @@ export default function CarListing({
   isPremium,
 }: CarListingProps) {
   return (
-    <div className="relative rounded-lg border-b border-b-gray-200 bg-white p-4 shadow-sm">
+    <Link
+      to={`./${id}`}
+      className="relative rounded-lg border-b border-b-gray-200 bg-white p-4 shadow-sm"
+    >
       <div className="flex gap-4">
         <div className="relative h-48 w-72 flex-shrink-0 overflow-hidden rounded-lg">
           <img
@@ -34,6 +40,7 @@ export default function CarListing({
           />
           <div className="absolute bottom-2 left-2 flex items-center space-x-1 rounded bg-black/70 px-2 py-1 text-xs text-white">
             <span>20</span>
+            <span>id : {id}</span>
           </div>
         </div>
         <div className="flex-1 space-y-2">
@@ -72,6 +79,6 @@ export default function CarListing({
           <div className="space-y-2 text-sm text-gray-500">{location}</div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

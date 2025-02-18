@@ -1,28 +1,40 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-type LanguageContextType = {
-  language: string;
-  setLanguage: (lang: string) => void;
+// Define the type for the context value
+type BlurBackgroundContextType = {
+  blurBackground: boolean;
+  setBlurBackground: (blurBackground: boolean) => void;
 };
 
-const LanguageContext = createContext<LanguageContextType | undefined>(
-  undefined
-);
+// Create the context with an initial undefined value
+const BlurBackgroundContext = createContext<
+  BlurBackgroundContextType | undefined
+>(undefined);
 
-export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguage] = useState('en');
+// Define the provider component
+export const BlurBackgroundProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
+  const [blurBackground, setBlurBackground] = useState(false);
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage }}>
+    <BlurBackgroundContext.Provider
+      value={{ blurBackground, setBlurBackground }}
+    >
       {children}
-    </LanguageContext.Provider>
+    </BlurBackgroundContext.Provider>
   );
 };
 
-export const useLanguage = () => {
-  const context = useContext(LanguageContext);
-  if (!context) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
+// Custom hook to use the blur background context
+export const useBackground = () => {
+  const context = useContext(BlurBackgroundContext);
+  if (context === undefined) {
+    throw new Error(
+      'useBackground must be used within a BlurBackgroundProvider'
+    );
   }
   return context;
 };

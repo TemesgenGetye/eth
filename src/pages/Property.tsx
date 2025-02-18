@@ -4,6 +4,7 @@ import VirtualViewing from '../components/Property.tsx/VirtualViewing';
 import PopularCategories from '../components/Property.tsx/PopularCategories';
 import PopularAreas from '../components/Property.tsx/PopularAreas';
 import LiatProductHorizontal from '../components/ui/ListProductHorizontal';
+import PopularSubcatagory from '../components/ui/PopularSubcatagory';
 
 const FeaturedListings = [
   {
@@ -58,13 +59,13 @@ function Property() {
             "url('https://images.unsplash.com/photo-1512654458600-cf5387bd9428?q=80&w=3456&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
         }}
       >
-        <div className="absolute inset-0 z-10 backdrop-brightness-50"></div>
+        <div className="absolute inset-0 z-10 rounded-xl bg-black bg-opacity-50"></div>
         <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-primary-900 opacity-80 shadow-2xl sm:text-5xl">
+            <h1 className="text-2xl font-bold text-white shadow-2xl sm:text-5xl">
               Every one is in ETH
             </h1>
-            <p className="mb-3 mt-3  text-lg text-gray-100 shadow-2xl shadow-black">
+            <p className="mb-3 mt-3  text-lg text-gray-300 shadow-2xl shadow-black">
               The largest marketplace in the country
             </p>
           </div>
@@ -73,14 +74,14 @@ function Property() {
       </div>
 
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 sm:px-6 lg:px-8">
+        <PopularSubcatagory />
         <Banners />
-        <VirtualViewing />
         <PopularCategories />
-        <PopularAreas />
         <LiatProductHorizontal
           list={FeaturedListings}
           text="Featured Listing"
         />
+        <PopularAreas />
       </div>
     </div>
   );

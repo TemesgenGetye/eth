@@ -1,62 +1,9 @@
-import {
-  Search,
-  Car,
-  Building,
-  Briefcase,
-  Smartphone,
-  Download,
-} from 'lucide-react';
+import { Search } from 'lucide-react';
 import ListForHome from '../components/Home/ListHomeIcon';
 import LiatProductHorizontal from '../components/ui/ListProductHorizontal';
 import DownloadApp from '../components/ui/DownloadApp';
-
-const categories = {
-  Motors: {
-    icon: <Car className="h-5 w-5 text-blue-600" />,
-    items: [
-      'Cars',
-      { name: 'Rental Cars', isNew: true },
-      'New Cars',
-      'Export Cars',
-    ],
-    viewAll: 'All in Motors',
-  },
-  'Property for Rent': {
-    icon: <Building className="h-5 w-5 text-blue-600" />,
-    items: [
-      'Residential',
-      'Commercial',
-      'Rooms For Rent',
-      'Monthly Short Term',
-    ],
-    viewAll: 'All in Property for Rent',
-  },
-  'Property for Sale': {
-    icon: <Building className="h-5 w-5 text-blue-600" />,
-    items: ['Residential', 'Commercial', 'New Projects', 'Off-Plan'],
-    viewAll: 'All in Property for Sale',
-  },
-  Classifieds: {
-    icon: <Smartphone className="h-5 w-5 text-blue-600" />,
-    items: [
-      'Electronics',
-      'Computers & Networking',
-      'Clothing & Accessories',
-      'Jewelry & Watches',
-    ],
-    viewAll: 'All in Classifieds',
-  },
-  Jobs: {
-    icon: <Briefcase className="h-5 w-5 text-blue-600" />,
-    items: [
-      'Accounting / Finance',
-      'Engineering',
-      'Sales / Business Development',
-      'Secretarial / Front Office',
-    ],
-    viewAll: 'All in Jobs',
-  },
-};
+import { useBackground } from '../Context/BlurBackground';
+import PopularCategories from '../components/Property.tsx/PopularCategories';
 
 const FeaturedListings = [
   {
@@ -102,22 +49,31 @@ const FeaturedListings = [
 ];
 
 const Home = () => {
+  const { blurBackground } = useBackground();
+
   return (
-    <div className="mx-auto min-h-screen max-w-7xl rounded-lg bg-gray-50">
+    <div className={`m-auto min-h-screen max-w-7xl rounded-lg `}>
+      {/* Improved Overlay */}
       <div
-        className="relative m-auto mt-3  items-center rounded-xl bg-cover bg-center py-16"
+        className={`overlay fixed inset-0 z-40 h-screen w-screen bg-black bg-opacity-10 transition-all duration-300 ${
+          blurBackground ? 'visible opacity-100' : 'invisible opacity-0'
+        }`}
+      ></div>
+
+      <div
+        className="relative m-auto mt-3 items-center overflow-hidden rounded-xl bg-cover bg-center py-16"
         style={{
           backgroundImage:
             "url('https://images.unsplash.com/photo-1624314138470-5a2f24623f10?q=80&w=3474&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
         }}
       >
-        <div className="absolute inset-0 z-10 backdrop-brightness-50"></div>
+        <div className="absolute inset-0 z-10 rounded-xl bg-black bg-opacity-50"></div>
         <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-primary-900 opacity-80 shadow-2xl sm:text-5xl">
-              Find Anything in Ethiopia
+            <h1 className="text-2xl font-bold text-white shadow-2xl sm:text-5xl">
+              Find Anything in Dubai
             </h1>
-            <p className="mt-3 text-lg  text-gray-100 shadow-2xl shadow-black">
+            <p className="mt-3 text-lg text-gray-300 shadow-2xl shadow-black">
               The largest marketplace in the country
             </p>
           </div>
@@ -130,7 +86,7 @@ const Home = () => {
                   placeholder="What are you looking for?"
                   className="flex-1 border-0 px-4 py-2 focus:outline-none focus:ring-0"
                 />
-                <button className="rounded-lg bg-blue-600 px-6 py-2 text-white hover:bg-blue-700 ">
+                <button className="rounded-lg bg-blue-600 px-6 py-2 text-white hover:bg-blue-700">
                   Search
                 </button>
               </div>
@@ -140,16 +96,19 @@ const Home = () => {
       </div>
 
       {/* Categories Section */}
+      <ListForHome />
 
-      <ListForHome categories={categories} />
+      {/* Popular Categories */}
+
+      <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 sm:px-6 lg:px-8">
+        <PopularCategories id={'fruits-vegetable:632aca2b4d87ff2494210be8'} />
+        <PopularCategories id={'beauty-healths:632ab2864d87ff2494210a8a'} />
+      </div>
 
       {/* Featured Listings */}
-      <LiatProductHorizontal list={FeaturedListings} text="Featured Listing" />
-
-      <LiatProductHorizontal list={FeaturedListings} text="Popular Listing" />
+      <LiatProductHorizontal />
 
       {/* Download App Section */}
-
       <DownloadApp />
     </div>
   );

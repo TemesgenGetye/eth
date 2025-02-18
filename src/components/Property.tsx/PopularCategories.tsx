@@ -1,78 +1,29 @@
-// src/components/PopularCategories.jsx
-import { useRef } from 'react';
+import { product } from '../../Data/Product';
+import { categories } from '../../Data/Catagorie';
+import { useEffect, useRef, useState } from 'react';
 
-const categories = [
-  {
-    title: 'Apartment for Rent',
-    image:
-      'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&auto=format&fit=crop',
-  },
-  {
-    title: 'Villa for Rent',
-    image:
-      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&auto=format&fit=crop',
-  },
-  {
-    title: 'Rooms for Rent',
-    image:
-      'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&auto=format&fit=crop',
-  },
-  {
-    title: 'Monthly Short Term for Rent',
-    image:
-      'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=800&auto=format&fit=crop',
-  },
-  {
-    title: 'Commercial for Rent',
-    image:
-      'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&auto=format&fit=crop',
-  },
-];
-
-export default function PopularCategories() {
+export default function PopularCategories({ id }: { id: string }) {
   const scrollContainerRef = useRef(null);
+  const [images, setImages] = useState([]);
 
-  interface Category {
-    title: string;
-    image: string;
-  }
+  const currentCatgoryProduct = product?.filter((pro) =>
+    pro?.categories?.includes(id.split(':')[1])
+  );
 
-  interface ScrollContainerRef {
-    current: HTMLDivElement | null;
-  }
+  console.log(
+    categories?.find((cat) => cat?._id === currentCatgoryProduct[0]?.category)
+  );
 
-  const categories: Category[] = [
-    {
-      title: 'Apartment for Rent',
-      image:
-        'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&auto=format&fit=crop',
-    },
-    {
-      title: 'Villa for Rent',
-      image:
-        'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&auto=format&fit=crop',
-    },
-    {
-      title: 'Rooms for Rent',
-      image:
-        'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&auto=format&fit=crop',
-    },
-    {
-      title: 'Monthly Short Term for Rent',
-      image:
-        'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=800&auto=format&fit=crop',
-    },
-    {
-      title: 'Commercial for Rent',
-      image:
-        'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&auto=format&fit=crop',
-    },
-  ];
+  useEffect(() => {
+    currentCatgoryProduct.map((pro) => {
+      setImages((img) => [...img, pro?.image[0]]);
+    });
+  }, [id]);
 
   const scroll = (direction: 'left' | 'right') => {
-    const container = scrollContainerRef.current;
+    const container = scrollContainerRef?.current;
     const scrollAmount = container?.offsetWidth
-      ? container.offsetWidth * 0.8
+      ? container?.offsetWidth * 0.8
       : 0;
 
     if (direction === 'left') {
@@ -84,7 +35,7 @@ export default function PopularCategories() {
 
   return (
     <div className="mb-8">
-      <h2 className="mb-6 text-2xl font-semibold">Popular Categories</h2>
+      <h2 className="mb-6 text-2xl font-semibold">Popular Products</h2>
       <div className="relative">
         <button
           onClick={() => scroll('left')}
@@ -128,15 +79,15 @@ export default function PopularCategories() {
           ref={scrollContainerRef}
           className="flex gap-4 overflow-x-hidden scroll-smooth px-4"
         >
-          {categories.map((category, index) => (
+          {images?.slice(0, 10).map((img, index) => (
             <div
               key={index}
               className="group relative w-72 flex-none cursor-pointer"
             >
               <div className="relative h-48 overflow-hidden rounded-lg">
                 <img
-                  src={category.image || '/placeholder.svg'}
-                  alt={category.title}
+                  src={img}
+                  alt={`pro_img ${index}`}
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                   loading="lazy"
                 />
@@ -160,7 +111,7 @@ export default function PopularCategories() {
                 </div>
 
                 <h3 className="absolute bottom-4 left-4 z-10 text-lg font-semibold text-white drop-shadow-lg">
-                  {category.title}
+                  {currentCatgoryProduct[index]?.title.en}
                 </h3>
               </div>
             </div>
@@ -168,10 +119,10 @@ export default function PopularCategories() {
         </div>
 
         <div className="mt-4 flex justify-center gap-2">
-          {categories.map((_, index) => (
+          {currentCatgoryProduct.map((_, index) => (
             <div
               key={index}
-              className="h-2 w-2 rounded-full bg-gray-300"
+              className="h-2 w-2 rounded-full bg-gray-400"
               role="presentation"
             />
           ))}

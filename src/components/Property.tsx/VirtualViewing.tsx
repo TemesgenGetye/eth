@@ -1,4 +1,3 @@
-// src/components/VirtualViewing.jsx
 export default function VirtualViewing() {
   return (
     <div className="mb-8 overflow-hidden rounded-lg bg-gray-50 shadow-xl transition-transform duration-200 hover:scale-105">
