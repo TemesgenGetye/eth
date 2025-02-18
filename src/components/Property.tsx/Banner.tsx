@@ -3,7 +3,7 @@ export default function Banners({ id }: { id: string }) {
   const filterdCategory = categories[0]?.children?.filter(
     (item) => item._id === id.split(':')[1]
   );
-  const images = filterdCategory?.[0].images;
+  const images = filterdCategory?.[0]?.images;
 
   return (
     <div className="mb-8 mt-5 grid gap-4 md:grid-cols-2">
