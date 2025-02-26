@@ -3,12 +3,12 @@ import { useFrame } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
 import { Group } from 'three';
 
-useGLTF.preload('/models/out_of_stock_cart.glb');
+useGLTF.preload('/model/out_of_stock_cart_wit_0226084018_texture.glb');
 
 export default function Model() {
   const group = useRef<Group>(null);
   const { nodes, materials, animations, scene } = useGLTF(
-    '/model/out_of_stock_cart.glb'
+    '/model/out_of_stock_cart_wit_0226084018_texture.glb'
   );
 
   return (
