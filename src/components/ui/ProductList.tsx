@@ -1,0 +1,151 @@
+import { Heart, Image, Share2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+export default function CarListing({ product }: { product: any[] }) {
+  const navigate = useNavigate();
+
+  const [imageIndexes, setImageIndexes] = useState<{ [key: string]: number }>(
+    {}
+  );
+
+  const handleImageChange = (
+    id: string,
+    direction: 'next' | 'prev',
+    images: string[]
+  ) => {
+    setImageIndexes((prevIndexes) => {
+      const currentIndex = prevIndexes[id] ?? 0;
+      let newIndex =
+        direction === 'next'
+          ? (currentIndex + 1) % images.length
+          : (currentIndex - 1 + images.length) % images.length;
+
+      return { ...prevIndexes, [id]: newIndex };
+    });
+  };
+
+  console.log(product);
+
+  return (
+    <div className="grid grid-cols-1 gap-4">
+      {product.map((item) => {
+        const currentImageIndex = imageIndexes[item._id] ?? 0;
+
+        return (
+          <div
+            key={item._id}
+            className="relative rounded-lg border-b border-b-gray-200 bg-white p-4 shadow-sm"
+            onClick={() => navigate(`/detail/${item._id}`)}
+          >
+            <div className="flex gap-4">
+              <div className="relative h-48 w-72 flex-shrink-0 overflow-hidden rounded-lg">
+                {item.image.length > 1 && (
+                  <>
+                    <button
+                      className="absolute left-0.5 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full bg-white/80 p-1 ring-1 ring-gray-300 hover:bg-gray-300 hover:ring-2 hover:ring-gray-400"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleImageChange(item._id, 'prev', item.image);
+                      }}
+                    >
+                      <ChevronLeft size={16} />
+                    </button>
+                    <button
+                      className="absolute right-0.5 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full bg-white/80 p-1 ring-1 ring-gray-300 hover:bg-gray-300 hover:ring-2 hover:ring-gray-400"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleImageChange(item._id, 'next', item.image);
+                      }}
+                    >
+                      <ChevronRight size={16} />
+                    </button>
+                  </>
+                )}
+                <img
+                  src={item.image[currentImageIndex]}
+                  alt={item.title.en}
+                  className="h-full w-full object-cover transition-transform duration-500 ease-in-out"
+                />
+                {item.image.length > 1 && (
+                  <div className="absolute bottom-2 left-2 flex items-center space-x-1 rounded bg-black/70 px-1.5 py-0.5 text-xs text-white">
+                    <span>
+                      <Image size={14} />
+                    </span>
+                    <span>{`${currentImageIndex + 1} / ${item.image.length}`}</span>
+                  </div>
+                )}
+              </div>
+              <div className="flex-1 space-y-3">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-lg font-medium text-gray-900">
+                      {item.title.en}
+                    </p>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-2xl font-bold">
+                        {item.prices.price === item.prices.originalPrice ? (
+                          <span>{item.prices.price} AED</span>
+                        ) : (
+                          <>
+                            <span>{item.prices.price} AED </span>
+                            <span>•</span>
+                            <span className="text-gray-500 line-through">
+                              {item.prices.originalPrice}
+                            </span>
+                            <span>AED</span>
+                            <div className="text-red-500">
+                              {Number(item.prices.discount).toFixed(2)} AED
+                              Downpayment
+                            </div>
+                          </>
+                        )}
+                      </span>
+                      {item.stock > 0 && (
+                        <span className="rounded bg-green-300 px-2 py-0.5 text-xs font-medium text-white">
+                          IN STOCK ( {item.stock})
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex flex-col items-start ">
+                      <span>• {item.slug}</span>
+                      <p className="cursor-pointer text-sm text-blue-500 hover:underline">
+                        {item.variants.length > 0
+                          ? item.variants.length + ' variants'
+                          : ''}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex space-x-2">
+                    <button
+                      className="h-7 w-7 shadow-sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // Handle share logic
+                      }}
+                    >
+                      <Share2 className="h-4 w-4" />
+                    </button>
+                    <button
+                      className="h-7 w-7 text-red-500"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // Handle like logic
+                      }}
+                    >
+                      <Heart className="h-5 w-5" />
+                    </button>
+                  </div>
+                </div>
+                <p className="line-clamp-2 pr-10 text-sm text-gray-600">
+                  {item.description.en}
+                </p>
+                <div className="space-y-2 text-sm text-gray-500">{'dubai'}</div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}

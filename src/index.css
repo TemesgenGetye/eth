@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: proxima-nova, sans-serif;
+  font-style: halcom-medium;
+  font-weight: 100;
+}
+
+.dropdown-pointer::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  right: 23px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #0000f6;
+}
+
+.dropdown-pointer-menu::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #2626a0;
+}
+
+.dropdown-pointer-menu {
+  transition:
+    opacity 0.2s ease-in-out,
+    transform 0.2s ease-in-out;
+  transition:
+    opacity 0.2s ease-in-out,
+    transform 0.2s ease-in-out;
+}
+
+.dropdown-pointer-menu:hover {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hover effect for child categories */
+.child-category:hover {
+  background-color: #f3f4f6; /* Light gray background on hover */
+  border-radius: 0.375rem; /* Rounded corners */
+}
+
+/* Active state for child categories */
+.child-category.active {
+  background-color: #e5e7eb; /* Slightly darker gray for active state */
+}
+
+/* 3d object style */
+
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
