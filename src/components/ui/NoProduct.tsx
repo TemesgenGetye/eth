@@ -74,12 +74,12 @@ function NoProduct() {
         style={{ opacity: iconOpacity }}
         className="absolute inset-0 z-30 flex items-center justify-center text-center"
       >
-        <p>
+        <div>
           <ShoppingCart className="h-12 w-12 text-blue-500" />
           <p className="text-center text-sm font-semibold text-blue-500">
             Out Of Stock
           </p>
-        </p>
+        </div>
       </motion.div>
 
       <motion.div
