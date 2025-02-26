@@ -18,7 +18,7 @@ ETH Marketplace is a comprehensive platform for buying and selling various produ
 - **Favorites**: Save favorite items for quick access.
 - **Chats**: Communicate with sellers directly through the platform.
 - **Notifications**: Receive updates on new messages and activities.
-- **Responsive Design**: Optimized for both desktop and mobile devices.
+- **Responsive Design**: Optimized for both desktop and mobile devices
 
 ## Installation
 
