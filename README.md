@@ -2,6 +2,8 @@
 
 ETH Marketplace is a comprehensive platform for buying and selling various products and services. The platform includes categories such as electronics, furniture, real estate, jobs, and community events.
 
+ETH Marketplace is a comprehensive platform for buying and selling various products and services. The platform includes categories such as electronics, furniture, real estate, jobs, and community events.
+
 ## Table of Contents
 
 - [Features](#features)
