@@ -4,55 +4,14 @@ import LiatProductHorizontal from '../components/ui/ListProductHorizontal';
 import DownloadApp from '../components/ui/DownloadApp';
 import { useBackground } from '../Context/BlurBackground';
 import PopularCategories from '../components/Property.tsx/PopularCategories';
-
-const FeaturedListings = [
-  {
-    id: 1,
-    title: '2022 Mercedes-Benz G63 AMG',
-    price: 'AED 989,000',
-    location: 'addis ababa Marina',
-    image:
-      'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    id: 2,
-    title: 'Luxury 3BR Apartment | Marina View',
-    price: 'AED 12,000/month',
-    location: 'Downtown addis ababa',
-    image:
-      'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    id: 3,
-    title: 'iPhone 15 Pro Max - 256GB',
-    price: 'AED 4,899',
-    location: 'Al Barsha',
-    image:
-      'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    id: 4,
-    title: 'Brand New PS5 with Extra Controller',
-    price: 'AED 2,199',
-    location: 'Jumeirah',
-    image:
-      'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    id: 5,
-    title: 'Luxury 3BR Apartment | Marina View',
-    price: 'AED 12,000/month',
-    location: 'Downtown addis ababa',
-    image:
-      'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80',
-  },
-];
+import FloatingCart from '../components/ui/FloatingCart';
 
 const Home = () => {
   const { blurBackground } = useBackground();
 
   return (
     <div className={`m-auto min-h-screen max-w-7xl rounded-lg `}>
+      <FloatingCart />
       {/* Improved Overlay */}
       <div
         className={`overlay fixed inset-0 z-40 h-screen w-screen bg-black bg-opacity-10 transition-all duration-300 ${
