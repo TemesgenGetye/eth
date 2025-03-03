@@ -7,7 +7,7 @@ useGLTF.preload('/model/out_of_stock_cart_wit_0226084018_texture.glb');
 
 export default function Model() {
   const group = useRef<Group>(null);
-  const { nodes, materials, animations, scene } = useGLTF(
+  const { scene } = useGLTF(
     '/model/out_of_stock_cart_wit_0226084018_texture.glb'
   );
 

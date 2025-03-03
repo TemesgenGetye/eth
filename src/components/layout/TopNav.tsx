@@ -8,17 +8,21 @@ import {
   X,
   List,
   ChevronRight,
+  CarTaxiFrontIcon,
+  ShoppingCart,
 } from 'lucide-react';
+import Favourite from '../TopNavElements/Favourite';
+import Cart from '../TopNavElements/Cart';
 
 const NavLinks = () => {
-  const [activeModal, setActiveModal] = useState(null);
+  const [activeModal, setActiveModal] = useState('');
 
-  const handleLinkClick = (modalName) => {
-    setActiveModal(activeModal === modalName ? null : modalName);
+  const handleLinkClick = (modalName: string) => {
+    setActiveModal(activeModal === modalName ? '' : modalName);
   };
 
   const closeModal = () => {
-    setActiveModal(null);
+    setActiveModal('');
   };
 
   return (
@@ -48,49 +52,17 @@ const NavLinks = () => {
       </div>
 
       {/* My Searches */}
-      <div className="relative">
-        <div
-          className="  flex cursor-pointer flex-col items-center justify-center text-sm text-gray-400 hover:text-gray-900"
-          onClick={() => handleLinkClick('searches')}
-        >
-          <Search className="mr-1 h-4 w-4" />
-          <p>My Searches</p>
-        </div>
-        {activeModal === 'searches' && (
-          <div className=" dropdown-pointer absolute right-2 top-12 z-50 w-64 rounded-lg bg-white p-4 shadow-lg">
-            <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-semibold capitalize">My Searches</h3>
-              <X className="h-4 w-4 cursor-pointer" onClick={closeModal} />
-            </div>
-            <p className="text-sm text-gray-500">
-              Your recent searches will appear here.
-            </p>
-          </div>
-        )}
-      </div>
-
+      <Cart
+        activeModal={activeModal}
+        handleLinkClick={handleLinkClick}
+        closeModal={closeModal}
+      />
       {/* Favorites */}
-      <div className="relative">
-        <div
-          className="flex cursor-pointer flex-col items-center justify-center text-sm text-gray-400 hover:text-gray-900"
-          onClick={() => handleLinkClick('favorites')}
-        >
-          <Heart className="mr-1 h-4 w-4" />
-          <p className="text-sm text-gray-500">Favorites</p>
-        </div>
-        {activeModal === 'favorites' && (
-          <div className="dropdown-pointer absolute right-0 top-12 z-50 w-64 rounded-lg bg-white p-4 shadow-lg">
-            <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-semibold capitalize">Favorites</h3>
-              <X className="h-4 w-4 cursor-pointer" onClick={closeModal} />
-            </div>
-            <p className="text-sm text-gray-500">
-              Your favorite items will appear here.
-            </p>
-          </div>
-        )}
-      </div>
-
+      <Favourite
+        activeModal={activeModal}
+        handleLinkClick={handleLinkClick}
+        closeModal={closeModal}
+      />
       {/* Chats */}
       <div className="relative">
         <div
@@ -108,28 +80,6 @@ const NavLinks = () => {
             </div>
             <p className="text-sm text-gray-500">
               Your chat messages will appear here.
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* My Ads */}
-      <div className="relative">
-        <div
-          className="  flex cursor-pointer flex-col items-center justify-center text-sm text-gray-400 hover:text-gray-900"
-          onClick={() => handleLinkClick('myAds')}
-        >
-          <List className="mr-1 h-4 w-4" />
-          <p className="text-sm text-gray-500">My Ads</p>
-        </div>
-        {activeModal === 'myAds' && (
-          <div className=" dropdown-pointer absolute right-0 top-12  z-50 w-64 rounded-lg bg-white p-4 shadow-lg">
-            <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-semibold capitalize">My Ads</h3>
-              <X className="h-4 w-4 cursor-pointer" onClick={closeModal} />
-            </div>
-            <p className="text-sm text-gray-500">
-              Your posted ads will appear here.
             </p>
           </div>
         )}

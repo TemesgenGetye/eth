@@ -4,16 +4,14 @@ import {
   Share2,
   ChevronLeft,
   ChevronRight,
-  HeartIcon,
   HeartCrackIcon,
-  ShoppingCart,
+  Filter,
 } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useFavourite } from '../../Context/Favourite';
-import { useCart } from '../../Context/Cart';
+import { useFavourite } from '../Context/Favourite';
 
-export default function CarListing({ product }: { product: any[] }) {
+export default function Favourites() {
   const navigate = useNavigate();
 
   const [imageIndexes, setImageIndexes] = useState<{ [key: string]: number }>(
@@ -21,7 +19,6 @@ export default function CarListing({ product }: { product: any[] }) {
   );
 
   const { favourite, setFavourite } = useFavourite();
-  const { cart, setCart } = useCart();
 
   const handleImageChange = (
     id: string,
@@ -52,19 +49,30 @@ export default function CarListing({ product }: { product: any[] }) {
     }
   }
 
-  function handleCart(
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    item: any
-  ) {
-    e.stopPropagation();
-    if (!cart.some((cart) => cart._id === item._id)) {
-      setCart([...cart, item]);
-    }
-  }
-
   return (
-    <div className="grid grid-cols-1 gap-4">
-      {product.map((item) => {
+    <div className="mx-auto mb-5 grid max-w-7xl grid-cols-1 gap-4">
+      <div className="p-10">
+        <p className="text-lg font-semibold ">My Favourites</p>
+        <p className="text-sm text-gray-500">
+          Your favourite items will appear here.
+        </p>
+      </div>
+      <div className="mx-auto flex w-full max-w-md flex-row items-center justify-end gap-2 p-4">
+        <input
+          type="text"
+          placeholder="Search..."
+          className="w-full flex-1 rounded-lg border border-gray-300 p-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          aria-label="Search"
+        />
+        <button
+          className="rounded-lg bg-gray-100 p-2 text-gray-600 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          aria-label="Filter"
+        >
+          <Filter className="h-5 w-5" />
+        </button>
+      </div>
+
+      {favourite.map((item) => {
         const currentImageIndex = imageIndexes[item._id] ?? 0;
 
         return (
@@ -98,7 +106,7 @@ export default function CarListing({ product }: { product: any[] }) {
                   </>
                 )}
                 <img
-                  src={item.image[currentImageIndex] || '/logo.png'}
+                  src={item.image[currentImageIndex]}
                   alt={item.title.en}
                   className="h-full w-full object-cover transition-transform duration-500 ease-in-out"
                 />
@@ -153,16 +161,13 @@ export default function CarListing({ product }: { product: any[] }) {
                   </div>
                   <div className="flex space-x-2">
                     <button
-                      className="rounded-lg bg-green-300 p-2 text-white"
+                      className="h-7 w-7 shadow-sm"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleCart(e, item);
+                        // Handle share logic
                       }}
                     >
-                      <div className="flex w-full items-center gap-2 text-sm font-medium text-white">
-                        <p>Add to Cart</p>
-                        <ShoppingCart className="h-4 w-4" />
-                      </div>
+                      <Share2 className="h-4 w-4" />
                     </button>
                     <button
                       className="h-7 w-7 text-red-500"
@@ -171,7 +176,7 @@ export default function CarListing({ product }: { product: any[] }) {
                       }}
                     >
                       {favourite.some((fav) => fav._id === item._id) ? (
-                        <Heart className="h-5 w-5 " fill="red" />
+                        <Heart className="h-5 w-5  " fill="red" />
                       ) : (
                         <Heart className="h-5 w-5" />
                       )}
