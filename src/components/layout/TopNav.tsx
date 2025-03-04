@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import Favourite from '../TopNavElements/Favourite';
 import Cart from '../TopNavElements/Cart';
+import Notfication from '../TopNavElements/Notfication';
 
 const NavLinks = () => {
   const [activeModal, setActiveModal] = useState('');
@@ -28,29 +29,11 @@ const NavLinks = () => {
   return (
     <div className="relative flex items-center space-x-6">
       {/* Notifications */}
-      <div className="relative">
-        <div
-          className="flex cursor-pointer flex-col items-center justify-center text-sm text-gray-400 hover:text-gray-900"
-          onClick={() => handleLinkClick('notifications')}
-        >
-          <Bell className="mr-1 h-4 w-4" />
-          <p>Notifications</p>
-        </div>
-        {activeModal === 'notifications' && (
-          <div className="dropdown-pointer absolute right-2 top-12 z-50 w-64 rounded-lg bg-white p-4 shadow-lg">
-            <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-semibold capitalize">
-                Notifications
-              </h3>
-              <X className="h-4 w-4 cursor-pointer" onClick={closeModal} />
-            </div>
-            <p className="text-sm text-gray-500">
-              You have no new notifications.
-            </p>
-          </div>
-        )}
-      </div>
-
+      <Notfication
+        activeModal={activeModal}
+        handleLinkClick={handleLinkClick}
+        closeModal={closeModal}
+      />
       {/* My Searches */}
       <Cart
         activeModal={activeModal}

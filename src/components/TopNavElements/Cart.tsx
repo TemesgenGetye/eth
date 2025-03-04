@@ -1,6 +1,7 @@
 import { ShoppingCart, X } from 'lucide-react';
 import { useCart } from '../../Context/Cart';
 import { Link, useNavigate } from 'react-router-dom';
+import NoProductSmall from '../ui/NoProductSmall';
 
 function Cart({
   activeModal,
@@ -33,6 +34,8 @@ function Cart({
               onClick={closeModal}
             />
           </div>
+
+          {cart.length === 0 && <NoProductSmall />}
 
           <div className="max-h-[500px] overflow-y-auto">
             {cart.map((item) => (
