@@ -71,9 +71,88 @@ function Notfication({
               />
             </div>
             <div className="max-h-[500px] overflow-y-auto">
-              {notfication.length === 0 && (
+              {notfication.length !== 0 && (
                 <div className="flex flex-col items-center justify-center p-10 text-center">
-                  <Bell className="h-16 w-16 text-gray-300" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlnsXlink="http://www.w3.org/1999/xlink"
+                    viewBox="0 0 128 128"
+                    width="128"
+                    height="128"
+                    preserveAspectRatio="xMidYMid meet"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      transform: 'translate3d(0px, 0px, 0px)',
+                      contentVisibility: 'visible',
+                    }}
+                    id="Notification"
+                  >
+                    <defs>
+                      <clipPath id="__lottie_element_10389">
+                        <rect width="128" height="128" x="0" y="0" />
+                      </clipPath>
+                    </defs>
+                    <g clip-path="url(#__lottie_element_10389)">
+                      <g
+                        transform="matrix(1,0,0,1,60.5,11.5)"
+                        opacity="1"
+                        style={{ display: 'block' }}
+                      >
+                        <g opacity="1" transform="matrix(1,0,0,1,0,0)">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="miter"
+                            fill-opacity="0"
+                            stroke-miterlimit="4"
+                            stroke="rgb(0,0,0)"
+                            stroke-opacity="1"
+                            stroke-width="7"
+                            d=" M3.5,3.5 C3.5,3.5 3.5,10.5 3.5,10.5"
+                          />
+                        </g>
+                      </g>
+                      <g
+                        transform="matrix(0.9410480260848999,-0.33827295899391174,0.33827295899391174,0.9410480260848999,89.84773254394531,89.31034851074219)"
+                        opacity="1"
+                        style={{ display: 'block' }}
+                      >
+                        <g opacity="1" transform="matrix(1,0,0,1,15,13)">
+                          <path
+                            stroke-linecap="butt"
+                            stroke-linejoin="miter"
+                            fill-opacity="0"
+                            stroke-miterlimit="4"
+                            stroke="rgb(0,0,0)"
+                            stroke-opacity="1"
+                            stroke-width="7"
+                            d=" M0,6 C-4.418000221252441,6 -8,2.4179999828338623 -8,-2 C-8,-2 -8,-6 -8,-6 C-8,-6 8,-6 8,-6 C8,-6 8,-2 8,-2 C8,2.4179999828338623 4.418000221252441,6 0,6z"
+                          />
+                        </g>
+                      </g>
+                      <g
+                        transform="matrix(0.9410480260848999,-0.33827295899391174,0.33827295899391174,0.9410480260848999,17.972164154052734,33.10683822631836)"
+                        opacity="1"
+                        style={{ display: 'block' }}
+                      >
+                        <g
+                          opacity="1"
+                          transform="matrix(1,0,0,1,46.39500045776367,45)"
+                        >
+                          <path
+                            stroke-linecap="butt"
+                            stroke-linejoin="miter"
+                            fill-opacity="0"
+                            stroke-miterlimit="4"
+                            stroke="rgb(0,0,0)"
+                            stroke-opacity="1"
+                            stroke-width="7"
+                            d=" M0,-38 C14.020000457763672,-38 25.385000228881836,-26.635000228881836 25.385000228881836,-12.614999771118164 C25.385000228881836,-12.614999771118164 25.385000228881836,-2.743000030517578 25.385000228881836,-2.743000030517578 C25.385000228881836,4.050000190734863 27.347000122070312,10.696999549865723 31.03499984741211,16.400999069213867 C31.03499984741211,16.400999069213867 35.145999908447266,22.759000778198242 35.145999908447266,22.759000778198242 C39.39500045776367,29.332000732421875 34.676998138427734,38 26.85099983215332,38 C26.85099983215332,38 -26.85099983215332,38 -26.85099983215332,38 C-34.676998138427734,38 -39.39500045776367,29.332000732421875 -35.145999908447266,22.759000778198242 C-35.145999908447266,22.759000778198242 -31.03499984741211,16.400999069213867 -31.03499984741211,16.400999069213867 C-27.347000122070312,10.696999549865723 -25.385000228881836,4.050000190734863 -25.385000228881836,-2.743000030517578 C-25.385000228881836,-2.743000030517578 -25.385000228881836,-12.614999771118164 -25.385000228881836,-12.614999771118164 C-25.385000228881836,-26.635000228881836 -14.020000457763672,-38 0,-38z"
+                          />
+                        </g>
+                      </g>
+                    </g>
+                  </svg>
                   <p className="mt-4 text-lg font-medium text-gray-900">
                     You have no new notifications.
                   </p>
