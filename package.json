@@ -1,7 +1,7 @@
 {
-  "name": "eth",
+  "name": "888_market",
   "private": true,
-  "homepage": "https://eth.ybssoftware.dev/",
+  "homepage": "https://888market.net/",
   "version": "0.0.0",
   "type": "module",
   "scripts": {

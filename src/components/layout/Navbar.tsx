@@ -12,18 +12,13 @@ const Navbar = () => {
       <div className="border-b border-b-gray-200 bg-white">
         <div className="m-auto max-w-6xl">
           <div className="mx-auto flex h-12 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
               <Link to="/" className="flex items-center">
-                <img
-                  src="./logo.png"
-                  alt="Dubizzle Logo"
-                  className="h-10 w-auto"
-                />
+                <img src="./logo.png" alt="888market" className="h-10 w-auto" />
               </Link>
               <div className="flex items-center">
-                <button className="flex items-center text-sm text-gray-600 hover:text-gray-900">
-                  Ethiopia
-                  <ChevronDown className="ml-1 h-4 w-4" />
+                <button className="flex items-center text-sm font-semibold text-gray-600 hover:text-gray-900">
+                  888Market
                 </button>
               </div>
             </div>
