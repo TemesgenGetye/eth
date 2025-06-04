@@ -33,7 +33,7 @@ const Home = () => {
               Find Anything in Dubai
             </h1>
             <p className="mt-3 text-lg text-gray-300 shadow-2xl shadow-black">
-              The largest marketplace in the country
+              The largest market place in the country
             </p>
           </div>
           <div className="mt-8">

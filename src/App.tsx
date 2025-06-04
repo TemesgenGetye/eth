@@ -22,8 +22,10 @@ import Cart from './pages/Cart';
 import { CartProvider } from './Context/Cart';
 import Checkout from './pages/Checkout';
 import OrderConfirmationPage from './pages/Order-configration';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 function App() {
+  const queryClient = new QueryClient();
   return (
     <LanguageProvider>
       <CartProvider>
@@ -32,34 +34,36 @@ function App() {
             <Router>
               <ScrollToTop />
               <div className="flex min-h-screen flex-col">
-                <Navbar />
-                <main className={`flex-grow `}>
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/category/:id" element={<CatagoryInfo />} />
-                    <Route path="/product/:id" element={<Product />} />
-                    <Route path="/detail/:id" element={<Detail />} />
-                    <Route path="/favourites" element={<Favourites />} />
-                    <Route path="/cart" element={<Cart />} />
-                    <Route path="/checkout" element={<Checkout />} />
-                    <Route
-                      path="/order-confirmation"
-                      element={<OrderConfirmationPage />}
-                    />
+                <QueryClientProvider client={queryClient}>
+                  <Navbar />
+                  <main className={`flex-grow `}>
+                    <Routes>
+                      <Route path="/" element={<Home />} />
+                      <Route path="/category/:id" element={<CatagoryInfo />} />
+                      <Route path="/product/:id" element={<Product />} />
+                      <Route path="/detail/:id" element={<Detail />} />
+                      <Route path="/favourites" element={<Favourites />} />
+                      <Route path="/cart" element={<Cart />} />
+                      <Route path="/checkout" element={<Checkout />} />
+                      <Route
+                        path="/order-confirmation"
+                        element={<OrderConfirmationPage />}
+                      />
 
-                    <Route path="/motor" element={<Motor />}>
-                      <Route index element={<Try />} />
-                    </Route>
-                    <Route path="/property" element={<Property />} />
-                    <Route path="/job" element={<Job />} />
-                    <Route path="/classified" element={<Classified />} />
-                    <Route path="/phone" element={<Phone />} />
-                    <Route path="/furniture" element={<Furniture />} />
-                    <Route path="/community" element={<Community />} />
-                    <Route path="*" element={<div>404</div>} />
-                  </Routes>
-                </main>
-                <Footer />
+                      <Route path="/motor" element={<Motor />}>
+                        <Route index element={<Try />} />
+                      </Route>
+                      <Route path="/property" element={<Property />} />
+                      <Route path="/job" element={<Job />} />
+                      <Route path="/classified" element={<Classified />} />
+                      <Route path="/phone" element={<Phone />} />
+                      <Route path="/furniture" element={<Furniture />} />
+                      <Route path="/community" element={<Community />} />
+                      <Route path="*" element={<div>404</div>} />
+                    </Routes>
+                  </main>
+                  <Footer />
+                </QueryClientProvider>
               </div>
             </Router>
           </BlurBackgroundProvider>
