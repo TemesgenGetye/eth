@@ -15,9 +15,11 @@ import Favourite from '../TopNavElements/Favourite';
 import Cart from '../TopNavElements/Cart';
 import Notfication from '../TopNavElements/Notfication';
 import { useAuth } from '../../Context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const NavLinks = () => {
   const [activeModal, setActiveModal] = useState('');
+  const navigate = useNavigate();
 
   const { user } = useAuth();
 
@@ -87,40 +89,53 @@ const NavLinks = () => {
               <X className="h-4 w-4 cursor-pointer" onClick={closeModal} />
             </div>
             <ul className="space-y-2">
-              <li className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
+              <li className="hover flex items-center justify-between rounded-md p-2 hover:bg-gray-100">
+                <button
+                  className="flex items-center space-x-2"
+                  onClick={() => {
+                    navigate('/profile');
+                    closeModal();
+                  }}
+                >
                   <User className="h-4 w-4" />
                   <p className="text-sm text-gray-500">Profile</p>
-                </div>
-                <ChevronRight className="h-4 w-4" />
+                </button>
               </li>
-              <li className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
+              <li className="hover flex items-center justify-between rounded-md p-2 hover:bg-gray-100">
+                <button
+                  className="flex items-center space-x-2"
+                  onClick={() => navigate('/profile')}
+                >
                   <User className="h-4 w-4" />
                   <p className="text-sm text-gray-500">My Ads</p>
-                </div>
-                <ChevronRight className="h-4 w-4" />
+                </button>
               </li>
-              <li className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
+              <li className="hover flex items-center justify-between rounded-md p-2 hover:bg-gray-100">
+                <button
+                  className="flex items-center space-x-2"
+                  onClick={() => navigate('/profile')}
+                >
                   <Heart className="h-4 w-4" />
                   <p className="text-sm text-gray-500">Favorites</p>
-                </div>
-                <ChevronRight className="h-4 w-4" />
+                </button>
               </li>
-              <li className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
+              <li className="hover flex items-center justify-between rounded-md p-2 hover:bg-gray-100">
+                <button
+                  className="flex items-center space-x-2"
+                  onClick={() => navigate('/profile')}
+                >
                   <MessageCircle className="h-4 w-4" />
                   <p className="text-sm text-gray-500">Chats</p>
-                </div>
-                <ChevronRight className="h-4 w-4" />
+                </button>
               </li>
-              <li className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
+              <li className="hover flex items-center justify-between rounded-md p-2 hover:bg-gray-100">
+                <button
+                  className="flex items-center space-x-2"
+                  onClick={() => navigate('/profile')}
+                >
                   <List className="h-4 w-4" />
                   <p className="text-sm text-gray-500">My Ads</p>
-                </div>
-                <ChevronRight className="h-4 w-4" />
+                </button>
               </li>
             </ul>
           </div>

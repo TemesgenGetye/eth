@@ -7,7 +7,7 @@ export default function useCustomers() {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['categories'],
+    queryKey: ['customers'],
     queryFn: getCustomers,
   });
 
@@ -20,7 +20,7 @@ export function useUpdateCustomer() {
     useMutation({
       mutationFn: updateCustomer,
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['categories'] });
+        queryClient.invalidateQueries({ queryKey: ['customers'] });
       },
     });
 
