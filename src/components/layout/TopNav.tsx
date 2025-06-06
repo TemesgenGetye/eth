@@ -14,9 +14,12 @@ import {
 import Favourite from '../TopNavElements/Favourite';
 import Cart from '../TopNavElements/Cart';
 import Notfication from '../TopNavElements/Notfication';
+import { useAuth } from '../../Context/AuthContext';
 
 const NavLinks = () => {
   const [activeModal, setActiveModal] = useState('');
+
+  const { user } = useAuth();
 
   const handleLinkClick = (modalName: string) => {
     setActiveModal(activeModal === modalName ? '' : modalName);
@@ -75,7 +78,7 @@ const NavLinks = () => {
           onClick={() => handleLinkClick('profile')}
         >
           <User className="mr-1 h-4 w-4" />
-          <p className="text-sm text-gray-500">Temesgen Getye</p>
+          <p className="text-sm text-gray-500">{user?.email}</p>
         </div>
         {activeModal === 'profile' && (
           <div className=" dropdown-pointer absolute right-5 top-10 z-50 w-64 rounded-lg bg-white p-4 shadow-lg">

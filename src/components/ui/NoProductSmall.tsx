@@ -18,10 +18,10 @@ function NoProductSmall() {
   );
 
   xNumeric.onChange((latest) => {
-    console.log('x numeric value:', latest);
+    // console.log('x numeric value:', latest);
   });
   iconOpacity.onChange((latest) => {
-    console.log('iconOpacity value:', latest);
+    // console.log('iconOpacity value:', latest);
   });
 
   return (
