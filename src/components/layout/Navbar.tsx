@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import TopNav from './TopNav';
 import useCategories from '../../hooks/useCategories';
-import type { Category } from '../type';
+import type { CategoryType } from '../type';
 
 const Navbar = () => {
   return (
@@ -61,7 +61,7 @@ const HoverMenu = () => {
   }
 
   // Create Home category with all categories as subcategories
-  const homeCategory: Category = {
+  const homeCategory: CategoryType = {
     id: 0,
     name: 'Home',
     subcategories: categories.map((cat) => ({
@@ -69,18 +69,13 @@ const HoverMenu = () => {
       name: cat.name,
       img_url: cat.img_url || '',
       category_id: String(cat.id),
-      // Pass subcategories for Home's children for right-side rendering
-      subcategories: cat.subcategories
-        ? cat.subcategories.map((subcat) => ({
-            ...subcat,
-            subcategories: [],
-          }))
-        : [],
+      // For Home's children, do not include a nested subcategories array
+      subcategories: undefined,
     })),
   };
 
   // Top-level: Home + first 5 categories
-  const topLevelCategories: Category[] = [
+  const topLevelCategories: CategoryType[] = [
     homeCategory,
     ...categories.slice(0, 5),
   ];
@@ -242,6 +237,7 @@ const HoverMenu = () => {
                               if (
                                 active &&
                                 active.subcategories &&
+                                Array.isArray(active.subcategories) &&
                                 active.subcategories.length > 0
                               ) {
                                 return active.subcategories.map((subcat) => (
