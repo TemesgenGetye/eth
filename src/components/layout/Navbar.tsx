@@ -61,7 +61,7 @@ const HoverMenu = () => {
   }
 
   // Create Home category with all categories as subcategories
-  const homeCategory: CategoryType = {
+  const homeCategory = {
     id: 0,
     name: 'Home',
     subcategories: categories.map((cat) => ({
@@ -69,8 +69,7 @@ const HoverMenu = () => {
       name: cat.name,
       img_url: cat.img_url || '',
       category_id: String(cat.id),
-      // For Home's children, do not include a nested subcategories array
-      subcategories: undefined,
+      subcategories: cat.subcategories || [],
     })),
   };
 
@@ -234,6 +233,7 @@ const HoverMenu = () => {
                               const active = category.subcategories.find(
                                 (c) => c.name === activeChild
                               );
+                              // print(active, 'active');
                               if (
                                 active &&
                                 active.subcategories &&
