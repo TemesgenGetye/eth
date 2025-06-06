@@ -5,9 +5,13 @@ import DownloadApp from '../components/ui/DownloadApp';
 import { useBackground } from '../Context/BlurBackground';
 import PopularCategories from '../components/Property.tsx/PopularCategories';
 import FloatingCart from '../components/ui/FloatingCart';
+import { useAuth } from '../Context/AuthContext';
 
 const Home = () => {
   const { blurBackground } = useBackground();
+  const user = useAuth();
+
+  console.log(user);
 
   return (
     <div className={`m-auto min-h-screen max-w-7xl rounded-lg `}>
