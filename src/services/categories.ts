@@ -1,4 +1,5 @@
 import supabase from './supabase';
+import camelCase from './utils';
 
 export async function getCategories() {
   try {
@@ -19,7 +20,9 @@ export async function getCategories() {
       throw error;
     }
 
-    return data;
+    const camelCasedData = data?.map((category) => camelCase(category));
+
+    return camelCasedData || [];
   } catch (err) {
     console.error('Failed to fetch categories:', err);
     return [];

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getProducts } from '../services/products';
+import { getPopularProducts, getFeaturedProducts } from '../services/products';
 
 const useProducts = () => {
   const {
@@ -9,13 +9,26 @@ const useProducts = () => {
     refetch: refetchProducts,
   } = useQuery({
     queryKey: ['products'],
-    queryFn: getProducts,
+    queryFn: getPopularProducts,
+  });
+  const {
+    isLoading: isLoadingFeatured,
+    data: featuredProducts,
+    isError: isErrorFeatured,
+    refetch: refetchFeaturedProducts,
+  } = useQuery({
+    queryKey: ['products'],
+    queryFn: getFeaturedProducts,
   });
   return {
     products: data,
     isLoading: isLoadingProducts,
     isError,
+    featuredProducts,
+    isLoadingFeatured,
+    isErrorFeatured,
     refetch: refetchProducts,
+    refetchFeatured: refetchFeaturedProducts,
   };
 };
 
