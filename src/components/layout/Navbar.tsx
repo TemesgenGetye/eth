@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import TopNav from './TopNav';
-import { categories } from '../../Data/Catagorie';
-import { useBackground } from '../../Context/BlurBackground';
+import useCategories from '../../hooks/useCategories';
+import type { Category } from '../type';
 
 const Navbar = () => {
   return (
@@ -39,19 +39,50 @@ export default Navbar;
 
 const HoverMenu = () => {
   const navigate = useNavigate();
-
-  // const { blurBackground, setBlurBackground } = useBackground();
+  const { categories, isLoading } = useCategories();
 
   const [hoveredParent, setHoveredParent] = useState<string | null>(null);
   const [activeChild, setActiveChild] = useState<string | null>(null);
-  const [showAllChildren, setShowAllChildren] = useState<boolean>(false); // State for "Show More"
+  // const [showAllChildren, setShowAllChildren] = useState<boolean>(false);
   const [closeTimeout, setCloseTimeout] = useState<NodeJS.Timeout | null>(null);
-  const [numberOfCategories, setNumberOfCategories] = useState<number>(10);
+  // const [numberOfCategories, setNumberOfCategories] = useState<number>(6);
 
-  const homeCategory = categories[0];
-  const topLevelCategories = [
+  // Early return if loading or no categories
+  if (isLoading || !categories) {
+    return (
+      <div className="flex items-center justify-around border-b border-gray-200 bg-white">
+        <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-6">
+          <div className="flex h-12 items-center space-x-20">
+            <span>Loading...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Create Home category with all categories as subcategories
+  const homeCategory: Category = {
+    id: 0,
+    name: 'Home',
+    subcategories: categories.map((cat) => ({
+      id: cat.id,
+      name: cat.name,
+      img_url: cat.img_url || '',
+      category_id: String(cat.id),
+      // Pass subcategories for Home's children for right-side rendering
+      subcategories: cat.subcategories
+        ? cat.subcategories.map((subcat) => ({
+            ...subcat,
+            subcategories: [],
+          }))
+        : [],
+    })),
+  };
+
+  // Top-level: Home + first 5 categories
+  const topLevelCategories: Category[] = [
     homeCategory,
-    ...homeCategory.children.slice(0, 4), // First 5 children of Home
+    ...categories.slice(0, 5),
   ];
 
   const handleMouseEnterParent = (category: string) => {
@@ -61,46 +92,36 @@ const HoverMenu = () => {
     }
     setHoveredParent(category);
 
-    // Find the first child of the hovered parent category
-    const parentCategory = categories.find(
-      (cat) =>
-        cat.name.en === category ||
-        cat.children.find((child) => child.name.en === category)
-    );
-    const firstChild = parentCategory?.children?.[0]?.name.en || hoveredParent;
+    let firstChild = hoveredParent;
+    if (category === 'Home') {
+      firstChild = homeCategory.subcategories?.[0]?.name || hoveredParent;
+    } else {
+      const parentCategory = categories.find((cat) => cat.name === category);
+      firstChild = parentCategory?.subcategories?.[0]?.name || hoveredParent;
+    }
     setActiveChild(firstChild);
-    setShowAllChildren(false);
   };
 
-  const handleMouseEnterChild = (category: string) => {
+  const handleMouseEnterChild = (subcategory: string) => {
     if (closeTimeout) {
       clearTimeout(closeTimeout);
       setCloseTimeout(null);
     }
-
-    setActiveChild(category);
+    setActiveChild(subcategory);
   };
 
   const handleMouseLeave = () => {
     const timeout = setTimeout(() => {
       setHoveredParent(null);
       setActiveChild(null);
-    }, 300); // Delay to allow smooth transition
-
+    }, 300);
     setCloseTimeout(timeout);
   };
-
-  // const handleShowMore = () => {
-  //   setShowAllChildren(true);
-  // };
 
   function handleLeaveCategoryOnClick() {
     setHoveredParent(null);
     setActiveChild(null);
   }
-  const handleShowMoreForDropdown = () => {
-    setNumberOfCategories((number) => number + 2);
-  };
 
   const hanldleShowAllCategories = () => {
     navigate('/');
@@ -119,122 +140,143 @@ const HoverMenu = () => {
           {/* Render the top-level categories */}
           {topLevelCategories.map((category) => (
             <div
-              key={category._id}
+              key={category.id}
               className="relative"
-              onMouseEnter={() => handleMouseEnterParent(category.name.en)}
+              onMouseEnter={() => handleMouseEnterParent(category.name)}
               onMouseLeave={handleMouseLeave}
               onClick={handleLeaveCategoryOnClick}
             >
               <button
                 className="flex h-full items-center justify-around text-nowrap border-b-2 border-transparent  text-sm font-semibold text-gray-600 hover:text-gray-900"
                 onClick={() => {
-                  if (category.name.en !== 'Home') {
+                  if (category.name === 'Home') {
+                    navigate('/');
+                  } else {
                     navigate(
                       '/category/' +
-                        category.name.en
+                        category.name
                           .toLowerCase()
                           .replace(/\s+/g, '-')
                           .replace(/[^a-z0-9-]/g, '')
                           .replace(/-+/g, '-')
                           .replace(/^-|-$/g, '') +
-                        `:${category._id}`
+                        `:${category.id}`
                     );
-                  } else {
-                    navigate('/');
                   }
                 }}
               >
-                {category.name.en}
-                {category.children && category.children.length > 0 && (
-                  <ChevronDown className="ml-1 h-4 w-4" />
-                )}
+                {category.name}
+                {category.subcategories &&
+                  category.subcategories.length > 0 && (
+                    <ChevronDown className="ml-1 h-4 w-4" />
+                  )}
               </button>
 
               {/* Dropdown Menu for Parent Categories */}
-              {hoveredParent === category.name.en &&
-                category.children &&
-                category.children.length > 0 && (
+              {hoveredParent === category.name &&
+                category.subcategories &&
+                category.subcategories.length > 0 && (
                   <div
-                    className="dropdown-pointer-menu absolute left-0 top-full z-50 mt-2 flex w-[550px] rounded-lg bg-white p-4 text-sm shadow-lg"
-                    onMouseEnter={() =>
-                      handleMouseEnterParent(category.name.en)
-                    }
+                    className={`dropdown-pointer-menu absolute left-0 top-full z-50 mt-2 flex ${category?.name === 'Home' ? 'w-[550px]' : 'w-[280px]'} rounded-lg bg-white p-4 text-sm shadow-lg`}
+                    onMouseEnter={() => handleMouseEnterParent(category.name)}
                     onMouseLeave={handleMouseLeave}
                   >
                     {/* Child Categories (Left Side) */}
-                    <div className="w-2/5 space-y-2 border-r border-gray-200 pr-4">
-                      {(showAllChildren
-                        ? category.children
-                        : category.children.slice(0, numberOfCategories)
-                      ).map((child) => (
+                    <div
+                      className={`max-h-96 ${category?.name === 'Home' ? 'w-2/5 border-r border-gray-200' : 'w-full'} overflow-y-auto pr-4`}
+                      style={{
+                        scrollbarWidth: 'none',
+                        msOverflowStyle: 'none',
+                      }}
+                    >
+                      <style>
+                        {`
+                          .w-2\\/5::-webkit-scrollbar {
+                            display: none;
+                          }
+                        `}
+                      </style>
+                      {category.subcategories.map((child) => (
                         <button
-                          key={child._id}
+                          key={child.id}
                           className={`flex w-full items-center justify-between overflow-hidden text-ellipsis text-nowrap rounded-md p-2 text-sm font-semibold ${
-                            activeChild === child.name.en
+                            activeChild === child.name
                               ? 'bg-gray-100 text-gray-900'
                               : 'text-gray-600 hover:bg-gray-50'
                           }`}
-                          onMouseEnter={() =>
-                            handleMouseEnterChild(child.name.en)
-                          }
+                          onMouseEnter={() => handleMouseEnterChild(child.name)}
                           onClick={() => {
-                            navigate(`/product/${child._id}`);
+                            if (category.name === 'Home') {
+                              navigate(
+                                '/category/' +
+                                  child.name
+                                    .toLowerCase()
+                                    .replace(/\s+/g, '-')
+                                    .replace(/[^a-z0-9-]/g, '')
+                                    .replace(/-+/g, '-')
+                                    .replace(/^-|-$/g, '') +
+                                  `:${child.id}`
+                              );
+                            } else {
+                              navigate(`/product/${child.id}`);
+                            }
                           }}
                         >
-                          {child.name.en}
-                          {child.children && child.children.length > 0 && (
-                            <ChevronRight className="h-3 w-3" />
-                          )}
+                          {child.name}
                         </button>
                       ))}
-                      {!showAllChildren && category.children.length > 10 && (
-                        <button
-                          className="w-full rounded-md p-2 text-left text-sm font-semibold text-blue-600 hover:bg-gray-50"
-                          onClick={handleShowMoreForDropdown}
-                        >
-                          Show More
-                        </button>
-                      )}
                     </div>
 
-                    <div className="w-2/3 ">
-                      <p className="border-b border-b-gray-200 p-2 text-sm font-semibold text-gray-800">
-                        {activeChild === 'Electronics'
-                          ? hoveredParent
-                          : activeChild}
-                      </p>
-                      <div className="mt-2 grid h-96 auto-rows-min grid-cols-1 gap-1 overflow-y-auto md:grid-cols-2">
-                        {category.children.find(
-                          (child) => child.name.en === activeChild
-                        )?.children?.length ? (
-                          category.children
-                            .find((child) => child.name.en === activeChild)
-                            ?.children?.map((subchild) => (
-                              <>
-                                <button
-                                  key={subchild._id}
-                                  className="flex w-full items-center rounded-md p-1 text-sm text-gray-600 hover:bg-gray-50"
-                                  onClick={() =>
-                                    navigate(`/product/${subchild._id}`)
-                                  }
-                                >
-                                  {subchild.name.en}
-                                </button>
-                              </>
-                            ))
-                        ) : (
-                          <p className="col-span-2 text-gray-400 md:col-span-3">
-                            --
-                          </p> // Placeholder for no subcategories
-                        )}
+                    {category?.name === 'Home' && (
+                      <div className="w-2/3 ">
+                        <p className="border-b border-b-gray-200 p-2 text-sm font-semibold text-gray-800">
+                          {activeChild}
+                        </p>
+                        <div className="mt-2 grid h-96 auto-rows-min grid-cols-1 gap-1 overflow-y-auto md:grid-cols-2">
+                          {/* Show subcategories for Home's children */}
+                          {category.name === 'Home' ? (
+                            (() => {
+                              const active = category.subcategories.find(
+                                (c) => c.name === activeChild
+                              );
+                              if (
+                                active &&
+                                active.subcategories &&
+                                active.subcategories.length > 0
+                              ) {
+                                return active.subcategories.map((subcat) => (
+                                  <button
+                                    key={subcat.id}
+                                    className="flex w-full items-center rounded-md p-1 text-sm text-gray-600 hover:bg-gray-50"
+                                    onClick={() =>
+                                      navigate(`/product/${subcat.id}`)
+                                    }
+                                  >
+                                    {subcat.name}
+                                  </button>
+                                ));
+                              }
+                              return (
+                                <p className="col-span-2 text-gray-400 md:col-span-3">
+                                  --
+                                </p>
+                              );
+                            })()
+                          ) : (
+                            // No sub-subcategories for other categories
+                            <p className="col-span-2 text-gray-400 md:col-span-3">
+                              --
+                            </p>
+                          )}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 )}
             </div>
           ))}
 
-          {/* "See More" button (does nothing) */}
+          {/* "See More" button */}
           <button
             className="flex items-center rounded-full bg-blue-600 p-2 text-sm font-semibold text-white hover:bg-blue-700"
             onClick={() => hanldleShowAllCategories()}
