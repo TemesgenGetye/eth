@@ -1,32 +1,57 @@
 import { useNavigate } from 'react-router-dom';
 import { product } from '../../Data/Product';
 import { useEffect, useRef, useState } from 'react';
+import useProducts from '../../hooks/useProducts';
 
 export default function PopularCategories({ id }: { id: string }) {
-  const scrollContainerRef = useRef(null);
-  const [images, setImages] = useState([]);
-  const [currentCatgoryProduct, setCurrentCatgoryProduct] = useState([]);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const { products } = useProducts();
   const navigate = useNavigate();
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  useEffect(() => {
-    const currentCatgoryProduct = product?.filter((pro) =>
-      pro?.categories?.includes(id.split(':')[1])
-    );
-    setCurrentCatgoryProduct(currentCatgoryProduct);
-  }, [id]);
+  // Number of products to show at once (visible section)
+  const visibleCount = 3;
 
+  // Calculate number of sections (pages)
+  const productsToShow = products?.slice(0, 10) || [];
+  const numSections = Math.max(
+    1,
+    Math.ceil(productsToShow.length / visibleCount)
+  );
+
+  // Update activeIndex on scroll (section-based)
   useEffect(() => {
-    currentCatgoryProduct.map((pro) => {
-      setImages((img) => [...img, pro?.image[0]]);
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const scrollLeft = container.scrollLeft;
+      const itemWidth = container.offsetWidth * 0.8;
+      const section = Math.round(scrollLeft / (itemWidth * visibleCount));
+      setActiveIndex(section);
+    };
+
+    container.addEventListener('scroll', handleScroll, { passive: true });
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [visibleCount]);
+
+  // Scroll to section when clicking a dot
+  const scrollToIndex = (section: number) => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const itemWidth = container.offsetWidth * 0.8;
+    container.scrollTo({
+      left: section * itemWidth * visibleCount,
+      behavior: 'smooth',
     });
-  }, [id, currentCatgoryProduct]);
+    setActiveIndex(section);
+  };
 
   const scroll = (direction: 'left' | 'right') => {
-    const container = scrollContainerRef?.current;
+    const container = scrollContainerRef.current;
     const scrollAmount = container?.offsetWidth
-      ? container?.offsetWidth * 0.8
+      ? container.offsetWidth * 0.8
       : 0;
-
     if (direction === 'left') {
       container?.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
     } else {
@@ -34,7 +59,7 @@ export default function PopularCategories({ id }: { id: string }) {
     }
   };
 
-  if (currentCatgoryProduct.length === 0) return null;
+  if (products && products.length === 0) return null;
   return (
     <div className="mb-8">
       <h2 className="mb-6 text-2xl font-semibold">Popular Products</h2>
@@ -81,17 +106,15 @@ export default function PopularCategories({ id }: { id: string }) {
           ref={scrollContainerRef}
           className="flex gap-4 overflow-x-hidden scroll-smooth px-4"
         >
-          {images?.slice(0, 10).map((img, index) => (
+          {productsToShow.map((product, index) => (
             <button
               key={index}
               className="group relative w-72 flex-none cursor-pointer"
-              onClick={() =>
-                navigate(`/detail/${currentCatgoryProduct[index]?._id}`)
-              }
+              onClick={() => navigate(`/detail/${products[index]?.id}`)}
             >
               <div className="relative h-48 overflow-hidden rounded-lg">
                 <img
-                  src={img || '/logo.png'}
+                  src={product.imgUrls[0] || '/logo.png'}
                   alt={`pro_img ${index}`}
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                   loading="lazy"
@@ -116,7 +139,7 @@ export default function PopularCategories({ id }: { id: string }) {
                 </div>
 
                 <h3 className="absolute bottom-4 left-4 z-10 text-lg font-semibold text-white drop-shadow-lg">
-                  {currentCatgoryProduct[index]?.title.en}
+                  {product.name}
                 </h3>
               </div>
             </button>
@@ -124,11 +147,17 @@ export default function PopularCategories({ id }: { id: string }) {
         </div>
 
         <div className="mt-4 flex justify-center gap-2">
-          {currentCatgoryProduct.map((_, index) => (
-            <div
-              key={index}
-              className="h-2 w-2 rounded-full bg-gray-400"
-              role="presentation"
+          {Array.from({ length: numSections }).map((_, sectionIdx) => (
+            <button
+              key={sectionIdx}
+              className={`h-2 w-2 rounded-full transition-colors ${
+                activeIndex === sectionIdx
+                  ? 'scale-125 bg-blue-600'
+                  : 'bg-gray-400'
+              }`}
+              onClick={() => scrollToIndex(sectionIdx)}
+              aria-label={`Go to section ${sectionIdx + 1}`}
+              style={{ outline: 'none', border: 'none', padding: 0 }}
             />
           ))}
         </div>

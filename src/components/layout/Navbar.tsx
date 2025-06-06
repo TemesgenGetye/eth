@@ -118,9 +118,9 @@ const HoverMenu = () => {
   }
 
   const hanldleShowAllCategories = () => {
-    navigate('/');
+    // navigate('/');
     setTimeout(() => {
-      const middlePosition = window.innerHeight * 0.5;
+      const middlePosition = window.innerHeight * 0.42;
       window.scrollTo({ top: middlePosition, behavior: 'smooth' });
     }, 100);
   };

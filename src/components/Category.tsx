@@ -28,7 +28,7 @@ export default function Category({ category }: CategoryProps) {
       >
         <span className="mr-2">
           <img
-            src={category?.icon_url || './all-product.gif'}
+            src={category?.iconUrl || './all-product.gif'}
             alt="icon icon"
             className="h-5 w-5"
           />
