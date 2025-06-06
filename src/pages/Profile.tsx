@@ -15,6 +15,8 @@ export default function Component() {
     (customer) => customer.uuid === user?.identities?.at(0)?.user_id
   );
 
+  console.log(customers);
+
   const [profileData, setProfileData] = useState({
     name: '',
     email: '',
