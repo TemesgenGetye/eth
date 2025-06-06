@@ -1,6 +1,6 @@
 import { ChevronRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Category as CategoryType, Subcategory } from './type';
+import { CategoryType, Subcategory } from './type';
 
 interface CategoryProps {
   category: CategoryType;
