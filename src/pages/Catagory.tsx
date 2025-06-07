@@ -28,7 +28,7 @@ export default function CatagoryInfo() {
         <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-white shadow-2xl sm:text-5xl">
-              Every one is in ETH
+              Every one is on ETH
             </h1>
             <p className="mb-3 mt-3  text-lg text-gray-300 shadow-2xl shadow-black">
               The largest marketplace in the country
@@ -59,7 +59,7 @@ export default function CatagoryInfo() {
         <PopularSubcatagory id={cname || ''} />
         <Banners id={cname ?? ''} />
         {/* <PopularCategories /> */}
-        <ListProductHorizontal />
+        <ListProductHorizontal cid={category?.id} />
         <SolidBento />
       </div>
     </div>

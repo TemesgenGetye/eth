@@ -2,9 +2,14 @@ import { TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import useProducts from '../../hooks/useProducts';
 
-function ListProductHorizontal() {
+function ListProductHorizontal({ cid }: { cid?: number }) {
   const { featuredProducts } = useProducts();
   const navigate = useNavigate();
+  const filteredFeaturedProducts = cid
+    ? featuredProducts?.filter((featured) => featured?.category?.id === cid)
+    : featuredProducts;
+
+  if (!filteredFeaturedProducts?.length) return null;
 
   return (
     <div className="bg-white py-12">
@@ -19,7 +24,7 @@ function ListProductHorizontal() {
           </div>
         </div>
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5">
-          {featuredProducts?.map((featured) => {
+          {filteredFeaturedProducts?.map((featured) => {
             const cName = featured?.category?.name
               ?.toLowerCase()
               ?.split(' ')
