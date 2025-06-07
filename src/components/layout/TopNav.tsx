@@ -100,8 +100,6 @@ const NavLinks = () => {
                 </button>
               </li>
               <li className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100">
-
-              <li className="hover flex items-center justify-between rounded-md p-2 hover:bg-gray-100">
                 <button
                   className="flex items-center space-x-2"
                   onClick={() => {
@@ -114,8 +112,6 @@ const NavLinks = () => {
                 </button>
               </li>
               <li className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100">
-
-              <li className="hover flex items-center justify-between rounded-md p-2 hover:bg-gray-100">
                 <button
                   className="flex items-center space-x-2"
                   onClick={() => navigate('/favourites')}
