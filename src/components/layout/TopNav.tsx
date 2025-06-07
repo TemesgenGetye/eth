@@ -1,22 +1,23 @@
 import { useState } from 'react';
-import {
-  Heart,
-  MessageCircle,
-  User,
-  X,
-  List,
-} from 'lucide-react';
+import { Heart, MessageCircle, User, X, List } from 'lucide-react';
 import Favourite from '../TopNavElements/Favourite';
 import Cart from '../TopNavElements/Cart';
 import Notfication from '../TopNavElements/Notfication';
 import { useAuth } from '../../Context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import useCustomers from '../../hooks/useCustomers';
 
 const NavLinks = () => {
   const [activeModal, setActiveModal] = useState('');
   const navigate = useNavigate();
 
   const { user } = useAuth();
+
+  const { customers, isLoading, error } = useCustomers();
+
+  const filterdCustomers = customers?.filter(
+    (customer) => customer.uuid === user?.identities?.at(0)?.user_id
+  );
 
   const handleLinkClick = (modalName: string) => {
     setActiveModal(activeModal === modalName ? '' : modalName);
@@ -75,7 +76,9 @@ const NavLinks = () => {
           onClick={() => handleLinkClick('profile')}
         >
           <User className="mr-1 h-4 w-4" />
-          <p className="text-sm text-gray-500">{user?.email}</p>
+          <p className="text-sm text-gray-500">
+            {filterdCustomers?.at(0)?.name || user?.email}
+          </p>
         </div>
         {activeModal === 'profile' && (
           <div className=" dropdown-pointer absolute right-5 top-10 z-50 w-64 rounded-lg bg-white p-4 shadow-lg">
@@ -97,18 +100,25 @@ const NavLinks = () => {
                 </button>
               </li>
               <li className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100">
+
+              <li className="hover flex items-center justify-between rounded-md p-2 hover:bg-gray-100">
                 <button
                   className="flex items-center space-x-2"
-                  onClick={() => navigate('/profile')}
+                  onClick={() => {
+                    navigate('/my-ads');
+                    closeModal();
+                  }}
                 >
-                  <User className="h-4 w-4" />
+                  <List className="h-4 w-4" />
                   <p className="text-sm text-gray-500">My Ads</p>
                 </button>
               </li>
               <li className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100">
+
+              <li className="hover flex items-center justify-between rounded-md p-2 hover:bg-gray-100">
                 <button
                   className="flex items-center space-x-2"
-                  onClick={() => navigate('/profile')}
+                  onClick={() => navigate('/favourites')}
                 >
                   <Heart className="h-4 w-4" />
                   <p className="text-sm text-gray-500">Favorites</p>
@@ -117,7 +127,7 @@ const NavLinks = () => {
               <li className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100">
                 <button
                   className="flex items-center space-x-2"
-                  onClick={() => navigate('/profile')}
+                  onClick={() => navigate('/chat')}
                 >
                   <MessageCircle className="h-4 w-4" />
                   <p className="text-sm text-gray-500">Chats</p>

@@ -32,6 +32,9 @@ import { ProtectedRoute } from './pages/ProtectedRoute';
 import LoginForm from './pages/Login';
 import { AuthProvider } from './Context/AuthContext';
 import Profile from './pages/Profile';
+import MyAds from './pages/MyAds';
+import PostAdPage from './pages/PostAds';
+import ChatPage from './pages/Chat';
 
 function AppContent() {
   const location = useLocation();
@@ -46,15 +49,15 @@ function AppContent() {
           <Route path="/:cname" element={<CatagoryInfo />} />
           <Route path="/:cid/:pid" element={<Product />} />
           <Route path="/detail/:id" element={<Detail />} />
-          <Route path="/profile" element={<Profile />} />
           <Route
-            path="/favourites"
+            path="/profile"
             element={
               <ProtectedRoute>
-                <Favourites />
+                <Profile />
               </ProtectedRoute>
             }
           />
+          <Route path="/favourites" element={<Favourites />} />
           <Route
             path="/cart"
             element={
@@ -79,7 +82,35 @@ function AppContent() {
               </ProtectedRoute>
             }
           />
+
+          <Route
+            path="/post-ad"
+            element={
+              <ProtectedRoute>
+                <PostAdPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/login" element={<LoginForm />} />
+          <Route
+            path="/chat"
+            element={
+              <ProtectedRoute>
+                <ChatPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/my-ads"
+            element={
+              <ProtectedRoute>
+                <MyAds />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 */}
           <Route path="/motor" element={<Motor />}>
             <Route index element={<Try />} />
           </Route>
