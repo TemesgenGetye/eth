@@ -1,15 +1,10 @@
 import { useState } from 'react';
 import {
-  Bell,
-  Search,
   Heart,
   MessageCircle,
   User,
   X,
   List,
-  ChevronRight,
-  CarTaxiFrontIcon,
-  ShoppingCart,
 } from 'lucide-react';
 import Favourite from '../TopNavElements/Favourite';
 import Cart from '../TopNavElements/Cart';
@@ -89,7 +84,7 @@ const NavLinks = () => {
               <X className="h-4 w-4 cursor-pointer" onClick={closeModal} />
             </div>
             <ul className="space-y-2">
-              <li className="hover flex items-center justify-between rounded-md p-2 hover:bg-gray-100">
+              <li className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100">
                 <button
                   className="flex items-center space-x-2"
                   onClick={() => {
@@ -101,7 +96,7 @@ const NavLinks = () => {
                   <p className="text-sm text-gray-500">Profile</p>
                 </button>
               </li>
-              <li className="hover flex items-center justify-between rounded-md p-2 hover:bg-gray-100">
+              <li className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100">
                 <button
                   className="flex items-center space-x-2"
                   onClick={() => navigate('/profile')}
@@ -110,7 +105,7 @@ const NavLinks = () => {
                   <p className="text-sm text-gray-500">My Ads</p>
                 </button>
               </li>
-              <li className="hover flex items-center justify-between rounded-md p-2 hover:bg-gray-100">
+              <li className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100">
                 <button
                   className="flex items-center space-x-2"
                   onClick={() => navigate('/profile')}
@@ -119,7 +114,7 @@ const NavLinks = () => {
                   <p className="text-sm text-gray-500">Favorites</p>
                 </button>
               </li>
-              <li className="hover flex items-center justify-between rounded-md p-2 hover:bg-gray-100">
+              <li className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100">
                 <button
                   className="flex items-center space-x-2"
                   onClick={() => navigate('/profile')}
@@ -128,7 +123,7 @@ const NavLinks = () => {
                   <p className="text-sm text-gray-500">Chats</p>
                 </button>
               </li>
-              <li className="hover flex items-center justify-between rounded-md p-2 hover:bg-gray-100">
+              <li className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100">
                 <button
                   className="flex items-center space-x-2"
                   onClick={() => navigate('/profile')}

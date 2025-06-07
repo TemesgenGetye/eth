@@ -8,7 +8,7 @@ const useProducts = () => {
     isError,
     refetch: refetchProducts,
   } = useQuery({
-    queryKey: ['products'],
+    queryKey: ['popular-products'],
     queryFn: getPopularProducts,
   });
   const {
@@ -17,7 +17,7 @@ const useProducts = () => {
     isError: isErrorFeatured,
     refetch: refetchFeaturedProducts,
   } = useQuery({
-    queryKey: ['products'],
+    queryKey: ['featured-products'],
     queryFn: getFeaturedProducts,
   });
   return {

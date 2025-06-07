@@ -1,45 +1,43 @@
 import { useParams } from 'react-router-dom';
-import { product } from '../Data/Product';
 import SearchFilters from '../components/Motor/Searchfilter';
 import ProductList from '../components/ui/ProductList';
 import Pagination from '../components/Motor/Pagination';
-import { categories } from '../Data/Catagorie';
 import NoProduct from '../components/ui/NoProduct';
+import useProducts from '../hooks/useProducts';
+import { ProductType } from '../components/type';
+import { useState } from 'react';
 
 function Product() {
-  const { id } = useParams<{ id: string }>();
+  const { pid } = useParams<{ pid: string }>();
+  console.log('pid', pid);
+  const pName = pid?.split('-')?.join(' ');
+  console.log('pname', pName);
 
-  const filterdProduct = id
-    ? product.filter((item) => item.categories.includes(id))
+  const { products } = useProducts();
+
+  const filteredProducts: ProductType[] | undefined = pid
+    ? products?.filter((product): product is ProductType =>
+        product?.subcategory?.name.toLowerCase()?.includes(pName)
+      )
     : [];
 
-  const filterdCategory = categories[0]?.children.flatMap((item) => {
-    const filteredChildren = item?.children?.filter(
-      (child) =>
-        child?._id === filterdProduct[0]?.category ||
-        child.parentId === filterdProduct[0]?.category
-    );
-    if (
-      item?._id === filterdProduct[0]?.category ||
-      item.parentId === filterdProduct[0]?.category
-    ) {
-      return [item, ...(filteredChildren || [])];
-    }
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 10;
 
-    return filteredChildren || [];
-  });
+  // Calculate total pages
+  const totalPages = filteredProducts
+    ? Math.ceil(filteredProducts.length / productsPerPage)
+    : 1;
 
-  if (filterdProduct.length === 0) return <NoProduct />;
+  // Get products for current page
+  const paginatedProducts = filteredProducts
+    ? filteredProducts.slice(
+        (currentPage - 1) * productsPerPage,
+        currentPage * productsPerPage
+      )
+    : [];
 
-  //   const brands = [
-  //     { name: 'Mercedes-Benz', count: '4644' },
-  //     { name: 'BMW', count: '2017' },
-  //     { name: 'Nissan', count: '1952' },
-  //     { name: 'Land Rover', count: '1552' },
-  //     { name: 'Porsche', count: '1172' },
-  //     { name: 'Ford', count: '1144' },
-  //     { name: 'Audi', count: '916' },
-  //   ];
+  if (filteredProducts?.length === 0) return <NoProduct />;
 
   return (
     <div className="mx-auto min-h-screen max-w-6xl px-4 py-4">
@@ -51,9 +49,9 @@ function Product() {
         <div className="flex items-center space-x-2 text-sm text-blue-600">
           <a href="#">Dubai</a>
           <span className="text-gray-400">&gt;</span>
-          <a href="#">{filterdCategory[0]?.name?.en}</a>
+          <a href="#">{filteredProducts?.[0]?.category?.name}</a>
           <span className="text-gray-400">&gt;</span>
-          <a href="#">{filterdProduct[0]?.title.en}</a>
+          <a href="#">{filteredProducts?.[0]?.subcategory?.name}</a>
         </div>
       </div>
 
@@ -61,8 +59,8 @@ function Product() {
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">
-            {filterdCategory[0]?.name?.en} sale in dubai •{' '}
-            {filterdProduct.length} Ads
+            {filteredProducts?.[0]?.subcategory?.name} sale in dubai •{' '}
+            {filteredProducts?.length} Ads
           </h2>
           <div className="flex items-center space-x-4">
             {/* <button className="flex items-center space-x-2 text-sm">
@@ -77,10 +75,14 @@ function Product() {
 
         {/* <BrandFilter brands={brands} /> */}
         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-1">
-          <ProductList product={filterdProduct} />
+          <ProductList products={paginatedProducts} />
         </div>
         <div className="p-6">
-          <Pagination currentPage={1} totalPages={10} onPageChange={() => {}} />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
         </div>
       </div>
     </div>

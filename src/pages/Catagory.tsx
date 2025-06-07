@@ -6,21 +6,23 @@ import PopularSubcatagory from '../components/ui/PopularSubcatagory';
 import { useParams } from 'react-router-dom';
 import SolidBento from '../components/ui/BentoGridProduct';
 import { categories } from '../Data/Catagorie';
+import useCategories from '../hooks/useCategories';
 
 export default function CatagoryInfo() {
-  const { id } = useParams<{ id: string }>();
+  const { cname } = useParams<{ cname: string }>();
+  const { categories } = useCategories();
 
-  const filterdCategory = categories[0]?.children?.filter(
-    (item) => item._id === id.split(':')[1]
+  const category = categories?.find(
+    (category) => category.name?.toLowerCase() === cname?.toLowerCase()
   );
-  const images = filterdCategory?.[0]?.images;
+  const image = category?.imgUrl;
 
   return (
     <div className="min-h-screen rounded-lg  ">
       <div
         className="relative m-auto mt-3 w-[80%] items-center rounded-xl bg-cover bg-center py-16"
         style={{
-          backgroundImage: `url(${images?.[0]})`,
+          backgroundImage: `url(${image})`,
         }}
       >
         <div className="absolute inset-0 z-10 rounded-xl bg-black bg-opacity-50"></div>
@@ -55,11 +57,11 @@ export default function CatagoryInfo() {
       </div>
 
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 sm:px-6 lg:px-8">
-        <PopularSubcatagory id={id ?? ''} />
-        <Banners id={id ?? ''} />
-        <PopularCategories id={id ?? ''} />
-        <SolidBento />
+        <PopularSubcatagory id={cname || ''} />
+        <Banners id={cname ?? ''} />
+        {/* <PopularCategories /> */}
         <ListProductHorizontal />
+        <SolidBento />
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import supabase from './supabase';
 import camelCase from './utils';
 
 export const getPopularProducts = async () => {
+  console.log('Fetching popular products...');
   try {
     const { data, error } = await supabase
       .from('products')
