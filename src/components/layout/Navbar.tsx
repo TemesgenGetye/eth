@@ -118,7 +118,7 @@ const HoverMenu = () => {
   }
 
   const hanldleShowAllCategories = () => {
-    // navigate('/');
+    navigate('/');
     setTimeout(() => {
       const middlePosition = window.innerHeight * 0.42;
       window.scrollTo({ top: middlePosition, behavior: 'smooth' });
@@ -147,14 +147,13 @@ const HoverMenu = () => {
                     navigate('/');
                   } else {
                     navigate(
-                      '/category/' +
+                      '/' +
                         category.name
                           .toLowerCase()
                           .replace(/\s+/g, '-')
                           .replace(/[^a-z0-9-]/g, '')
                           .replace(/-+/g, '-')
-                          .replace(/^-|-$/g, '') +
-                        `:${category.id}`
+                          .replace(/^-|-$/g, '')
                     );
                   }
                 }}
@@ -202,17 +201,18 @@ const HoverMenu = () => {
                           onClick={() => {
                             if (category.name === 'Home') {
                               navigate(
-                                '/category/' +
+                                '/' +
                                   child.name
                                     .toLowerCase()
                                     .replace(/\s+/g, '-')
                                     .replace(/[^a-z0-9-]/g, '')
                                     .replace(/-+/g, '-')
-                                    .replace(/^-|-$/g, '') +
-                                  `:${child.id}`
+                                    .replace(/^-|-$/g, '')
                               );
                             } else {
-                              navigate(`/product/${child.id}`);
+                              navigate(
+                                `/${category.name?.toLowerCase()?.split(' ')?.join('-')}/${child.name?.toLowerCase()?.split(' ')?.join('-')}`
+                              );
                             }
                           }}
                         >

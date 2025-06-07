@@ -24,9 +24,9 @@ export interface Subcategory {
 export interface ProductType {
   id: number;
   name: string;
-  price: number;
+  price: { orignal: number; discounted?: number; currency?: string };
   stock: number;
-  img_urls: string[];
+  imgUrls: string[];
   views: number;
   description: string;
   category: CategoryType;

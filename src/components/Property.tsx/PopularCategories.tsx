@@ -1,9 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import { product } from '../../Data/Product';
 import { useEffect, useRef, useState } from 'react';
 import useProducts from '../../hooks/useProducts';
 
-export default function PopularCategories({ id }: { id: string }) {
+export default function PopularCategories() {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const { products } = useProducts();
   const navigate = useNavigate();
@@ -13,7 +12,7 @@ export default function PopularCategories({ id }: { id: string }) {
   const visibleCount = 3;
 
   // Calculate number of sections (pages)
-  const productsToShow = products?.slice(0, 10) || [];
+  const   productsToShow = products?.slice(0, 10) || [];
   const numSections = Math.max(
     1,
     Math.ceil(productsToShow.length / visibleCount)
@@ -110,7 +109,7 @@ export default function PopularCategories({ id }: { id: string }) {
             <button
               key={index}
               className="group relative w-72 flex-none cursor-pointer"
-              onClick={() => navigate(`/detail/${products[index]?.id}`)}
+              onClick={() => navigate(`/detail/${products?.[index]?.id}`)}
             >
               <div className="relative h-48 overflow-hidden rounded-lg">
                 <img

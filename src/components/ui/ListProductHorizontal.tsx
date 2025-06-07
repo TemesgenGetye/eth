@@ -10,7 +10,9 @@ function ListProductHorizontal() {
     <div className="bg-white py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-gray-900">Featured listing</h2>
+          <h2 className="text-2xl font-bold text-gray-900">
+            Featured Listings
+          </h2>
           <div className="flex items-center text-blue-600">
             <TrendingUp className="mr-2 h-5 w-5" />
             <span>Trending Now</span>
@@ -35,7 +37,7 @@ function ListProductHorizontal() {
                   {featured?.name}
                 </h3>
                 <p className="mb-2 text-sm font-bold text-blue-600">
-                  <span>{featured?.price.amount}</span>
+                  <span>{featured?.price.discounted}</span>
                   <span className="ml-1 text-[10px] text-gray-500">
                     {featured?.price.currency}
                   </span>

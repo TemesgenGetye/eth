@@ -79,7 +79,7 @@ function Property() {
         <PopularCategories />
         <LiatProductHorizontal
           list={FeaturedListings}
-          text="Featured Listing"
+          text="Featured Listings"
         />
         <PopularAreas />
       </div>

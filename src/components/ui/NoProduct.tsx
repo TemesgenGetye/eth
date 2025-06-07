@@ -9,7 +9,7 @@ const NoProductModel = lazy(() =>
 function NoProduct() {
   const x = useMotionValue(0);
 
-  const xNumeric = useTransform(x, (latest) => parseFloat(latest));
+  const xNumeric = useTransform(x, (latest) => latest);
 
   const iconOpacity = useTransform(
     xNumeric,
@@ -17,12 +17,12 @@ function NoProduct() {
     [1, 0, 0, 1]
   );
 
-  xNumeric.onChange((latest) => {
-    console.log('x numeric value:', latest);
-  });
-  iconOpacity.onChange((latest) => {
-    console.log('iconOpacity value:', latest);
-  });
+  // xNumeric.onChange((latest) => {
+  //   // console.log('x numeric value:', latest);
+  // });
+  // iconOpacity.onChange((latest) => {
+  //   // console.log('iconOpacity value:', latest);
+  // });
 
   return (
     <div className="relative h-[90vh] w-full overflow-hidden bg-gradient-to-b from-white to-blue-50">

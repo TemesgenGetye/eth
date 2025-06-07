@@ -64,8 +64,7 @@ const Home = () => {
       {/* Popular Categories */}
 
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 sm:px-6 lg:px-8">
-        {/* <PopularCategories id={'fruits-vegetable:632aca2b4d87ff2494210be8'} /> */}
-        <PopularCategories id={'beauty-healths:632ab2864d87ff2494210a8a'} />
+        <PopularCategories />
       </div>
 
       {/* Featured Listings */}

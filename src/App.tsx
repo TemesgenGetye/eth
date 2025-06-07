@@ -32,7 +32,6 @@ import { ProtectedRoute } from './pages/ProtectedRoute';
 import LoginForm from './pages/Login';
 import { AuthProvider } from './Context/AuthContext';
 import Profile from './pages/Profile';
-import { Profiler } from 'react';
 
 function AppContent() {
   const location = useLocation();
@@ -44,8 +43,8 @@ function AppContent() {
       <main className="flex-grow ">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/category/:id" element={<CatagoryInfo />} />
-          <Route path="/product/:id" element={<Product />} />
+          <Route path="/:cname" element={<CatagoryInfo />} />
+          <Route path="/:cid/:pid" element={<Product />} />
           <Route path="/detail/:id" element={<Detail />} />
           <Route path="/profile" element={<Profile />} />
           <Route

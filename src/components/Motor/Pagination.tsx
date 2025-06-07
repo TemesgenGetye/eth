@@ -1,3 +1,4 @@
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type React from 'react';
 
 interface PaginationProps {
@@ -23,7 +24,7 @@ const Pagination: React.FC<PaginationProps> = ({
         disabled={currentPage === 1}
         className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        Previous
+        <ChevronLeft className="h-4 w-4" />
       </button>
       {pageNumbers.map((number) => (
         <button
@@ -43,7 +44,7 @@ const Pagination: React.FC<PaginationProps> = ({
         disabled={currentPage === totalPages}
         className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        Next
+        <ChevronRight className="h-4 w-4" />
       </button>
     </nav>
   );

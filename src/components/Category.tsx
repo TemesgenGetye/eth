@@ -15,14 +15,13 @@ export default function Category({ category }: CategoryProps) {
         className="mb-4 flex items-center font-semibold text-gray-900 hover:text-gray-700"
         onClick={() => {
           navigate(
-            '/category/' +
+            '/' +
               category?.name
                 .toLowerCase()
                 .replace(/\s+/g, '-')
                 .replace(/[^a-z0-9-]/g, '')
                 .replace(/-+/g, '-')
-                .replace(/^-|-$/g, '') +
-              `:${category?.id}`
+                .replace(/^-|-$/g, '')
           );
         }}
       >
@@ -41,7 +40,7 @@ export default function Category({ category }: CategoryProps) {
           ?.map((subcategory: Subcategory) => (
             <li key={subcategory?.id}>
               <Link
-                to={`/product/${subcategory?.id}`}
+                to={`/${category?.name?.toLowerCase()?.split(' ')?.join('-')}/${subcategory?.name?.toLowerCase()?.split(' ')?.join('-')}`}
                 className="flex items-center text-sm text-gray-600 hover:text-blue-600"
               >
                 {subcategory?.name}
