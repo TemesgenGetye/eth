@@ -2,13 +2,14 @@ import { Link } from 'react-router-dom';
 import useCategories from '../../hooks/useCategories';
 import { Subcategory } from '../type';
 import useProducts from '../../hooks/useProducts';
+import { cleanString } from '../../services/utils';
 
 function PopularSubcatagory({ id }: { id: string }) {
   console.log('PopularSubcatagory', id);
   const { categories } = useCategories();
   const { products } = useProducts();
   const category = categories?.find(
-    (category) => category?.name?.toLowerCase() === id?.toLowerCase()
+    (category) => cleanString(category?.name) === id
   );
   const subcategories = category?.subcategories || [];
 
@@ -28,7 +29,15 @@ function PopularSubcatagory({ id }: { id: string }) {
                 {subcategory?.name}
               </h3>
               <p className="text-xl text-gray-600">
-                {products?.filter((p) => p.category?.id == id).length}
+                {
+                  products?.filter(
+                    (p) =>
+                      cleanString(p.category?.name) ===
+                        cleanString(category?.name) &&
+                      cleanString(p?.subcategory?.name) ===
+                        cleanString(subcategory?.name)
+                  ).length
+                }
               </p>
             </Link>
           ))

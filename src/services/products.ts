@@ -1,5 +1,5 @@
 import supabase from './supabase';
-import camelCase from './utils';
+import { camelCase } from './utils';
 
 export const getPopularProducts = async () => {
   console.log('Fetching popular products...');

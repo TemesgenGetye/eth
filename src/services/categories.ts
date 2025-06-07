@@ -1,5 +1,5 @@
 import supabase from './supabase';
-import camelCase from './utils';
+import {camelCase} from './utils';
 
 export async function getCategories() {
   try {
