@@ -1,11 +1,9 @@
 import { Search } from 'lucide-react';
 import Banners from '../components/Property.tsx/Banner';
-import PopularCategories from '../components/Property.tsx/PopularCategories';
 import ListProductHorizontal from '../components/ui/ListProductHorizontal';
 import PopularSubcatagory from '../components/ui/PopularSubcatagory';
 import { useParams } from 'react-router-dom';
 import SolidBento from '../components/ui/BentoGridProduct';
-import { categories } from '../Data/Catagorie';
 import useCategories from '../hooks/useCategories';
 
 export default function CatagoryInfo() {
