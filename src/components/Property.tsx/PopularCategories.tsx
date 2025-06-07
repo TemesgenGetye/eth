@@ -12,7 +12,7 @@ export default function PopularCategories() {
   const visibleCount = 3;
 
   // Calculate number of sections (pages)
-  const   productsToShow = products?.slice(0, 10) || [];
+  const productsToShow = products?.slice(0, 10) || [];
   const numSections = Math.max(
     1,
     Math.ceil(productsToShow.length / visibleCount)
@@ -105,44 +105,58 @@ export default function PopularCategories() {
           ref={scrollContainerRef}
           className="flex gap-4 overflow-x-hidden scroll-smooth px-4"
         >
-          {productsToShow.map((product, index) => (
-            <button
-              key={index}
-              className="group relative w-72 flex-none cursor-pointer"
-              onClick={() => navigate(`/detail/${products?.[index]?.id}`)}
-            >
-              <div className="relative h-48 overflow-hidden rounded-lg">
-                <img
-                  src={product.imgUrls[0] || '/logo.png'}
-                  alt={`pro_img ${index}`}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          {productsToShow.map((product, index) => {
+            const cName = product?.category?.name
+              ?.toLowerCase()
+              ?.split(' ')
+              ?.join('-');
+            const scName = product?.subcategory?.name
+              ?.toLowerCase()
+              ?.split(' ')
+              ?.join('-');
+            const pName = product?.name?.toLowerCase()?.split(' ')?.join('-');
+            const pid = product?.id;
+            return (
+              <button
+                key={index}
+                className="group relative w-72 flex-none cursor-pointer"
+                onClick={() =>
+                  navigate(`/${cName}/${scName}/${pName}`, { state: { pid } })
+                }
+              >
+                <div className="relative h-48 overflow-hidden rounded-lg">
+                  <img
+                    src={product.imgUrls[0] || '/logo.png'}
+                    alt={`pro_img ${index}`}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
-                {/* Blue gradient overlay */}
-                <div className="absolute inset-x-0 bottom-0 h-0 bg-gradient-to-t from-blue-600/60 to-transparent transition-all duration-500 ease-out group-hover:h-full" />
+                  {/* Blue gradient overlay */}
+                  <div className="absolute inset-x-0 bottom-0 h-0 bg-gradient-to-t from-blue-600/60 to-transparent transition-all duration-500 ease-out group-hover:h-full" />
 
-                {/* Animated border */}
-                <div className="absolute inset-0 p-2">
-                  <div className="relative h-full w-full overflow-hidden">
-                    <div className="border-1 absolute inset-0 border-white/0 transition-colors duration-500 group-hover:border-white/100">
-                      <div className="absolute inset-0">
-                        <div className="absolute left-0 top-0 h-0.5 w-0 bg-white transition-all duration-500 group-hover:w-full"></div>
-                        <div className="absolute right-0 top-0 h-0 w-0.5 bg-white transition-all duration-500 group-hover:h-full"></div>
-                        <div className="absolute bottom-0 right-0 h-0.5 w-0 bg-white transition-all duration-500 group-hover:w-full"></div>
-                        <div className="absolute bottom-0 left-0 h-0 w-0.5 bg-white transition-all duration-500 group-hover:h-full"></div>
+                  {/* Animated border */}
+                  <div className="absolute inset-0 p-2">
+                    <div className="relative h-full w-full overflow-hidden">
+                      <div className="border-1 absolute inset-0 border-white/0 transition-colors duration-500 group-hover:border-white/100">
+                        <div className="absolute inset-0">
+                          <div className="absolute left-0 top-0 h-0.5 w-0 bg-white transition-all duration-500 group-hover:w-full"></div>
+                          <div className="absolute right-0 top-0 h-0 w-0.5 bg-white transition-all duration-500 group-hover:h-full"></div>
+                          <div className="absolute bottom-0 right-0 h-0.5 w-0 bg-white transition-all duration-500 group-hover:w-full"></div>
+                          <div className="absolute bottom-0 left-0 h-0 w-0.5 bg-white transition-all duration-500 group-hover:h-full"></div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <h3 className="absolute bottom-4 left-4 z-10 text-lg font-semibold text-white drop-shadow-lg">
-                  {product.name}
-                </h3>
-              </div>
-            </button>
-          ))}
+                  <h3 className="absolute bottom-4 left-4 z-10 text-lg font-semibold text-white drop-shadow-lg">
+                    {product.name}
+                  </h3>
+                </div>
+              </button>
+            );
+          })}
         </div>
 
         <div className="mt-4 flex justify-center gap-2">

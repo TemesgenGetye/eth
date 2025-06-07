@@ -20,7 +20,7 @@ function PopularSubcatagory({ id }: { id: string }) {
         ) : (
           subcategories?.map((subcategory: Subcategory) => (
             <Link
-              to={`/product/${subcategory.id}`}
+              to={`/${category?.name?.toLowerCase()?.split(' ').join('-')}/${subcategory?.name?.toLowerCase()?.split(' ').join('-')}`}
               key={subcategory.id}
               className=" mt-8 w-44 rounded-lg border border-gray-200 bg-white p-4 text-center shadow-xl transition-shadow hover:shadow-md"
             >

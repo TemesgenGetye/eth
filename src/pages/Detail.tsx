@@ -7,17 +7,20 @@ import {
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import PopularCategories from '../components/Property.tsx/PopularCategories';
 import useProducts from '../hooks/useProducts';
 
-export default function App() {
+export default function Detail() {
   const [currentImage, setCurrentImage] = useState(0);
   const navigate = useNavigate();
   const { products } = useProducts();
 
-  const { id } = useParams();
-  const product = products?.find((product) => product.id == id);
+  const {
+    state: { pid },
+  } = useLocation();
+
+  const product = products?.find((product) => product.id == pid);
 
   if (!product) {
     return <div>Product not found</div>;

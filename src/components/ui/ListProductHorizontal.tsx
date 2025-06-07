@@ -19,35 +19,49 @@ function ListProductHorizontal() {
           </div>
         </div>
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5">
-          {featuredProducts?.map((featured) => (
-            <button
-              key={featured?.id}
-              className="overflow-hidden rounded-lg bg-white pb-2 shadow-md transition-transform hover:scale-105"
-              onClick={() => navigate(`/detail/${featured?.id}`)}
-            >
-              <div className="aspect-w-16 aspect-h-9 text-gray-600">
-                <img
-                  src={featured.imgUrls[0] || '/logo.png'}
-                  alt={featured?.name}
-                  className="h-36 w-full object-cover"
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="mb-2 text-sm font-normal text-gray-700">
-                  {featured?.name}
-                </h3>
-                <p className="mb-2 text-sm font-bold text-blue-600">
-                  <span>{featured?.price.discounted}</span>
-                  <span className="ml-1 text-[10px] text-gray-500">
-                    {featured?.price.currency}
-                  </span>
-                </p>
-                <p className="h-10 text-ellipsis text-sm text-gray-500">
-                  {featured?.description}
-                </p>
-              </div>
-            </button>
-          ))}
+          {featuredProducts?.map((featured) => {
+            const cName = featured?.category?.name
+              ?.toLowerCase()
+              ?.split(' ')
+              ?.join('-');
+            const scName = featured?.subcategory?.name
+              ?.toLowerCase()
+              ?.split(' ')
+              ?.join('-');
+            const pName = featured?.name?.toLowerCase()?.split(' ')?.join('-');
+            const pid = featured?.id;
+            return (
+              <button
+                key={featured?.id}
+                className="overflow-hidden rounded-lg bg-white pb-2 shadow-md transition-transform hover:scale-105"
+                onClick={() =>
+                  navigate(`/${cName}/${scName}/${pName}`, { state: { pid } })
+                }
+              >
+                <div className="aspect-w-16 aspect-h-9 text-gray-600">
+                  <img
+                    src={featured.imgUrls[0] || '/logo.png'}
+                    alt={featured?.name}
+                    className="h-36 w-full object-cover"
+                  />
+                </div>
+                <div className="p-4">
+                  <h3 className="mb-2 text-sm font-normal text-gray-700">
+                    {featured?.name}
+                  </h3>
+                  <p className="mb-2 text-sm font-bold text-blue-600">
+                    <span>{featured?.price.discounted}</span>
+                    <span className="ml-1 text-[10px] text-gray-500">
+                      {featured?.price.currency}
+                    </span>
+                  </p>
+                  <p className="h-10 text-ellipsis text-sm text-gray-500">
+                    {featured?.description}
+                  </p>
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>
