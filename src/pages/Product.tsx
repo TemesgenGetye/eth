@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import SearchFilters from '../components/Motor/Searchfilter';
 import ProductList from '../components/ui/ProductList';
 import Pagination from '../components/Motor/Pagination';
@@ -6,6 +6,7 @@ import NoProduct from '../components/ui/NoProduct';
 import useProducts from '../hooks/useProducts';
 import { ProductType } from '../components/type';
 import { useState } from 'react';
+import { cleanString } from '../services/utils';
 
 function Product() {
   const { pname } = useParams<{ pname: string }>();
@@ -47,11 +48,20 @@ function Product() {
       {/* Breadcrumbs */}
       <div className="container mx-auto py-4 text-sm">
         <div className="flex items-center space-x-2 text-sm text-blue-600">
-          <a href="#">Dubai</a>
+          <Link to="/" className="hover:underline">
+            Dubai
+          </Link>
+          <span className="text-gray-400 hover:underline">&gt;</span>
+          <Link
+            to={`/${cleanString(filteredProducts?.[0]?.category?.name || '')}`}
+            className="hover:underline"
+          >
+            {filteredProducts?.[0]?.category?.name}
+          </Link>
           <span className="text-gray-400">&gt;</span>
-          <a href="#">{filteredProducts?.[0]?.category?.name}</a>
-          <span className="text-gray-400">&gt;</span>
-          <a href="#">{filteredProducts?.[0]?.subcategory?.name}</a>
+          <span className="text-gray-400">
+            {filteredProducts?.[0]?.subcategory?.name}
+          </span>
         </div>
       </div>
 
