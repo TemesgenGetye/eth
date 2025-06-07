@@ -1,4 +1,4 @@
-export default function camelCase(obj: any) {
+export function camelCase(obj: any) {
   const keys = Object.keys(obj);
   const newProduct: { [key: string]: any } = {};
   keys.forEach((key: string) => {
@@ -15,4 +15,13 @@ export default function camelCase(obj: any) {
     newProduct[camelCasedKey] = obj[key];
   });
   return newProduct;
+}
+
+export function cleanString(str: string) {
+  return str
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
 }

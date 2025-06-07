@@ -1,6 +1,7 @@
 import { ChevronRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CategoryType, Subcategory } from './type';
+import { cleanString } from '../services/utils';
 
 interface CategoryProps {
   category: CategoryType;
@@ -14,15 +15,7 @@ export default function Category({ category }: CategoryProps) {
       <button
         className="mb-4 flex items-center font-semibold text-gray-900 hover:text-gray-700"
         onClick={() => {
-          navigate(
-            '/' +
-              category?.name
-                .toLowerCase()
-                .replace(/\s+/g, '-')
-                .replace(/[^a-z0-9-]/g, '')
-                .replace(/-+/g, '-')
-                .replace(/^-|-$/g, '')
-          );
+          navigate('/' + cleanString(category?.name));
         }}
       >
         <span className="mr-2">
@@ -40,7 +33,7 @@ export default function Category({ category }: CategoryProps) {
           ?.map((subcategory: Subcategory) => (
             <li key={subcategory?.id}>
               <Link
-                to={`/${category?.name?.toLowerCase()?.split(' ')?.join('-')}/${subcategory?.name?.toLowerCase()?.split(' ')?.join('-')}`}
+                to={`/${cleanString(category?.name)}/${cleanString(subcategory?.name)}`}
                 className="flex items-center text-sm text-gray-600 hover:text-blue-600"
               >
                 {subcategory?.name}
@@ -50,13 +43,7 @@ export default function Category({ category }: CategoryProps) {
       </ul>
       {category?.subcategories?.length > 0 && (
         <Link
-          to={`/category/${category?.name
-            .toLowerCase()
-            .replace(/\s+/g, '-')
-            .replace(/[^a-z0-9-]/g, '')
-            .replace(/-+/g, '-')
-            .replace(/^-|-$/g, '')
-            .replace(/\//g, '')}:${category?.id}`}
+          to={`/category/${cleanString(category?.name)}`}
           className="mt-3 inline-flex items-center text-xs text-blue-600 hover:text-blue-700"
         >
           View all {category?.name}

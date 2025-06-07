@@ -54,7 +54,7 @@ const areas = [
 ];
 
 export default function PopularAreas() {
-  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
     <div className="mb-8">

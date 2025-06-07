@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import useProducts from '../../hooks/useProducts';
+import { cleanString } from '../../services/utils';
 
 export default function PopularCategories() {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
@@ -106,15 +107,9 @@ export default function PopularCategories() {
           className="flex gap-4 overflow-x-hidden scroll-smooth px-4"
         >
           {productsToShow.map((product, index) => {
-            const cName = product?.category?.name
-              ?.toLowerCase()
-              ?.split(' ')
-              ?.join('-');
-            const scName = product?.subcategory?.name
-              ?.toLowerCase()
-              ?.split(' ')
-              ?.join('-');
-            const pName = product?.name?.toLowerCase()?.split(' ')?.join('-');
+            const cName = cleanString(product?.category?.name);
+            const scName = cleanString(product?.subcategory?.name);
+            const pName = cleanString(product?.name);
             const pid = product?.id;
             return (
               <button

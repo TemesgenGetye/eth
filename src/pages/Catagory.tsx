@@ -5,13 +5,14 @@ import PopularSubcatagory from '../components/ui/PopularSubcatagory';
 import { useParams } from 'react-router-dom';
 import SolidBento from '../components/ui/BentoGridProduct';
 import useCategories from '../hooks/useCategories';
+import { cleanString } from '../services/utils';
 
 export default function CatagoryInfo() {
   const { cname } = useParams<{ cname: string }>();
   const { categories } = useCategories();
 
   const category = categories?.find(
-    (category) => category.name?.toLowerCase() === cname?.toLowerCase()
+    (category) => cleanString(category.name) === cname
   );
   const image = category?.imgUrl;
 

@@ -4,6 +4,7 @@ import { ChevronDown } from 'lucide-react';
 import TopNav from './TopNav';
 import useCategories from '../../hooks/useCategories';
 import type { CategoryType } from '../type';
+import { cleanString } from '../../services/utils';
 
 const Navbar = () => {
   return (
@@ -146,15 +147,7 @@ const HoverMenu = () => {
                   if (category.name === 'Home') {
                     navigate('/');
                   } else {
-                    navigate(
-                      '/' +
-                        category.name
-                          .toLowerCase()
-                          .replace(/\s+/g, '-')
-                          .replace(/[^a-z0-9-]/g, '')
-                          .replace(/-+/g, '-')
-                          .replace(/^-|-$/g, '')
-                    );
+                    navigate('/' + cleanString(category.name));
                   }
                 }}
               >
@@ -200,18 +193,10 @@ const HoverMenu = () => {
                           onMouseEnter={() => handleMouseEnterChild(child.name)}
                           onClick={() => {
                             if (category.name === 'Home') {
-                              navigate(
-                                '/' +
-                                  child.name
-                                    .toLowerCase()
-                                    .replace(/\s+/g, '-')
-                                    .replace(/[^a-z0-9-]/g, '')
-                                    .replace(/-+/g, '-')
-                                    .replace(/^-|-$/g, '')
-                              );
+                              navigate('/' + cleanString(child.name));
                             } else {
                               navigate(
-                                `/${category.name?.toLowerCase()?.split(' ')?.join('-')}/${child.name?.toLowerCase()?.split(' ')?.join('-')}`
+                                `/${cleanString(category.name)}/${cleanString(child.name)}`
                               );
                             }
                           }}

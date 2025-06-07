@@ -13,7 +13,7 @@ const NavLinks = () => {
 
   const { user } = useAuth();
 
-  const { customers, isLoading, error } = useCustomers();
+  const { customers } = useCustomers();
 
   const filterdCustomers = customers?.filter(
     (customer) => customer.uuid === user?.identities?.at(0)?.user_id
