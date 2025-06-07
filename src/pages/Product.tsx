@@ -8,14 +8,14 @@ import { ProductType } from '../components/type';
 import { useState } from 'react';
 
 function Product() {
-  const { pid } = useParams<{ pid: string }>();
-  console.log('pid', pid);
-  const pName = pid?.split('-')?.join(' ');
+  const { pname } = useParams<{ pname: string }>();
+  // console.log('pid', pid);
+  const pName = pname?.split('-')?.join(' ');
   console.log('pname', pName);
 
   const { products } = useProducts();
 
-  const filteredProducts: ProductType[] | undefined = pid
+  const filteredProducts: ProductType[] | undefined = pname
     ? products?.filter((product): product is ProductType =>
         product?.subcategory?.name.toLowerCase()?.includes(pName)
       )

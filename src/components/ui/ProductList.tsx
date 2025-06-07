@@ -69,12 +69,24 @@ export default function ProductList({ products }: ProductProps) {
     <ul className="grid grid-cols-1 gap-4">
       {products?.map((product) => {
         const currentImageIndex = imageIndexes[product.id] ?? 0;
+        const cName = product?.category?.name
+          ?.toLowerCase()
+          ?.split(' ')
+          ?.join('-');
+        const scName = product?.subcategory?.name
+          ?.toLowerCase()
+          ?.split(' ')
+          ?.join('-');
+        const pName = product?.name?.toLowerCase()?.split(' ')?.join('-');
+        const pid = product?.id;
 
         return (
           <li
             key={product.id}
             className="relative cursor-pointer rounded-lg border-b border-b-gray-200 bg-white p-4 shadow-sm"
-            onClick={() => navigate(`/detail/${product?.id}`)}
+            onClick={() =>
+              navigate(`/${cName}/${scName}/${pName}`, { state: { pid } })
+            }
           >
             <div className="flex gap-4">
               <div className="relative h-48 w-72 flex-shrink-0 overflow-hidden rounded-lg">

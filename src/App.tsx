@@ -47,8 +47,8 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/:cname" element={<CatagoryInfo />} />
-          <Route path="/:cid/:pid" element={<Product />} />
-          <Route path="/detail/:id" element={<Detail />} />
+          <Route path="/:cid/:pname" element={<Product />} />
+          <Route path="/:cid/:pname/:pid" element={<Detail />} />
           <Route
             path="/profile"
             element={
