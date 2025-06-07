@@ -7,9 +7,11 @@ import {
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import PopularCategories from '../components/Property.tsx/PopularCategories';
 import useProducts from '../hooks/useProducts';
+import SimilarProducts from '../components/SimilarProducts';
+import { cleanString } from '../services/utils';
 
 export default function Detail() {
   const [currentImage, setCurrentImage] = useState(0);
@@ -26,7 +28,16 @@ export default function Detail() {
     return <div>Product not found</div>;
   }
 
-  const { price, imgUrls, name, description, stock, sales } = product;
+  const {
+    price,
+    imgUrls,
+    name,
+    description,
+    stock,
+    sales,
+    category,
+    subcategory,
+  } = product;
 
   // Safely get prices and other properties
   const displayPrice = product ? price.discounted : 'N/A';
@@ -64,14 +75,28 @@ export default function Detail() {
           Back To Search
         </span>
         <span className="px-2">•</span>
-        <span
-          onClick={() => navigate('../')}
-          className="cursor-pointer text-blue-400 hover:text-blue-500"
+        <Link
+          to={'/'}
+          className="cursor-pointer text-blue-400 hover:text-blue-500 hover:underline"
         >
-          Products
-        </span>
+          Dubai
+        </Link>
         <span>›</span>
-        <span>{name || 'N/A'}</span>
+        <Link
+          to={`/${cleanString(category?.name)}`}
+          className="cursor-pointer text-blue-400 hover:text-blue-500 hover:underline"
+        >
+          {category?.name}
+        </Link>
+        <span>›</span>
+        <Link
+          to={`/${cleanString(category?.name)}/${cleanString(subcategory?.name)}`}
+          className="cursor-pointer text-blue-400 hover:text-blue-500 hover:underline"
+        >
+          {subcategory?.name}
+        </Link>
+        <span>›</span>
+        <span className="text-gray-400">{name || 'N/A'}</span>
       </div>
 
       {/* Image Gallery */}
@@ -188,7 +213,7 @@ export default function Detail() {
         <p className="text-gray-600">{'N/A'}</p>
       </div>
       <div className="mt-36">
-        <PopularCategories />
+        <SimilarProducts id={product?.subcategory?.id} filterBy="subcategory" />
       </div>
     </div>
   );
