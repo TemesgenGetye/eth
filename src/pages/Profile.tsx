@@ -2,12 +2,13 @@ import type React from 'react';
 import { useState, useRef, useEffect } from 'react';
 import useCustomers, { useUpdateCustomer } from '../hooks/useCustomers';
 import { useAuth } from '../Context/AuthContext';
-import { updateCustomer } from '../services/customers';
-import { t } from 'i18next';
+import supabase from '../services/supabase';
+import { useNavigate } from 'react-router-dom';
 
 export default function Component() {
   const { customers, isLoading, error } = useCustomers();
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const { updateCustomerMutate, isPendingCustomer } = useUpdateCustomer();
 
@@ -15,7 +16,7 @@ export default function Component() {
     (customer) => customer.uuid === user?.identities?.at(0)?.user_id
   );
 
-  console.log(customers);
+  console.log(filterdCustomers);
 
   const [profileData, setProfileData] = useState({
     name: '',
@@ -74,6 +75,11 @@ export default function Component() {
 
   const handleCancel = () => {
     setFormData(profileData);
+  };
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    navigate('/');
   };
 
   return (
@@ -298,7 +304,10 @@ export default function Component() {
               </div>
 
               {/* Logout Button */}
-              <button className="flex w-full items-center justify-center gap-3 rounded-xl bg-blue-600 bg-gradient-to-r px-6 py-4 text-lg font-semibold text-white  hover:from-blue-500 hover:to-blue-600 hover:shadow-lg">
+              <button
+                className="flex w-full items-center justify-center gap-3 rounded-xl bg-blue-600 bg-gradient-to-r px-6 py-4 text-lg font-semibold text-white  hover:from-blue-500 hover:to-blue-600 hover:shadow-lg"
+                onClick={handleLogout}
+              >
                 <svg
                   className="h-5 w-5"
                   fill="none"
