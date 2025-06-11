@@ -8,7 +8,6 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import PopularCategories from '../components/Property.tsx/PopularCategories';
 import useProducts from '../hooks/useProducts';
 import SimilarProducts from '../components/SimilarProducts';
 import { cleanString } from '../services/utils';

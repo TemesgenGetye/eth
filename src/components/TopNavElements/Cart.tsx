@@ -2,6 +2,7 @@ import { ShoppingCart, X } from 'lucide-react';
 import { useCart } from '../../Context/Cart';
 import { Link, useNavigate } from 'react-router-dom';
 import NoProductSmall from '../ui/NoProductSmall';
+import { useCartItems } from '../../hooks/store';
 
 function Cart({
   activeModal,
@@ -13,6 +14,7 @@ function Cart({
   closeModal: () => void;
 }) {
   const { cart } = useCart();
+  const { cartItems } = useCartItems();
   const navigate = useNavigate();
   return (
     <div className="relative">
@@ -38,24 +40,24 @@ function Cart({
           {cart.length === 0 && <NoProductSmall />}
 
           <div className="max-h-[500px] overflow-y-auto">
-            {cart.map((item) => (
-              <Link to={`/cart`} key={item._id}>
+            {cartItems?.map((item) => (
+              <Link to={`/cart`} key={item.id}>
                 <div className="border-b p-4">
                   <div className="flex gap-3">
                     <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
                       <img
-                        src={item.image[0] || '/logo.png'}
-                        alt={item.title.en}
+                        src={item.imgUrls[0] || '/logo.png'}
+                        alt={item.name}
                         className="h-full w-full object-cover"
                       />
                     </div>
                     <div className="flex flex-col justify-between">
                       <p className="text-sm font-medium text-gray-900">
-                        {item.title.en}
+                        {item?.name}
                       </p>
                       <div>
                         <p className="text-xs font-medium text-gray-900">
-                          {item?.prices?.originalPrice}
+                          {item?.price?.discounted}
                           <span className="font-semibold">{'AED'}</span>
                         </p>
                       </div>

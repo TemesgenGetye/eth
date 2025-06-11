@@ -1,7 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { getPopularProducts, getFeaturedProducts } from '../services/products';
+import {
+  getPopularProducts,
+  getFeaturedProducts,
+  getProductsById,
+} from '../services/products';
 
-const useProducts = () => {
+const useProducts = (productIds: number[] = []) => {
   const {
     isLoading: isLoadingProducts,
     data,
@@ -20,15 +24,28 @@ const useProducts = () => {
     queryKey: ['featured-products'],
     queryFn: getFeaturedProducts,
   });
+  const {
+    isLoading: isLoadingFavorites,
+    data: favoriteProducts,
+    isError: isErrorFavorites,
+    refetch: refetchFavProducts,
+  } = useQuery({
+    queryKey: ['favorite-products'],
+    queryFn: () => getProductsById(productIds),
+  });
   return {
     products: data,
-    isLoading: isLoadingProducts,
-    isError,
     featuredProducts,
+    favoriteProducts,
+    isLoading: isLoadingProducts,
     isLoadingFeatured,
+    isLoadingFavorites,
+    isError,
     isErrorFeatured,
+    isErrorFavorites,
     refetch: refetchProducts,
     refetchFeatured: refetchFeaturedProducts,
+    refetchFavProducts,
   };
 };
 
