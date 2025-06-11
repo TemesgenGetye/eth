@@ -2,6 +2,7 @@ import type React from 'react';
 import { useState } from 'react';
 import { useLogin } from '../services/auth';
 import { useNavigate } from 'react-router-dom';
+import supabase from '../services/supabase';
 
 export default function LoginPage() {
   const [error, setError] = useState<string>('');
@@ -31,7 +32,11 @@ export default function LoginPage() {
 
     try {
       // Implement Google OAuth login here
-      console.log('Google login initiated');
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+      });
+
+      if (error) console.error('Google sign-in error:', error.message);
 
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
