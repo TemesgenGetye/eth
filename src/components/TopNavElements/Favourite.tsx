@@ -1,6 +1,8 @@
 import { Heart, X } from 'lucide-react';
 import { useFavourite } from '../../Context/Favourite';
 import { Link, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useFavouriteItems } from '../../hooks/store';
 
 export default function Favourite({
   activeModal,
@@ -12,7 +14,17 @@ export default function Favourite({
   closeModal: () => void;
 }) {
   const { favourite } = useFavourite();
+  const { favoriteProducts, refetchFavorites } = useFavouriteItems(
+    favourite?.map((fav) => +fav)
+  );
   const navigate = useNavigate();
+
+  useEffect(
+    function () {
+      if (favourite.length && !favoriteProducts?.length) refetchFavorites();
+    },
+    [favoriteProducts?.length, favourite?.length, refetchFavorites]
+  );
   return (
     <div>
       <div className="relative">
@@ -36,24 +48,24 @@ export default function Favourite({
             </div>
 
             <div className="max-h-[500px] overflow-y-auto">
-              {favourite.map((item) => (
-                <Link to={`/detail/${item?._id}`} key={item._id}>
+              {favoriteProducts?.map((product) => (
+                <Link to={`/detail/${product?.id}`} key={product.id}>
                   <div className="border-b p-4">
                     <div className="flex gap-3">
                       <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
                         <img
-                          src={item.image[0] || '/logo.png'}
-                          alt={item.title.en}
+                          src={product.imgUrls[0] || '/logo.png'}
+                          alt={product.name}
                           className="h-full w-full object-cover"
                         />
                       </div>
                       <div className="flex flex-col justify-between">
                         <p className="text-sm font-medium text-gray-900">
-                          {item.title.en}
+                          {product.name}
                         </p>
                         <div>
                           <p className="text-xs font-medium text-gray-900">
-                            {item?.prices?.originalPrice}
+                            {product?.price?.orignal}
                             <span className="font-semibold">{'AED'}</span>
                           </p>
                         </div>

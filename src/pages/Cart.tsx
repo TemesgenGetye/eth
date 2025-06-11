@@ -2,7 +2,6 @@ import type React from 'react';
 import {
   ShoppingCart,
   Image,
-  Share2,
   ChevronLeft,
   ChevronRight,
   Trash2,
@@ -22,6 +21,7 @@ export default function CartPage() {
   );
 
   const { cart, setCart } = useCart();
+  console.log('cart', cart);
 
   const handleImageChange = (
     id: string,

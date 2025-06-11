@@ -44,24 +44,24 @@ export default function ProductList({ products }: ProductProps) {
 
   function handleFavourite(
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    product: ProductType
+    id: number
   ) {
     e.stopPropagation();
 
-    if (!favourite.some((fav) => fav._id === product.id)) {
-      setFavourite([...favourite, product]);
+    if (!favourite.some((fav) => fav === id)) {
+      setFavourite([...favourite, id]);
     } else {
-      setFavourite(favourite.filter((fav) => fav._id !== product.id));
+      setFavourite(favourite.filter((fav) => fav !== id));
     }
   }
 
   function handleCart(
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    product: ProductType
+    id: number
   ) {
     e.stopPropagation();
-    if (!cart.some((cart) => cart.id === product.id)) {
-      setCart([...cart, product]);
+    if (!cart.some((item) => item === id)) {
+      setCart([...cart, id]);
     }
   }
 
@@ -175,7 +175,7 @@ export default function ProductList({ products }: ProductProps) {
                       className="rounded-lg bg-green-300 p-2 text-white"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleCart(e, product);
+                        handleCart(e, product?.id);
                       }}
                     >
                       <div className="flex w-full items-center gap-2 text-sm font-medium text-white">
@@ -186,10 +186,10 @@ export default function ProductList({ products }: ProductProps) {
                     <button
                       className="h-7 w-7 text-red-500"
                       onClick={(e) => {
-                        handleFavourite(e, product);
+                        handleFavourite(e, product?.id);
                       }}
                     >
-                      {favourite.some((fav) => fav._id === product.id) ? (
+                      {favourite.some((fav) => fav === product.id) ? (
                         <Heart className="h-5 w-5 " fill="red" />
                       ) : (
                         <Heart className="h-5 w-5" />

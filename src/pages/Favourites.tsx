@@ -4,12 +4,13 @@ import {
   Share2,
   ChevronLeft,
   ChevronRight,
-  HeartCrackIcon,
   Filter,
 } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFavourite } from '../Context/Favourite';
+import { cleanString } from '../services/utils';
+import { useFavouriteItems } from '../hooks/store';
 
 export default function Favourites() {
   const navigate = useNavigate();
@@ -19,6 +20,10 @@ export default function Favourites() {
   );
 
   const { favourite, setFavourite } = useFavourite();
+  console.log('favorite', favourite);
+  const { favoriteProducts } = useFavouriteItems(
+    favourite?.map((item) => +item)
+  );
 
   const handleImageChange = (
     id: string,
@@ -27,7 +32,7 @@ export default function Favourites() {
   ) => {
     setImageIndexes((prevIndexes) => {
       const currentIndex = prevIndexes[id] ?? 0;
-      let newIndex =
+      const newIndex =
         direction === 'next'
           ? (currentIndex + 1) % images.length
           : (currentIndex - 1 + images.length) % images.length;
@@ -38,14 +43,14 @@ export default function Favourites() {
 
   function handleFavourite(
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    item: any
+    id: number
   ) {
     e.stopPropagation();
 
-    if (!favourite.some((fav) => fav._id === item._id)) {
-      setFavourite([...favourite, item]);
+    if (!favourite.some((fav) => fav == id)) {
+      setFavourite([...favourite, id]);
     } else {
-      setFavourite(favourite.filter((fav) => fav._id !== item._id));
+      setFavourite(favourite.filter((fav) => fav != id));
     }
   }
 
@@ -72,24 +77,29 @@ export default function Favourites() {
         </button>
       </div>
 
-      {favourite.map((item) => {
-        const currentImageIndex = imageIndexes[item._id] ?? 0;
+      {favoriteProducts?.map((product) => {
+        const currentImageIndex = imageIndexes[product.id] ?? 0;
 
         return (
           <div
-            key={item._id}
-            className="relative rounded-lg border-b border-b-gray-200 bg-white p-4 shadow-sm"
-            onClick={() => navigate(`/detail/${item._id}`)}
+            key={product.id}
+            className="relative cursor-pointer rounded-lg border-b border-b-gray-200 bg-white p-4 shadow-sm"
+            onClick={() =>
+              navigate(
+                `/${cleanString(product.category?.name)}/${cleanString(product.subcategory?.name)}/${cleanString(product?.name)}`,
+                { state: { pid: product?.id } }
+              )
+            }
           >
             <div className="flex gap-4">
               <div className="relative h-48 w-72 flex-shrink-0 overflow-hidden rounded-lg">
-                {item.image.length > 1 && (
+                {product.imgUrls.length > 1 && (
                   <>
                     <button
                       className="absolute left-0.5 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full bg-white/80 p-1 ring-1 ring-gray-300 hover:bg-gray-300 hover:ring-2 hover:ring-gray-400"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleImageChange(item._id, 'prev', item.image);
+                        handleImageChange(product.id, 'prev', product.imgUrls);
                       }}
                     >
                       <ChevronLeft size={16} />
@@ -98,7 +108,7 @@ export default function Favourites() {
                       className="absolute right-0.5 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full bg-white/80 p-1 ring-1 ring-gray-300 hover:bg-gray-300 hover:ring-2 hover:ring-gray-400"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleImageChange(item._id, 'next', item.image);
+                        handleImageChange(product.id, 'next', product.imgUrls);
                       }}
                     >
                       <ChevronRight size={16} />
@@ -106,16 +116,16 @@ export default function Favourites() {
                   </>
                 )}
                 <img
-                  src={item.image[currentImageIndex]}
-                  alt={item.title.en}
+                  src={product.imgUrls[currentImageIndex]}
+                  alt={product.name}
                   className="h-full w-full object-cover transition-transform duration-500 ease-in-out"
                 />
-                {item.image.length > 1 && (
+                {product.imgUrls.length > 1 && (
                   <div className="absolute bottom-2 left-2 flex items-center space-x-1 rounded bg-black/70 px-1.5 py-0.5 text-xs text-white">
                     <span>
                       <Image size={14} />
                     </span>
-                    <span>{`${currentImageIndex + 1} / ${item.image.length}`}</span>
+                    <span>{`${currentImageIndex + 1} / ${product.imgUrls.length}`}</span>
                   </div>
                 )}
               </div>
@@ -123,40 +133,42 @@ export default function Favourites() {
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-lg font-medium text-gray-900">
-                      {item.title.en}
+                      {product.name}
                     </p>
                     <div className="flex items-center space-x-2">
                       <span className="text-2xl font-bold">
-                        {item.prices.price === item.prices.originalPrice ? (
-                          <span>{item.prices.price} AED</span>
+                        {product.price.discounted === product.price.orignal ? (
+                          <span>{product.price.orignal} AED</span>
                         ) : (
                           <>
-                            <span>{item.prices.price} AED </span>
+                            <span>{product.price.discounted} AED </span>
                             <span>•</span>
                             <span className="text-gray-500 line-through">
-                              {item.prices.originalPrice}
+                              {product.price.orignal}
                             </span>
                             <span>AED</span>
                             <div className="text-red-500">
-                              {Number(item.prices.discount).toFixed(2)} AED
-                              Downpayment
+                              {Number(
+                                product.price.orignal - product.price.discounted
+                              ).toFixed(2)}{' '}
+                              AED Downpayment
                             </div>
                           </>
                         )}
                       </span>
-                      {item.stock > 0 && (
+                      {product.stock > 0 && (
                         <span className="rounded bg-green-300 px-2 py-0.5 text-xs font-medium text-white">
-                          IN STOCK ( {item.stock})
+                          IN STOCK ( {product.stock})
                         </span>
                       )}
                     </div>
                     <div className="flex flex-col items-start ">
-                      <span>• {item.slug}</span>
-                      <p className="cursor-pointer text-sm text-blue-500 hover:underline">
+                      <span>• {product.slug || 'N/A'}</span>
+                      {/* <p className="cursor-pointer text-sm text-blue-500 hover:underline">
                         {item.variants.length > 0
                           ? item.variants.length + ' variants'
                           : ''}
-                      </p>
+                      </p> */}
                     </div>
                   </div>
                   <div className="flex space-x-2">
@@ -172,10 +184,10 @@ export default function Favourites() {
                     <button
                       className="h-7 w-7 text-red-500"
                       onClick={(e) => {
-                        handleFavourite(e, item);
+                        handleFavourite(e, product?.id);
                       }}
                     >
-                      {favourite.some((fav) => fav._id === item._id) ? (
+                      {favourite.some((fav) => fav === product.id) ? (
                         <Heart className="h-5 w-5  " fill="red" />
                       ) : (
                         <Heart className="h-5 w-5" />
@@ -184,7 +196,7 @@ export default function Favourites() {
                   </div>
                 </div>
                 <p className="line-clamp-2 pr-10 text-sm text-gray-600">
-                  {item.description.en}
+                  {product.description}
                 </p>
                 <div className="space-y-2 text-sm text-gray-500">{'dubai'}</div>
               </div>
