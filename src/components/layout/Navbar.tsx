@@ -230,7 +230,9 @@ const HoverMenu = () => {
                                     key={subcat.id}
                                     className="flex w-full items-center rounded-md p-1 text-sm text-gray-600 hover:bg-gray-50"
                                     onClick={() =>
-                                      navigate(`/product/${subcat.id}`)
+                                      navigate(
+                                        `/${cleanString(active.name)}/${cleanString(subcat.name)}`
+                                      )
                                     }
                                   >
                                     {subcat.name}

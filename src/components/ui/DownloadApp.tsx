@@ -9,7 +9,7 @@ function DownloadApp() {
               <div className="relative h-16 w-16 overflow-hidden rounded-xl shadow-lg">
                 <img
                   src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=3540&auto=format&fit=crop"
-                  alt="Dubizzle App"
+                  alt="888Market"
                   className="h-full w-full transform object-cover transition hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent"></div>
