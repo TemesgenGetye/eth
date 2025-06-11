@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Heart, MessageCircle, User, X, List } from 'lucide-react';
+import { Heart, MessageCircle, User, X, List, LogOutIcon } from 'lucide-react';
 import Favourite from '../TopNavElements/Favourite';
 import Cart from '../TopNavElements/Cart';
 import Notfication from '../TopNavElements/Notfication';
 import { useAuth } from '../../Context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import useCustomers from '../../hooks/useCustomers';
+import supabase from '../../services/supabase';
 
 const NavLinks = () => {
   const [activeModal, setActiveModal] = useState('');
@@ -20,7 +21,11 @@ const NavLinks = () => {
   );
 
   const handleLinkClick = (modalName: string) => {
-    setActiveModal(activeModal === modalName ? '' : modalName);
+    if (filterdCustomers?.length === 0) {
+      navigate('/login');
+    } else {
+      setActiveModal(activeModal === modalName ? '' : modalName);
+    }
   };
 
   const closeModal = () => {
@@ -132,10 +137,13 @@ const NavLinks = () => {
               <li className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100">
                 <button
                   className="flex items-center space-x-2"
-                  onClick={() => navigate('/profile')}
+                  onClick={async () => {
+                    const { error } = await supabase.auth.signOut();
+                    navigate('/');
+                  }}
                 >
-                  <List className="h-4 w-4" />
-                  <p className="text-sm text-gray-500">My Ads</p>
+                  <LogOutIcon className="h-4 w-4" />
+                  <p className="text-sm text-gray-500">Logout</p>
                 </button>
               </li>
             </ul>
