@@ -213,7 +213,7 @@ const Footer = () => {
           <div className="mb-4 md:mb-0">
             <img src="./logo.png" alt="Dubizzle Group" className="h-28" />
             <p className="mt-2 text-sm text-gray-500">
-              © dubizzle.com 2025, All Rights Reserved.
+              © 888Market 2025, All Rights Reserved.
             </p>
           </div>
           <div></div>

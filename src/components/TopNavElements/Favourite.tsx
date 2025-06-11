@@ -14,9 +14,7 @@ export default function Favourite({
   closeModal: () => void;
 }) {
   const { favourite } = useFavourite();
-  const { favoriteProducts, refetchFavorites } = useFavouriteItems(
-    favourite?.map((fav) => +fav)
-  );
+  const { favoriteProducts, refetchFavorites } = useFavouriteItems();
   const navigate = useNavigate();
 
   useEffect(

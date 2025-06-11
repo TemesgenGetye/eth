@@ -12,8 +12,11 @@ import {
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../Context/Cart';
+import { useCartItems } from '../hooks/store';
+import toast from 'react-hot-toast';
 
 export default function CartPage() {
+  const { cartItems } = useCartItems();
   const navigate = useNavigate();
 
   const [imageIndexes, setImageIndexes] = useState<{ [key: string]: number }>(
@@ -41,10 +44,13 @@ export default function CartPage() {
 
   function handleRemoveFromCart(
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    item: any
+    id: number
   ) {
     e.stopPropagation();
-    setCart(cart.filter((cartItem) => cartItem._id !== item._id));
+    if (cartItems?.length) {
+      setCart(cartItems?.filter((item) => +item !== id));
+      toast.success('Item removed sucessfully.');
+    }
   }
 
   function updateQuantity(
@@ -54,7 +60,7 @@ export default function CartPage() {
   ) {
     e.stopPropagation();
 
-    const updatedCart = cart.map((cartItem) => {
+    const updatedCart = cartItems?.map((cartItem) => {
       if (cartItem._id === item._id) {
         const newQuantity =
           action === 'increase'
@@ -70,10 +76,10 @@ export default function CartPage() {
   }
 
   const calculateTotal = () => {
-    return cart
-      .reduce((total, item) => {
+    return cartItems
+      ?.reduce((total, item) => {
         const quantity = item.quantity || 1;
-        return total + item.prices.price * quantity;
+        return total + item.price.orignal * quantity;
       }, 0)
       .toFixed(2);
   };
@@ -101,7 +107,7 @@ export default function CartPage() {
         </button>
       </div>
 
-      {cart.length === 0 ? (
+      {cartItems?.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-10 text-center">
           <ShoppingCart className="h-16 w-16 text-gray-300" />
           <p className="mt-4 text-lg font-medium text-gray-900">
@@ -119,25 +125,25 @@ export default function CartPage() {
         </div>
       ) : (
         <>
-          {cart.map((item) => {
-            const currentImageIndex = imageIndexes[item._id] ?? 0;
+          {cartItems?.map((item) => {
+            const currentImageIndex = imageIndexes[item.id] ?? 0;
             const quantity = item.quantity || 1;
 
             return (
               <div
                 key={item._id}
                 className="relative rounded-lg border-b border-b-gray-200 bg-white p-4 shadow-sm"
-                onClick={() => navigate(`/detail/${item._id}`)}
+                onClick={() => navigate(`/detail/${item.id}`)}
               >
                 <div className="flex gap-4">
                   <div className="relative h-48 w-72 flex-shrink-0 overflow-hidden rounded-lg">
-                    {item.image.length > 1 && (
+                    {item.imgUrls.length > 1 && (
                       <>
                         <button
                           className="absolute left-0.5 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full bg-white/80 p-1 ring-1 ring-gray-300 hover:bg-gray-300 hover:ring-2 hover:ring-gray-400"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleImageChange(item._id, 'prev', item.image);
+                            handleImageChange(item.id, 'prev', item.imgUrls);
                           }}
                         >
                           <ChevronLeft size={16} />
@@ -146,7 +152,7 @@ export default function CartPage() {
                           className="absolute right-0.5 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full bg-white/80 p-1 ring-1 ring-gray-300 hover:bg-gray-300 hover:ring-2 hover:ring-gray-400"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleImageChange(item._id, 'next', item.image);
+                            handleImageChange(item._id, 'next', item.imgUrls);
                           }}
                         >
                           <ChevronRight size={16} />
@@ -154,16 +160,18 @@ export default function CartPage() {
                       </>
                     )}
                     <img
-                      src={item.image[currentImageIndex] || '/placeholder.svg'}
-                      alt={item.title.en}
+                      src={
+                        item.imgUrls[currentImageIndex] || '/placeholder.svg'
+                      }
+                      alt={item.name}
                       className="h-full w-full object-cover transition-transform duration-500 ease-in-out"
                     />
-                    {item.image.length > 1 && (
+                    {item.imgUrls.length > 1 && (
                       <div className="absolute bottom-2 left-2 flex items-center space-x-1 rounded bg-black/70 px-1.5 py-0.5 text-xs text-white">
                         <span>
                           <Image size={14} />
                         </span>
-                        <span>{`${currentImageIndex + 1} / ${item.image.length}`}</span>
+                        <span>{`${currentImageIndex + 1} / ${item.imgUrls.length}`}</span>
                       </div>
                     )}
                   </div>
@@ -171,23 +179,23 @@ export default function CartPage() {
                     <div className="flex items-start justify-between">
                       <div>
                         <p className="text-lg font-medium text-gray-900">
-                          {item.title.en}
+                          {item.name}
                         </p>
                         <div className="flex items-center space-x-2">
                           <span className="text-2xl font-bold">
-                            {item.prices.price === item.prices.originalPrice ? (
-                              <span>{item.prices.price} AED</span>
+                            {item.price.discounted === item.price.orignal ? (
+                              <span>{item.price.orignal} AED</span>
                             ) : (
                               <>
-                                <span>{item.prices.price} AED </span>
+                                <span>{item.price.discounted} AED </span>
                                 <span>•</span>
                                 <span className="text-gray-500 line-through">
-                                  {item.prices.originalPrice}
+                                  {item.price.orignal}
                                 </span>
                                 <span>AED</span>
                                 <div className="text-red-500">
-                                  {Number(item.prices.discount).toFixed(2)} AED
-                                  Downpayment
+                                  {item.price.orignal - item.price.discounted}{' '}
+                                  AED Downpayment
                                 </div>
                               </>
                             )}
@@ -200,11 +208,11 @@ export default function CartPage() {
                         </div>
                         <div className="flex flex-col items-start">
                           <span>• {item.slug}</span>
-                          <p className="cursor-pointer text-sm text-blue-500 hover:underline">
+                          {/* <p className="cursor-pointer text-sm text-blue-500 hover:underline">
                             {item.variants.length > 0
                               ? item.variants.length + ' variants'
                               : ''}
-                          </p>
+                          </p> */}
                         </div>
                         <div className="mt-2 flex items-center">
                           <span className="mr-2 text-sm font-medium text-gray-700">
@@ -230,8 +238,8 @@ export default function CartPage() {
                             </button>
                           </div>
                           <span className="ml-4 font-medium">
-                            Total: {(item.prices.price * quantity).toFixed(2)}{' '}
-                            AED
+                            Total:{' '}
+                            {(item.price.discounted * quantity).toFixed(2)} AED
                           </span>
                         </div>
                       </div>
@@ -247,7 +255,7 @@ export default function CartPage() {
                       </div>
                     </div>
                     <p className="line-clamp-2 pr-10 text-sm text-gray-600">
-                      {item.description.en}
+                      {item.description}
                     </p>
                     <div className="space-y-2 text-sm text-gray-500">
                       {'dubai'}

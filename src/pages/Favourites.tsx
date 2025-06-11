@@ -21,9 +21,7 @@ export default function Favourites() {
 
   const { favourite, setFavourite } = useFavourite();
   console.log('favorite', favourite);
-  const { favoriteProducts } = useFavouriteItems(
-    favourite?.map((item) => +item)
-  );
+  const { favoriteProducts } = useFavouriteItems();
 
   const handleImageChange = (
     id: string,

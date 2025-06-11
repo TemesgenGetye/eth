@@ -104,6 +104,7 @@ export const getProductById = async (id: number) => {
 };
 
 export const getProductsById = async (ids: number[]) => {
+  console.log('refetching products');
   console.log(ids);
   if (!Array.isArray(ids) || ids.length === 0) return [];
 

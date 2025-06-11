@@ -35,6 +35,7 @@ import Profile from './pages/Profile';
 import MyAds from './pages/MyAds';
 import PostAdPage from './pages/PostAds';
 import ChatPage from './pages/Chat';
+import { Toaster } from 'react-hot-toast';
 
 function AppContent() {
   const location = useLocation();
@@ -122,6 +123,7 @@ function AppContent() {
           <Route path="/community" element={<Community />} />
           <Route path="*" element={<div>404</div>} />
         </Routes>
+        <Toaster position="top-center" reverseOrder={false} />
       </main>
       {!hideNavAndFooter && !profileHideFooter && <Footer />}
     </div>
