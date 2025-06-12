@@ -80,6 +80,7 @@ export default function SignUpPage() {
         <div className="rounded-lg border border-gray-200 bg-white shadow-lg">
           {/* Card Header */}
           <div className="border-b border-gray-200 px-6 py-4">
+            <img src={'./logo.png'} alt="logo" className="mx-auto w-[20%]" />
             <h2 className="text-center text-2xl font-semibold text-gray-900">
               Sign up
             </h2>

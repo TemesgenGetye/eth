@@ -136,7 +136,8 @@ const NavLinks = () => {
                 <button
                   className="flex items-center space-x-2"
                   onClick={async () => {
-                    await supabase.auth.signOut();
+                    const { error } = await supabase.auth.signOut();
+                    console.log('logot Error', error);
                     navigate('/');
                   }}
                 >
