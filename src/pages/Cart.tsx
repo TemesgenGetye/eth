@@ -1,4 +1,4 @@
-import type React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ShoppingCart,
   Image,
@@ -9,11 +9,13 @@ import {
   Minus,
   Plus,
 } from 'lucide-react';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../Context/Cart';
 import { useCartItems } from '../hooks/store';
 import toast from 'react-hot-toast';
+import { useAuth } from '../Context/AuthContext';
+import { useOrder } from '../hooks/useOrder';
+import useCustomers from '../hooks/useCustomers';
 
 export default function CartPage() {
   const { cartItems } = useCartItems();
@@ -22,9 +24,20 @@ export default function CartPage() {
   const [imageIndexes, setImageIndexes] = useState<{ [key: string]: number }>(
     {}
   );
+  const [paymentModal, setPaymentModal] = useState<'cash' | 'credit' | null>(
+    null
+  );
 
   const { cart, setCart } = useCart();
+  const { user } = useAuth();
+  const orderMutation = useOrder();
   console.log('cart', cart);
+  console.log('user', user);
+
+  const { customers } = useCustomers();
+  const filterdCustomers = customers?.filter(
+    (customer) => customer.uuid === user?.identities?.at(0)?.user_id
+  );
 
   const handleImageChange = (
     id: string,
@@ -47,42 +60,75 @@ export default function CartPage() {
     id: number
   ) {
     e.stopPropagation();
-    if (cartItems?.length) {
-      setCart(cartItems?.filter((item) => +item !== id));
+    console.log('item to be removed', id);
+    if (cart?.length) {
+      console.log(cart);
+      setCart(cart?.filter((item) => +item !== id));
       toast.success('Item removed sucessfully.');
     }
   }
 
+  const [quantities, setQuantities] = useState<{ [id: number]: number }>({});
+
+  // Initialize quantities from cartItems on mount or when cartItems change
+  useEffect(() => {
+    if (cartItems) {
+      const initialQuantities: { [id: number]: number } = {};
+      cartItems.forEach((item) => {
+        initialQuantities[item.id] = item.quantity || 1;
+      });
+      setQuantities(initialQuantities);
+    }
+  }, [cartItems]);
+
   function updateQuantity(
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    item: any,
+    item: { id: number },
     action: 'increase' | 'decrease'
   ) {
     e.stopPropagation();
-
-    const updatedCart = cartItems?.map((cartItem) => {
-      if (cartItem._id === item._id) {
-        const newQuantity =
-          action === 'increase'
-            ? (cartItem.quantity || 1) + 1
-            : Math.max((cartItem.quantity || 1) - 1, 1);
-
-        return { ...cartItem, quantity: newQuantity };
-      }
-      return cartItem;
+    setQuantities((prev) => {
+      const current = prev[item.id] || 1;
+      const newQuantity =
+        action === 'increase' ? current + 1 : Math.max(current - 1, 1);
+      return { ...prev, [item.id]: newQuantity };
     });
-
-    setCart(updatedCart);
   }
 
   const calculateTotal = () => {
     return cartItems
       ?.reduce((total, item) => {
-        const quantity = item.quantity || 1;
-        return total + item.price.orignal * quantity;
+        return total + item.price.orignal * (quantities[item.id] || 1);
       }, 0)
       .toFixed(2);
   };
+
+  function handleCashOnDelivery() {
+    console.log('user', user);
+
+    setPaymentModal('cash');
+    const orderProducts = cartItems?.map((item) => ({
+      product: +item.id,
+      quantity: quantities[item.id] || 1,
+    }));
+
+    if (orderProducts && orderProducts.length > 0) {
+      console.log({
+        customer_order: filterdCustomers?.at(0)?.id,
+        detail: orderProducts,
+      });
+
+      orderMutation.mutate({
+        customer_order: String(filterdCustomers?.at(0)?.id),
+        detail: orderProducts as [{ product: number; quantity: number }],
+      });
+
+      toast.success('Order placed successfully!');
+      localStorage.removeItem('cart');
+    } else {
+      toast.error('No items in cart to order.');
+    }
+  }
 
   return (
     <div className="mx-auto mb-5 grid max-w-7xl grid-cols-1 gap-4">
@@ -127,7 +173,6 @@ export default function CartPage() {
         <>
           {cartItems?.map((item) => {
             const currentImageIndex = imageIndexes[item.id] ?? 0;
-            const quantity = item.quantity || 1;
 
             return (
               <div
@@ -222,16 +267,18 @@ export default function CartPage() {
                             <button
                               className="px-2 py-1 text-gray-600 hover:bg-gray-100"
                               onClick={(e) =>
-                                updateQuantity(e, item, 'decrease')
+                                updateQuantity(e, { id: item.id }, 'decrease')
                               }
                             >
                               <Minus size={16} />
                             </button>
-                            <span className="px-3 py-1">{quantity}</span>
+                            <span className="px-3 py-1">
+                              {quantities[item.id] || 1}
+                            </span>
                             <button
                               className="px-2 py-1 text-gray-600 hover:bg-gray-100"
                               onClick={(e) =>
-                                updateQuantity(e, item, 'increase')
+                                updateQuantity(e, { id: item.id }, 'increase')
                               }
                             >
                               <Plus size={16} />
@@ -239,7 +286,10 @@ export default function CartPage() {
                           </div>
                           <span className="ml-4 font-medium">
                             Total:{' '}
-                            {(item.price.discounted * quantity).toFixed(2)} AED
+                            {(
+                              item.price.discounted * (quantities[item.id] || 1)
+                            ).toFixed(2)}{' '}
+                            AED
                           </span>
                         </div>
                       </div>
@@ -247,7 +297,7 @@ export default function CartPage() {
                         <button
                           className="h-7 w-7 text-red-500"
                           onClick={(e) => {
-                            handleRemoveFromCart(e, item);
+                            handleRemoveFromCart(e, item.id);
                           }}
                         >
                           <Trash2 className="h-5 w-5" />
@@ -286,16 +336,162 @@ export default function CartPage() {
                 </span>
               </div>
             </div>
-            <button
-              className="mt-6 w-full rounded-lg bg-blue-600 py-3 text-white hover:bg-blue-700"
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate('/checkout');
-              }}
-            >
-              Proceed to Checkout
-            </button>
+            <div className="mt-6 flex gap-3">
+              <button
+                className="w-full rounded-lg bg-blue-600 py-3 text-white hover:bg-blue-700"
+                onClick={() => handleCashOnDelivery()}
+              >
+                Cash on Delivery
+              </button>
+              <button
+                className="w-full rounded-lg bg-gray-200 py-3 text-gray-700 hover:bg-gray-300"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPaymentModal('credit');
+                }}
+              >
+                Credit/Payment
+              </button>
+            </div>
           </div>
+
+          {/* Modal for Cash on Delivery */}
+          {paymentModal === 'cash' && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+              <div className="w-full max-w-lg rounded-2xl border border-green-100 bg-white p-10 text-center shadow-2xl">
+                <div className="mb-6 flex flex-col items-center">
+                  <svg
+                    className="mb-3 h-20 w-20 text-green-500"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      fill="#e6f9ed"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 12l2 2 4-4"
+                    />
+                  </svg>
+                  <h2 className="mb-2 text-3xl font-extrabold text-green-700">
+                    Order Placed Successfully!
+                  </h2>
+                </div>
+                <p className="mb-3 text-lg text-gray-800">
+                  Your order has been placed with{' '}
+                  <span className="font-bold text-green-700">
+                    Cash on Delivery
+                  </span>
+                  .
+                </p>
+                <div className="mb-5 flex items-center justify-center gap-2 text-base text-green-700">
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M13 16h-1v-4h-1m1-4h.01"
+                    />
+                    <circle cx="12" cy="12" r="10" />
+                  </svg>
+                  <span>We will contact you soon for delivery details.</span>
+                </div>
+                <div className="mb-8 rounded-lg bg-green-50 p-4 text-base text-gray-600">
+                  Thank you for shopping with us! If you have any questions, our{' '}
+                  <span className="font-semibold">support team</span> is here to
+                  help.
+                </div>
+                <button
+                  className="rounded-lg bg-blue-600 px-8 py-3 text-lg font-semibold text-white shadow transition hover:bg-blue-700"
+                  onClick={() => {
+                    navigate('/');
+                    setPaymentModal(null);
+                  }}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
+          {/* Modal for Credit/Payment */}
+          {paymentModal === 'credit' && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+              <div className="w-full max-w-lg rounded-2xl border border-yellow-100 bg-white p-10 text-center shadow-2xl">
+                <div className="mb-6 flex flex-col items-center">
+                  <svg
+                    className="mb-3 h-20 w-20 text-yellow-500"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      fill="#fffbe6"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 8v4m0 4h.01"
+                    />
+                  </svg>
+                  <h2 className="mb-2 text-3xl font-extrabold text-yellow-700">
+                    Coming Soon!
+                  </h2>
+                </div>
+                <p className="mb-3 text-lg text-gray-800">
+                  Credit/Payment option will be available soon.
+                </p>
+                <div className="mb-5 flex items-center justify-center gap-2 text-base text-yellow-700">
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M13 16h-1v-4h-1m1-4h.01"
+                    />
+                    <circle cx="12" cy="12" r="10" />
+                  </svg>
+                  <span>
+                    We're working hard to bring you more payment options.
+                  </span>
+                </div>
+                <div className="mb-8 rounded-lg bg-yellow-50 p-4 text-base text-gray-600">
+                  Stay tuned for updates and thank you for your patience!
+                </div>
+                <button
+                  className="rounded-lg bg-blue-600 px-8 py-3 text-lg font-semibold text-white shadow transition hover:bg-blue-700"
+                  onClick={() => setPaymentModal(null)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>

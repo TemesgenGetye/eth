@@ -11,9 +11,7 @@ import supabase from '../../services/supabase';
 const NavLinks = () => {
   const [activeModal, setActiveModal] = useState('');
   const navigate = useNavigate();
-
   const { user } = useAuth();
-
   const { customers } = useCustomers();
 
   const filterdCustomers = customers?.filter(
