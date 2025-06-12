@@ -5,7 +5,7 @@ import { cleanString } from '../../services/utils';
 
 export default function PopularCategories() {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
-  const { products } = useProducts();
+  const { products, isLoading } = useProducts();
   const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -58,6 +58,32 @@ export default function PopularCategories() {
       container?.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="mb-8">
+        <h2 className="mb-6 text-2xl font-semibold">Popular Products</h2>
+        <div className="relative">
+          <div className="flex gap-4 px-4">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-48 w-72 animate-pulse rounded-lg bg-gray-200"
+              />
+            ))}
+          </div>
+          <div className="mt-4 flex justify-center gap-2">
+            {Array.from({ length: 2 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-2 w-2 animate-pulse rounded-full bg-gray-300"
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (products && products.length === 0) return null;
   return (

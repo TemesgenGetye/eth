@@ -53,8 +53,11 @@ const HoverMenu = () => {
     return (
       <div className="flex items-center justify-around border-b border-gray-200 bg-white">
         <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-6">
-          <div className="flex h-12 items-center space-x-20">
-            <span>Loading...</span>
+          <div className="flex h-12 animate-pulse items-center space-x-8">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-6 w-20 rounded bg-gray-200" />
+            ))}
+            <div className="ml-4 h-8 w-28 rounded-full bg-gray-200" />
           </div>
         </div>
       </div>
