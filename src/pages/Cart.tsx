@@ -47,8 +47,9 @@ export default function CartPage() {
     id: number
   ) {
     e.stopPropagation();
-    if (cartItems?.length) {
-      setCart(cartItems?.filter((item) => +item !== id));
+    if (cart?.length) {
+      console.log('item to be removed', id);
+      setCart(cart?.filter((item) => +item !== id));
       toast.success('Item removed sucessfully.');
     }
   }
@@ -247,7 +248,7 @@ export default function CartPage() {
                         <button
                           className="h-7 w-7 text-red-500"
                           onClick={(e) => {
-                            handleRemoveFromCart(e, item);
+                            handleRemoveFromCart(e, item.id);
                           }}
                         >
                           <Trash2 className="h-5 w-5" />

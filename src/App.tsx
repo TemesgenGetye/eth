@@ -123,7 +123,11 @@ function AppContent() {
           <Route path="/community" element={<Community />} />
           <Route path="*" element={<div>404</div>} />
         </Routes>
-        <Toaster position="top-center" reverseOrder={false} />
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          // toastOptions={{ style: { width: '800px' } }}
+        />
       </main>
       {!hideNavAndFooter && !profileHideFooter && <Footer />}
     </div>
