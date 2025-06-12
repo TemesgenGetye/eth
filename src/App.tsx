@@ -36,10 +36,12 @@ import MyAds from './pages/MyAds';
 import PostAdPage from './pages/PostAds';
 import ChatPage from './pages/Chat';
 import { Toaster } from 'react-hot-toast';
+import SignUpPage from './pages/SignUp';
 
 function AppContent() {
   const location = useLocation();
-  const hideNavAndFooter = location.pathname === '/login';
+  const hideNavAndFooter =
+    location.pathname === '/login' || location.pathname === '/signup';
   const profileHideFooter = location.pathname === '/profile';
   return (
     <div className="flex min-h-screen flex-col">
@@ -93,6 +95,7 @@ function AppContent() {
             }
           />
           <Route path="/login" element={<LoginForm />} />
+          <Route path="/signup" element={<SignUpPage />} />
           <Route
             path="/chat"
             element={
