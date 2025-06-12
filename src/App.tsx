@@ -122,7 +122,7 @@ function AppContent() {
           <Route path="/job" element={<Job />} />
           <Route path="/classified" element={<Classified />} />
           <Route path="/phone" element={<Phone />} />
-          <Route path="/furniture" element={<Furniture />} />
+          {/* <Route path="/furniture" element={<Furniture />} /> */}
           <Route path="/community" element={<Community />} />
           <Route path="*" element={<div>404</div>} />
         </Routes>

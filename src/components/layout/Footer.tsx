@@ -99,42 +99,55 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Egypt
+                  France
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Bahrain
+                  Spain
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Saudi Arabia
+                  USA
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Lebanon
+                  China
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Kuwait
+                  Italy
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Oman
+                  Turkey
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Qatar
+                  Mexico
                 </a>
               </li>
+
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Pakistan
+                  Germany
+                </a>
+              </li>
+
+              <li>
+                <a href="#" className="text-sm text-blue-400 hover:underline">
+                  United Kingdom
+                </a>
+              </li>
+
+              <li>
+                <a href="#" className="text-sm text-blue-400 hover:underline">
+                  Japan
                 </a>
               </li>
             </ul>
@@ -162,6 +175,11 @@ const Footer = () => {
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
                   Instagram
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-sm text-blue-400 hover:underline">
+                  Whatsapp
                 </a>
               </li>
             </ul>
@@ -195,7 +213,7 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  አማርኛ
+                  English
                 </a>
               </li>
             </ul>
@@ -203,7 +221,7 @@ const Footer = () => {
               onClick={() => handleLanguageChange('am')}
               className="mt-2 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
             >
-              Switch to Amharic
+              Switch to Arabic
             </button>
           </div>
         </div>

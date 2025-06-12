@@ -56,6 +56,9 @@ export default function SignUpPage() {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
+        options: {
+          redirectTo: window.location.origin,
+        },
       });
       if (error) console.error('Google sign-up error:', error.message);
       await new Promise((resolve) => setTimeout(resolve, 2000));
