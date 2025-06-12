@@ -11,9 +11,7 @@ import supabase from '../../services/supabase';
 const NavLinks = () => {
   const [activeModal, setActiveModal] = useState('');
   const navigate = useNavigate();
-
   const { user } = useAuth();
-
   const { customers } = useCustomers();
 
   const filterdCustomers = customers?.filter(
@@ -138,7 +136,7 @@ const NavLinks = () => {
                 <button
                   className="flex items-center space-x-2"
                   onClick={async () => {
-                    const { error } = await supabase.auth.signOut();
+                    await supabase.auth.signOut();
                     navigate('/');
                   }}
                 >

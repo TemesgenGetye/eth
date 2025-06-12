@@ -47,7 +47,7 @@ export default function CheckoutPage() {
   const calculateSubtotal = () => {
     return cart.reduce((total, item) => {
       const quantity = item.quantity || 1;
-      return total + item.prices.price * quantity;
+      return total + item?.price?.discounted * quantity;
     }, 0);
   };
 

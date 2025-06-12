@@ -6,11 +6,11 @@ import supabase from '../services/supabase';
 import { useNavigate } from 'react-router-dom';
 
 export default function Component() {
-  const { customers, isLoading, error } = useCustomers();
+  const { customers } = useCustomers();
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const { updateCustomerMutate, isPendingCustomer } = useUpdateCustomer();
+  const { updateCustomerMutate } = useUpdateCustomer();
 
   const filterdCustomers = customers?.filter(
     (customer) => customer.uuid === user?.identities?.at(0)?.user_id
@@ -78,7 +78,7 @@ export default function Component() {
   };
 
   const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
+    await supabase.auth.signOut();
     navigate('/');
   };
 
@@ -107,10 +107,23 @@ export default function Component() {
                 )}
               </div>
 
+              {/* Profile Image as Circle */}
+              {formData.img_url && (
+                <div className="absolute left-1/2 top-[25%] z-10 flex h-32 w-32 -translate-x-1/2 -translate-y-1/2 transform items-center justify-center rounded-full border-4 border-white shadow-lg">
+                  <img
+                    src={formData.img_url}
+                    alt="Profile"
+                    className="h-32 w-32 rounded-full object-cover"
+                  />
+                </div>
+              )}
+
               {/* Blur overlay with name */}
               <div className="absolute inset-0 bg-black bg-opacity-30">
                 <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 backdrop-blur-sm">
-                  <div className="text-center">
+                  <div className="mt-20 text-center">
+                    {' '}
+                    {/* push text below the profile image */}
                     <h1 className="text-4xl font-bold text-white drop-shadow-lg">
                       {formData.name}
                     </h1>

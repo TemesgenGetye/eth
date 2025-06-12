@@ -1,15 +1,16 @@
 import type React from 'react';
 import { useState } from 'react';
-import { useLogin } from '../services/auth';
+import { useSignup } from '../services/auth';
 import { useNavigate } from 'react-router-dom';
 import supabase from '../services/supabase';
+import toast from 'react-hot-toast';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-export default function LoginPage() {
+export default function SignUpPage() {
   const [error, setError] = useState<string>('');
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
-  const login = useLogin();
+  const signUp = useSignup();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -26,31 +27,40 @@ export default function LoginPage() {
     const password = formData.get('password') as string;
 
     try {
-      await login.mutateAsync({ email, password });
-      navigate('/');
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: window.location.origin + '/login',
+        },
+      });
+      if (error) {
+        setError(error.message);
+        return;
+      }
+      // Show a message to the user to check their email for verification
+      toast.success(
+        'Signup successful! Please check your email inbox and click the verification link to activate your account. You will not be able to log in until your email is verified.',
+        { duration: 8000 }
+      );
+
+      navigate('/login');
     } catch (error: any) {
-      setError(error.message || 'An error occurred during login');
+      setError(error.message || 'An error occurred during signup');
     }
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleSignUp = async () => {
     setIsGoogleLoading(true);
     setError('');
-
     try {
-      // Implement Google OAuth login here
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
       });
-
-      if (error) console.error('Google sign-in error:', error.message);
-
-      // Simulate API call
+      if (error) console.error('Google sign-up error:', error.message);
       await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // Handle successful Google login
     } catch (error: any) {
-      setError(error.message || 'Google login failed');
+      setError(error.message || 'Google signup failed');
     } finally {
       setIsGoogleLoading(false);
     }
@@ -62,25 +72,21 @@ export default function LoginPage() {
         {/* Header */}
         <div className="text-center">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-            Welcome back
+            Create your account
           </h1>
-          <p className="mt-2 text-sm text-gray-600">
-            Sign in to your account to continue
-          </p>
+          <p className="mt-2 text-sm text-gray-600">Sign up to get started</p>
         </div>
-
-        {/* Login Card */}
+        {/* Sign Up Card */}
         <div className="rounded-lg border border-gray-200 bg-white shadow-lg">
           {/* Card Header */}
           <div className="border-b border-gray-200 px-6 py-4">
             <h2 className="text-center text-2xl font-semibold text-gray-900">
-              Sign in
+              Sign up
             </h2>
             <p className="mt-1 text-center text-sm text-gray-600">
-              Enter your email and password to access your account
+              Enter your email and password to create your account
             </p>
           </div>
-
           {/* Card Content */}
           <div className="space-y-6 px-6 py-6">
             {/* Error Alert */}
@@ -106,12 +112,11 @@ export default function LoginPage() {
                 </div>
               </div>
             )}
-
-            {/* Google Login Button */}
+            {/* Google Sign Up Button */}
             <button
               type="button"
-              onClick={handleGoogleLogin}
-              disabled={isGoogleLoading || login.isPending}
+              onClick={handleGoogleSignUp}
+              disabled={isGoogleLoading || signUp.isPending}
               className="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isGoogleLoading ? (
@@ -157,7 +162,6 @@ export default function LoginPage() {
               )}
               Continue with Google
             </button>
-
             {/* Divider */}
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
@@ -169,7 +173,6 @@ export default function LoginPage() {
                 </span>
               </div>
             </div>
-
             {/* Email/Password Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
@@ -185,50 +188,39 @@ export default function LoginPage() {
                   type="email"
                   placeholder="Enter your email"
                   required
-                  disabled={login.isPending || isGoogleLoading}
+                  disabled={signUp.isPending || isGoogleLoading}
                   className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
                 />
               </div>
-
               <div>
-                <div className="flex items-center justify-between">
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Password
-                  </label>
-                  <a
-                    href="/forgot-password"
-                    className="text-sm text-blue-600 hover:text-blue-500 hover:underline"
-                  >
-                    Forgot password?
-                  </a>
-                </div>
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Password
+                </label>
                 <input
                   id="password"
                   name="password"
                   type="password"
                   placeholder="Enter your password"
                   required
-                  disabled={login.isPending || isGoogleLoading}
+                  disabled={signUp.isPending || isGoogleLoading}
                   className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
                 />
               </div>
-
               <div className="flex justify-center">
                 <ReCAPTCHA
                   sitekey="6Lek5V0rAAAAAAImWHkztQdMSur4hAMo170Po3hs"
                   onChange={setRecaptchaToken}
                 />
               </div>
-
               <button
                 type="submit"
-                disabled={login.isPending || isGoogleLoading}
+                disabled={signUp.isPending || isGoogleLoading}
                 className="flex w-full items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {login.isPending ? (
+                {signUp.isPending ? (
                   <>
                     <svg
                       className="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
@@ -250,7 +242,7 @@ export default function LoginPage() {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       ></path>
                     </svg>
-                    Signing in...
+                    Signing up...
                   </>
                 ) : (
                   <>
@@ -267,37 +259,35 @@ export default function LoginPage() {
                         d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                       />
                     </svg>
-                    Sign in with Email
+                    Sign up with Email
                   </>
                 )}
               </button>
             </form>
           </div>
-
           {/* Card Footer */}
           <div className="rounded-b-lg border-t border-gray-200 bg-gray-50 px-6 py-4">
             <p className="text-center text-sm text-gray-600">
-              {"Don't have an account? "}
+              Already have an account?{' '}
               <a
-                href="/signup"
+                href="/login"
                 className="font-medium text-blue-600 hover:text-blue-500 hover:underline"
               >
-                Sign up
+                Sign in
               </a>
             </p>
           </div>
         </div>
-
         {/* Terms and Privacy */}
         <div className="text-center text-xs text-gray-500">
-          By signing in, you agree to our{' '}
+          By signing up, you agree to our{' '}
           <a
             href="/terms"
             className="text-blue-600 hover:text-blue-500 hover:underline"
           >
             Terms of Service
-          </a>{' '}
-          and{' '}
+          </a>
+          and
           <a
             href="/privacy"
             className="text-blue-600 hover:text-blue-500 hover:underline"
