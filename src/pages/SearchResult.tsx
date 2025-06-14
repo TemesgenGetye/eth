@@ -64,13 +64,15 @@ function SearchResult() {
           >
             {categoryName}
           </Link>
-          {filteredProducts?.length && (
+          {filteredProducts?.length ? (
             <>
               <span className="text-gray-400">&gt;</span>
               <span className="text-gray-400">
                 {filteredProducts?.[0]?.subcategory?.name}
               </span>
             </>
+          ) : (
+            <></>
           )}
         </div>
       </div>
