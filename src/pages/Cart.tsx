@@ -19,7 +19,7 @@ import useCustomers from '../hooks/useCustomers';
 import { cleanString } from '../services/utils';
 
 export default function CartPage() {
-  const { cartItems, refetchCart } = useCartItems();
+  const { cartItems, isLoadingCart, refetchCart } = useCartItems();
   const navigate = useNavigate();
 
   const [imageIndexes, setImageIndexes] = useState<{ [key: string]: number }>(
@@ -130,9 +130,43 @@ export default function CartPage() {
     }
   }
 
-  // useEffect(() => {
-
-  // }, []);
+  if (isLoadingCart) {
+    return (
+      <div className="mx-auto mb-5 grid max-w-7xl grid-cols-1 gap-4">
+        <div className="p-10">
+          <div className="mb-2 h-6 w-32 animate-pulse rounded bg-gray-200" />
+          <div className="h-4 w-48 animate-pulse rounded bg-gray-200" />
+        </div>
+        <div className="mx-auto flex w-full max-w-md flex-row items-center justify-end gap-2 p-4">
+          <div className="h-10 w-full animate-pulse rounded-lg bg-gray-200" />
+          <div className="h-10 w-10 animate-pulse rounded-lg bg-gray-200" />
+        </div>
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div
+            key={i}
+            className="relative flex animate-pulse gap-4 rounded-lg border-b border-b-gray-200 bg-white p-4 shadow-sm"
+          >
+            <div className="h-48 w-72 rounded-lg bg-gray-200" />
+            <div className="flex-1 space-y-3">
+              <div className="h-6 w-32 rounded bg-gray-200" />
+              <div className="h-4 w-24 rounded bg-gray-200" />
+              <div className="h-4 w-40 rounded bg-gray-200" />
+              <div className="h-8 w-32 rounded bg-gray-200" />
+            </div>
+          </div>
+        ))}
+        <div className="mt-6 animate-pulse rounded-lg bg-white p-6 shadow-sm">
+          <div className="mb-4 h-6 w-40 rounded bg-gray-200" />
+          <div className="mb-2 h-4 w-32 rounded bg-gray-200" />
+          <div className="mb-2 h-4 w-32 rounded bg-gray-200" />
+          <div className="mb-2 h-6 w-32 rounded bg-gray-200" />
+          <div className="mb-2 h-4 w-24 rounded bg-gray-200" />
+          <div className="mb-2 h-8 w-32 rounded bg-gray-200" />
+          <div className="mb-2 h-8 w-32 rounded bg-gray-200" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto mb-5 grid max-w-7xl grid-cols-1 gap-4">
@@ -427,10 +461,7 @@ export default function CartPage() {
                 </div>
                 <button
                   className="rounded-lg bg-blue-600 px-8 py-3 text-lg font-semibold text-white shadow transition hover:bg-blue-700"
-                  onClick={() => {
-                    navigate('/');
-                    setPaymentModal(null);
-                  }}
+                  onClick={() => setPaymentModal(null)}
                 >
                   Close
                 </button>

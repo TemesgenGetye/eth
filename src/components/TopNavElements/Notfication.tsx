@@ -159,7 +159,7 @@ function Notfication({
                 </div>
               )}
 
-              {notfication.map((item) => (
+              {/* {notfication.map((item) => (
                 <Link to={`/detail/${item?._id}`} key={item._id}>
                   <div className="border-b p-4">
                     <div className="flex gap-3">
@@ -187,7 +187,7 @@ function Notfication({
                     </div>
                   </div>
                 </Link>
-              ))}
+              ))} */}
             </div>
           </div>
         )}
