@@ -37,8 +37,9 @@ export function useProductForm(onSuccess?: () => void, onError?: () => void) {
           const filePath = `bucket/${Date.now()}-${Math.random()
             .toString(36)
             .substring(2)}.${fileExt}`;
-          const { data: uploadData, error: uploadError } =
-            await supabase.storage.from('products').upload(filePath, file, {
+          const { error: uploadError } = await supabase.storage
+            .from('products')
+            .upload(filePath, file, {
               cacheControl: '3600',
               upsert: false,
             });

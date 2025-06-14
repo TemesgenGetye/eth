@@ -37,6 +37,8 @@ import PostAdPage from './pages/PostAds';
 import ChatPage from './pages/Chat';
 import { Toaster } from 'react-hot-toast';
 import SignUpPage from './pages/SignUp';
+import SearchResult from './pages/SearchResult';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 function AppContent() {
   const location = useLocation();
@@ -50,6 +52,7 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/:cname" element={<CatagoryInfo />} />
+          <Route path="/:cname/search" element={<SearchResult />} />
           <Route path="/:cid/:pname" element={<Product />} />
           <Route path="/:cid/:pname/:pid" element={<Detail />} />
           <Route
@@ -122,7 +125,7 @@ function AppContent() {
           <Route path="/job" element={<Job />} />
           <Route path="/classified" element={<Classified />} />
           <Route path="/phone" element={<Phone />} />
-          <Route path="/furniture" element={<Furniture />} />
+          {/* <Route path="/furniture" element={<Furniture />} /> */}
           <Route path="/community" element={<Community />} />
           <Route path="*" element={<div>404</div>} />
         </Routes>
@@ -145,6 +148,7 @@ function App() {
                 <ScrollToTop />
                 <QueryClientProvider client={queryClient}>
                   <AppContent />
+                  <ReactQueryDevtools />
                 </QueryClientProvider>
               </Router>
             </BlurBackgroundProvider>

@@ -15,6 +15,7 @@ function Cart({
 }) {
   const { cart } = useCart();
   const { cartItems } = useCartItems();
+
   const navigate = useNavigate();
   return (
     <div className="relative">
@@ -41,8 +42,15 @@ function Cart({
 
           <div className="max-h-[500px] overflow-y-auto">
             {cartItems?.map((item) => (
-              <Link to={`/cart`} key={item.id}>
-                <div className="border-b p-4">
+              <div
+                onClick={() => {
+                  navigate('/cart');
+                  closeModal();
+                }}
+                className="cursor-pointer"
+                key={item.id}
+              >
+                <div className="border-b p-4 hover:bg-gray-100">
                   <div className="flex gap-3">
                     <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
                       <img
@@ -64,15 +72,18 @@ function Cart({
                     </div>
                   </div>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
           <div className="p-4 text-center">
             <button
-              className="text-sm font-medium text-blue-500 hover:text-blue-700"
-              onClick={() => navigate('/cart')}
+              className="w-full p-2 text-xs font-medium text-blue-500 hover:bg-gray-100/70 hover:text-blue-700"
+              onClick={() => {
+                navigate('/cart');
+                closeModal();
+              }}
             >
-              View Cart
+              VIEW ALL CART
             </button>
           </div>
         </div>

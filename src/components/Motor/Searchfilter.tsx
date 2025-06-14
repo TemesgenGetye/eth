@@ -1,140 +1,379 @@
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import type React from 'react';
-import { useState } from 'react';
-
-interface FilterSelectProps {
-  placeholder: string;
-  options: string[];
-  value: string;
-  onChange: (value: string) => void;
-}
-
-const FilterSelect: React.FC<FilterSelectProps> = ({
-  placeholder,
-  options,
-  value,
-  onChange,
-}) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div className="relative">
-      <button
-        className="w-full  border-r border-r-gray-300 bg-white px-4  text-left "
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <p className="text-sm font-medium text-gray-800">{placeholder}</p>
-        <p className="text-sm text-gray-400"> {value}</p>
-        <ChevronDown
-          size={16}
-          className="absolute right-4 top-1/2 -translate-y-1/2 transform"
-        />
-      </button>
-      {isOpen && (
-        <ul className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border-r border-r-gray-300 bg-white ">
-          {options.map((option) => (
-            <li
-              key={option}
-              className="cursor-pointer px-4 py-2 hover:bg-gray-100"
-              onClick={() => {
-                onChange(option);
-                setIsOpen(false);
-              }}
-            >
-              {option}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-};
+import { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useFilteredProducts } from '../../hooks/useFilteredProducts';
+import debounce from 'lodash/debounce'; // Install lodash for debouncing
 
 function SearchFilters({ use }: { use: string }) {
-  const [city, setCity] = useState('addis ababa');
-  const [makeModel, setMakeModel] = useState('');
-  const [priceRange, setPriceRange] = useState('0-50,000');
-  const [year, setYear] = useState('2024');
-  const [kilometers, setKilometers] = useState('33');
-  const [filters, setFilters] = useState('Regional Specs');
+  const [searchParams] = useSearchParams();
+  const keyword = searchParams.get('keyword') || '';
+  const [isCitySelectOpen, setIsCitySelectOpen] = useState(false);
+  const [isYearOpen, setIsYearOpen] = useState(false);
+  const [isPriceOpen, setIsPriceOpen] = useState(false);
+  const [city, setCity] = useState('Dubai');
+  const [yearRange, setYearRange] = useState('Select');
+  const [priceRange, setPriceRange] = useState('Select');
+  const [key, setKey] = useState(keyword);
 
-  const cities = ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ajman'];
-  const priceRanges = [
-    '0-50,000',
-    '50,000-100,000',
-    '100,000-150,000',
-    '150,000+',
-  ];
-  const years = Array.from({ length: 30 }, (_, i) => (2024 - i).toString());
-  const kilometerRanges = [
-    '0-50,000',
-    '50,000-100,000',
-    '100,000-150,000',
-    '150,000+',
-  ];
-  const filterOptions = ['Regional Specs', 'Keywords', 'GCC Specs', 'Warranty'];
+  const cityRef = useRef<HTMLDivElement>(null);
+  const yearRef = useRef<HTMLDivElement>(null);
+  const priceRef = useRef<HTMLDivElement>(null);
+
+  // Initialize filterOptions with all possible filters
+  const [filterOptions, setFilterOptions] = useState<{
+    term?: string;
+    city?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    minYear?: number;
+    maxYear?: number;
+  }>({ term: keyword, city: 'Dubai' });
+
+  const { filteredProducts, isLoadingFiltered } =
+    useFilteredProducts(filterOptions);
+
+  console.log(filteredProducts);
+  console.log(isLoadingFiltered);
+
+  // Debounced function to update search term
+  const debouncedSetFilterOptions = debounce((value: string) => {
+    setFilterOptions((prev) => ({ ...prev, term: value.trim() }));
+  }, 500);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (cityRef.current && !cityRef.current.contains(event.target as Node)) {
+        setIsCitySelectOpen(false);
+      }
+      if (yearRef.current && !yearRef.current.contains(event.target as Node)) {
+        setIsYearOpen(false);
+      }
+      if (
+        priceRef.current &&
+        !priceRef.current.contains(event.target as Node)
+      ) {
+        setIsPriceOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Handle search input change
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setKey(value);
+    debouncedSetFilterOptions(value);
+  };
+
+  // Handle city selection
+  const handleCitySelect = (selectedCity: string) => {
+    setCity(selectedCity);
+    setFilterOptions((prev) => ({ ...prev, city: selectedCity }));
+    setIsCitySelectOpen(false);
+  };
+
+  // Handle price range application
+  const handlePriceRangeApply = (range: string, min: number, max: number) => {
+    setPriceRange(range);
+    setFilterOptions((prev) => ({ ...prev, minPrice: min, maxPrice: max }));
+    setIsPriceOpen(false);
+  };
+
+  // Handle year range application
+  const handleYearRangeApply = (range: string, min: number, max: number) => {
+    setYearRange(range);
+    setFilterOptions((prev) => ({ ...prev, minYear: min, maxYear: max }));
+    setIsYearOpen(false);
+  };
 
   return (
     <div
-      className={`sticky top-0 z-10 bg-white p-1 ${use === 'property' ? 'bg-transparent' : 'bg-white'}`}
+      className={`sticky top-0 z-10 bg-white p-1 ${
+        use === 'property' ? 'bg-transparent' : 'bg-white'
+      }`}
     >
-      <div className=" mx-auto mb-5 mt-5 w-full max-w-6xl rounded-xl border border-gray-400 bg-white p-2 text-sm shadow-md">
-        <div className="flex flex-col items-stretch gap-3 md:flex-row">
-          <div className="w-full md:w-[200px]">
-            <FilterSelect
-              placeholder="City"
-              options={cities}
-              value={city}
-              onChange={setCity}
-            />
+      <div className="mx-auto mb-5 w-full max-w-6xl rounded-xl border border-gray-400 bg-white text-sm shadow-md">
+        <div className="flex flex-col items-stretch md:flex-row">
+          <div
+            className="relative w-full rounded-bl-xl rounded-tl-xl py-2 hover:bg-gray-100"
+            ref={cityRef}
+          >
+            <button
+              onClick={() => setIsCitySelectOpen((state) => !state)}
+              className="w-full border-r border-r-gray-100 px-4 text-left"
+            >
+              <p className="mb-1 text-xs font-bold text-gray-800">City</p>
+              <p className="text-xs text-gray-400">{city}</p>
+              {isCitySelectOpen ? (
+                <ChevronUp
+                  size={16}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 transform"
+                />
+              ) : (
+                <ChevronDown
+                  size={16}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 transform"
+                />
+              )}
+            </button>
+            {isCitySelectOpen && (
+              <FilterCityComponent onSetCity={handleCitySelect} city={city} />
+            )}
           </div>
 
-          <div className="flex-1">
-            <input
-              type="text"
-              placeholder="Search Make, Model"
-              value={makeModel}
-              onChange={(e) => setMakeModel(e.target.value)}
-              className="w-44  border-r border-r-gray-300 px-4 py-2 "
-            />
+          <div className="w-full py-2 hover:bg-gray-100">
+            <div>
+              <button className="w-full border-r border-r-gray-100 px-4 text-left">
+                <p className="mb-1 text-xs font-bold text-gray-800">
+                  {keyword ? 'Keyword' : 'Search Make, Model'}
+                </p>
+                <input
+                  type="text"
+                  className="w-full focus:border-none focus:outline-none focus:ring-[none]"
+                  style={{ background: 'none' }}
+                  value={key}
+                  onChange={handleSearchChange}
+                />
+              </button>
+            </div>
           </div>
 
-          <div className="w-full md:w-[200px]">
-            <FilterSelect
-              placeholder="Price Range"
-              options={priceRanges}
-              value={priceRange}
-              onChange={setPriceRange}
-            />
+          <div
+            className="relative w-full py-2 hover:bg-gray-100"
+            ref={priceRef}
+          >
+            <button
+              onClick={() => {
+                setIsYearOpen(false);
+                setIsPriceOpen((state) => !state);
+              }}
+              className="w-full border-r border-r-gray-100 px-4 text-left"
+            >
+              <p className="mb-1 text-xs font-bold text-gray-800">Price</p>
+              <p className="text-xs text-gray-400">{priceRange}</p>
+              {isPriceOpen ? (
+                <ChevronUp
+                  size={16}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 transform"
+                />
+              ) : (
+                <ChevronDown
+                  size={16}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 transform"
+                />
+              )}
+            </button>
+            {isPriceOpen && (
+              <RangeFilter
+                onApplyFilters={handlePriceRangeApply}
+                type="price"
+                defaultFrom="0"
+                defaultUpto="1000000"
+              />
+            )}
           </div>
 
-          <div className="w-full md:w-[150px]">
-            <FilterSelect
-              placeholder="Year"
-              options={years}
-              value={year}
-              onChange={setYear}
-            />
-          </div>
-
-          <div className="w-full md:w-[200px]">
-            <FilterSelect
-              placeholder="Kilometers"
-              options={kilometerRanges}
-              value={kilometers}
-              onChange={setKilometers}
-            />
-          </div>
-
-          <div className="w-full md:w-[250px]">
-            <FilterSelect
-              placeholder="Filters"
-              options={filterOptions}
-              value={filters}
-              onChange={setFilters}
-            />
+          <div
+            className="relative w-full rounded-br-xl rounded-tr-xl py-2 hover:bg-gray-100"
+            ref={yearRef}
+          >
+            <button
+              onClick={() => {
+                setIsYearOpen((state) => !state);
+                setIsPriceOpen(false);
+              }}
+              className="w-full border-r border-r-gray-100 px-4 text-left"
+            >
+              <p className="mb-1 text-xs font-bold text-gray-800">Year</p>
+              <p className="text-xs text-gray-400">{yearRange}</p>
+              {isYearOpen ? (
+                <ChevronUp
+                  size={16}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 transform"
+                />
+              ) : (
+                <ChevronDown
+                  size={16}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 transform"
+                />
+              )}
+            </button>
+            {isYearOpen && (
+              <RangeFilter
+                onApplyFilters={handleYearRangeApply}
+                type="year"
+                defaultFrom="2020"
+                defaultUpto="2026"
+              />
+            )}
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+const cities = [
+  'Dubai',
+  'Abu Dhabi',
+  'Ras Al Khaimah',
+  'Sharjah',
+  'Fujairah',
+  'Ajman',
+  'Umm Al Quwain',
+  'Al Ain',
+];
+
+function FilterCityComponent({
+  onSetCity,
+  city,
+}: {
+  onSetCity: (city: string) => void;
+  city: string;
+}) {
+  const [selectedCity, setSelectedCity] = useState(city);
+
+  // Reorder cities to put the selected city first
+  const orderedCities = selectedCity
+    ? [selectedCity, ...cities.filter((c) => c !== selectedCity)]
+    : cities;
+
+  const handleCitySelect = (city: string) => {
+    setSelectedCity(city);
+  };
+
+  const handleApplyFilters = () => {
+    onSetCity(selectedCity);
+  };
+
+  return (
+    <div className="absolute top-[calc(100%+5px)] z-[9000] min-w-[400px] rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="mb-6 flex flex-wrap gap-3">
+        {orderedCities.map((city) => (
+          <button
+            key={city}
+            onClick={() => handleCitySelect(city)}
+            className={`
+              rounded-full border px-6 py-3 text-sm font-medium transition-all duration-200
+              ${
+                selectedCity === city
+                  ? 'border-blue-400 bg-blue-50 text-blue-700'
+                  : 'border-gray-300 bg-white text-gray-700 hover:border-blue-400 hover:bg-blue-50'
+              }
+            `}
+          >
+            {city}
+          </button>
+        ))}
+      </div>
+      <button
+        onClick={handleApplyFilters}
+        className="w-full rounded-lg bg-blue-700 px-6 py-4 font-semibold text-white transition-colors duration-200 hover:bg-blue-800"
+      >
+        Apply Filters
+      </button>
+    </div>
+  );
+}
+
+interface RangeFilterProps {
+  onApplyFilters: (range: string, min: number, max: number) => void;
+  onClear?: () => void;
+  type: 'price' | 'year';
+  defaultFrom: string;
+  defaultUpto: string;
+}
+
+function RangeFilter({
+  onApplyFilters,
+  onClear,
+  type,
+  defaultFrom,
+  defaultUpto,
+}: RangeFilterProps) {
+  const [from, setFrom] = useState(defaultFrom);
+  const [upto, setUpto] = useState(defaultUpto);
+
+  const handleApplyFilters = () => {
+    const min = parseInt(from) || 0;
+    const max = parseInt(upto) || (type === 'year' ? 2026 : 1000000);
+    onApplyFilters(`${from}-${upto}`, min, max);
+  };
+
+  const handleClear = () => {
+    setFrom('');
+    setUpto('');
+    onClear?.();
+  };
+
+  const handleFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === '' || /^\d+$/.test(value)) {
+      setFrom(value);
+    }
+  };
+
+  const handleUptoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === '' || /^\d+$/.test(value)) {
+      setUpto(value);
+    }
+  };
+
+  return (
+    <div className="absolute right-0 top-[calc(100%+15px)] z-[100000] rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="mb-6 grid grid-cols-2 gap-6">
+        <div>
+          <label
+            htmlFor={`from-${type}`}
+            className="mb-1 block text-sm font-medium text-gray-400"
+          >
+            From
+          </label>
+          <input
+            id={`from-${type}`}
+            type="number"
+            value={from}
+            onChange={handleFromChange}
+            placeholder={type === 'year' ? '2000' : '0'}
+            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-1 font-medium text-gray-900 transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          />
+        </div>
+        <div>
+          <label
+            htmlFor={`upto-${type}`}
+            className="mb-1 block text-sm font-medium text-gray-400"
+          >
+            Upto
+          </label>
+          <input
+            id={`upto-${type}`}
+            type="number"
+            value={upto}
+            onChange={handleUptoChange}
+            placeholder={type === 'year' ? '2026' : '1000000'}
+            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-1 font-medium text-gray-900 transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          />
+        </div>
+      </div>
+      <div className="grid gap-4" style={{ gridTemplateColumns: '80px 180px' }}>
+        <button
+          onClick={handleClear}
+          className="rounded-lg border border-gray-300 bg-white px-1 py-0 font-medium text-gray-700 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50 focus:outline-none"
+        >
+          Clear
+        </button>
+        <button
+          onClick={handleApplyFilters}
+          className="w-full rounded-lg bg-blue-700 px-6 py-3 font-semibold text-white transition-colors duration-200 hover:bg-blue-800"
+        >
+          Apply Filters
+        </button>
       </div>
     </div>
   );

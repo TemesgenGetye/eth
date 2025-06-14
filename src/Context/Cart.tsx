@@ -5,7 +5,6 @@ import React, {
   ReactNode,
   useEffect,
 } from 'react';
-import { useCartItems } from '../hooks/store';
 
 type CartContextType = {
   cart: any[];
@@ -15,10 +14,9 @@ type CartContextType = {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [cart, setCartt] = useState<any[]>(() => {
+  const [cart, setCart] = useState<any[]>(() => {
     return JSON.parse(localStorage.getItem('cart') || '[]');
   });
-  // const { refetchCart } = useCartItems();
 
   useEffect(() => {
     // Save to localStorage when favourite changes
@@ -26,15 +24,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   }, [cart]);
 
   return (
-    <CartContext.Provider
-      value={{
-        cart,
-        setCart: (item: any) => {
-          setCartt(item);
-          // refetchCart();
-        },
-      }}
-    >
+    <CartContext.Provider value={{ cart, setCart }}>
       {children}
     </CartContext.Provider>
   );

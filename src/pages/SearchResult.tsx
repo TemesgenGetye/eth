@@ -2,26 +2,22 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import SearchFilters from '../components/Motor/Searchfilter';
 import ProductList from '../components/ui/ProductList';
 import Pagination from '../components/Motor/Pagination';
-import NoProduct from '../components/ui/NoProduct';
+// import NoProduct from '../components/ui/NoProduct';
 import useProducts from '../hooks/useProducts';
 import { ProductType } from '../components/type';
 import { useState } from 'react';
 import { cleanString } from '../services/utils';
+import NoSearchResult from '../components/TopNavElements/NoSearchResult';
 
-function Product() {
-  const { pname } = useParams<{ pname: string }>();
-  // console.log('pid', pid);
+function SearchResult() {
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get('keyword')?.split('-').join(' ') || '';
-  const pName = pname?.split('-')?.join(' ');
-  console.log('keyword', keyword);
-  console.log('pname', pName);
-
   const { products } = useProducts();
+  const { cname } = useParams();
 
-  const filteredProducts: ProductType[] | undefined = pname
+  const filteredProducts: ProductType[] | undefined = keyword
     ? products?.filter((product): product is ProductType =>
-        product?.subcategory?.name.toLowerCase()?.includes(pName)
+        product?.name.toLowerCase()?.includes(keyword)
       )
     : [];
 
@@ -41,7 +37,10 @@ function Product() {
       )
     : [];
 
-  if (filteredProducts?.length === 0) return <NoProduct />;
+  // if (filteredProducts?.length === 0) return <NoProduct />;
+  const categoryName = filteredProducts?.length
+    ? filteredProducts?.[0]?.category?.name
+    : cname?.split('-')?.join(' ');
 
   return (
     <div className="mx-auto min-h-screen max-w-6xl px-4 py-4">
@@ -56,15 +55,23 @@ function Product() {
           </Link>
           <span className="text-gray-400 hover:underline">&gt;</span>
           <Link
-            to={`/${cleanString(filteredProducts?.[0]?.category?.name || '')}`}
+            to={
+              !filteredProducts?.length
+                ? `/${cname}`
+                : `/${cleanString(filteredProducts?.[0]?.category?.name || '')}`
+            }
             className="hover:underline"
           >
-            {filteredProducts?.[0]?.category?.name}
+            {categoryName}
           </Link>
-          <span className="text-gray-400">&gt;</span>
-          <span className="text-gray-400">
-            {filteredProducts?.[0]?.subcategory?.name}
-          </span>
+          {filteredProducts?.length && (
+            <>
+              <span className="text-gray-400">&gt;</span>
+              <span className="text-gray-400">
+                {filteredProducts?.[0]?.subcategory?.name}
+              </span>
+            </>
+          )}
         </div>
       </div>
 
@@ -72,8 +79,13 @@ function Product() {
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">
-            {filteredProducts?.[0]?.subcategory?.name} sale in dubai •{' '}
-            {filteredProducts?.length} Ads
+            {filteredProducts?.length
+              ? filteredProducts?.[0]?.subcategory?.name
+              : categoryName}{' '}
+            sale in dubai
+            {filteredProducts?.length
+              ? ` • ${filteredProducts?.length} Ads`
+              : ''}
           </h2>
           <div className="flex items-center space-x-4">
             {/* <button className="flex items-center space-x-2 text-sm">
@@ -88,18 +100,26 @@ function Product() {
 
         {/* <BrandFilter brands={brands} /> */}
         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-1">
-          <ProductList products={paginatedProducts} />
+          {filteredProducts?.length ? (
+            <ProductList products={paginatedProducts} />
+          ) : (
+            <NoSearchResult />
+          )}
         </div>
         <div className="p-6">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={(page) => setCurrentPage(page)}
-          />
+          {filteredProducts?.length ? (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={(page) => setCurrentPage(page)}
+            />
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-export default Product;
+export default SearchResult;

@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Heart, MessageCircle, User, X, List, LogOutIcon } from 'lucide-react';
 import Favourite from '../TopNavElements/Favourite';
 import Cart from '../TopNavElements/Cart';
 import Notfication from '../TopNavElements/Notfication';
 import { useAuth } from '../../Context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useCustomers from '../../hooks/useCustomers';
 import supabase from '../../services/supabase';
 
@@ -13,6 +13,7 @@ const NavLinks = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { customers } = useCustomers();
+  const navlinksRef = useRef<HTMLDivElement>(null);
 
   const filterdCustomers = customers?.filter(
     (customer) => customer.uuid === user?.identities?.at(0)?.user_id
@@ -30,8 +31,27 @@ const NavLinks = () => {
     setActiveModal('');
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        navlinksRef.current &&
+        !navlinksRef.current.contains(event.target as Node)
+      ) {
+        setActiveModal('');
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="relative flex items-center space-x-6">
+    <div
+      className="navlinks relative flex items-center space-x-6"
+      ref={navlinksRef}
+    >
       {/* Notifications */}
       <Notfication
         activeModal={activeModal}
@@ -53,14 +73,14 @@ const NavLinks = () => {
       {/* Chats */}
       <div className="relative">
         <div
-          className="  flex cursor-pointer flex-col items-center justify-center text-sm text-gray-400 hover:text-gray-900"
+          className="flex cursor-pointer flex-col items-center justify-center text-sm text-gray-400 hover:text-gray-900"
           onClick={() => handleLinkClick('chats')}
         >
           <MessageCircle className="mr-1 h-4 w-4" />
           <p className="text-sm text-gray-500">Chats</p>
         </div>
         {activeModal === 'chats' && (
-          <div className=" dropdown-pointer absolute -right-4  top-12 z-50 w-64 rounded-lg bg-white p-4 shadow-lg">
+          <div className="dropdown-pointer absolute -right-4 top-12 z-50 w-64 rounded-lg bg-white p-4 shadow-lg">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-lg font-semibold capitalize">Chats</h3>
               <X className="h-4 w-4 cursor-pointer" onClick={closeModal} />
@@ -75,7 +95,7 @@ const NavLinks = () => {
       {/* Profile */}
       <div className="relative">
         <div
-          className=" flex cursor-pointer flex-row items-center justify-center text-sm text-gray-400 hover:text-gray-900"
+          className="flex cursor-pointer flex-row items-center justify-center text-sm text-gray-400 hover:text-gray-900"
           onClick={() => handleLinkClick('profile')}
         >
           <User className="mr-1 h-4 w-4" />
@@ -84,62 +104,69 @@ const NavLinks = () => {
           </p>
         </div>
         {activeModal === 'profile' && (
-          <div className=" dropdown-pointer absolute right-5 top-10 z-50 w-64 rounded-lg bg-white p-4 shadow-lg">
+          <div className="dropdown-pointer absolute right-5 top-10 z-[1000] w-64 rounded-lg bg-white p-4 shadow-lg">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-lg font-semibold capitalize">Profile</h3>
               <X className="h-4 w-4 cursor-pointer" onClick={closeModal} />
             </div>
             <ul className="space-y-2">
-              <li className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100">
-                <button
-                  className="flex items-center space-x-2"
-                  onClick={() => {
-                    navigate('/profile');
-                    closeModal();
-                  }}
-                >
+              <li
+                className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100"
+                onClick={() => {
+                  navigate('/profile');
+                  closeModal();
+                }}
+              >
+                <button className="flex items-center space-x-2">
                   <User className="h-4 w-4" />
                   <p className="text-sm text-gray-500">Profile</p>
                 </button>
               </li>
-              <li className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100">
-                <button
-                  className="flex items-center space-x-2"
-                  onClick={() => {
-                    navigate('/my-ads');
-                    closeModal();
-                  }}
-                >
+              <li
+                className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100"
+                onClick={() => {
+                  navigate('/my-ads');
+                  closeModal();
+                }}
+              >
+                <button className="flex items-center space-x-2">
                   <List className="h-4 w-4" />
                   <p className="text-sm text-gray-500">My Ads</p>
                 </button>
               </li>
-              <li className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100">
-                <button
-                  className="flex items-center space-x-2"
-                  onClick={() => navigate('/favourites')}
-                >
+              <li
+                className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100"
+                onClick={() => {
+                  navigate('/favourites');
+                  closeModal();
+                }}
+              >
+                <button className="flex items-center space-x-2">
                   <Heart className="h-4 w-4" />
                   <p className="text-sm text-gray-500">Favorites</p>
                 </button>
               </li>
-              <li className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100">
-                <button
-                  className="flex items-center space-x-2"
-                  onClick={() => navigate('/chat')}
-                >
+              <li
+                className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100"
+                onClick={() => {
+                  navigate('/chat');
+                  closeModal();
+                }}
+              >
+                <button className="flex items-center space-x-2">
                   <MessageCircle className="h-4 w-4" />
                   <p className="text-sm text-gray-500">Chats</p>
                 </button>
               </li>
-              <li className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100">
-                <button
-                  className="flex items-center space-x-2"
-                  onClick={async () => {
-                    await supabase.auth.signOut();
-                    navigate('/');
-                  }}
-                >
+              <li
+                className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100"
+                onClick={async () => {
+                  await supabase.auth.signOut();
+                  navigate('/');
+                  closeModal();
+                }}
+              >
+                <button className="flex items-center space-x-2">
                   <LogOutIcon className="h-4 w-4" />
                   <p className="text-sm text-gray-500">Logout</p>
                 </button>
@@ -148,6 +175,13 @@ const NavLinks = () => {
           </div>
         )}
       </div>
+      {/* Place Ad */}
+      <Link
+        to={'/post-ad'}
+        className="rounded-md bg-blue-700 p-2 px-5 text-sm font-semibold text-white hover:bg-blue-800"
+      >
+        Place Your Ad
+      </Link>
     </div>
   );
 };

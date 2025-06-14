@@ -34,7 +34,7 @@ export default function Favourite({
           <p className="text-s text-gray-500">Favorites</p>
         </div>
         {activeModal === 'favorites' && (
-          <div className="dropdown-pointer shadow-3xl absolute right-0 top-11 z-50 w-[400px] rounded-lg bg-white p-0 shadow-lg">
+          <div className="dropdown-pointer shadow-3xl absolute right-0 top-11 z-[1000] w-[400px] rounded-lg bg-white p-0 shadow-lg">
             <div className="flex items-center justify-between border-b p-4">
               <h3 className="text-sm font-semibold text-gray-900">
                 Favorites ({favourite.length})
@@ -47,8 +47,12 @@ export default function Favourite({
 
             <div className="max-h-[500px] overflow-y-auto">
               {favoriteProducts?.map((product) => (
-                <Link to={`/detail/${product?.id}`} key={product.id}>
-                  <div className="border-b p-4">
+                <Link
+                  to={`/detail/${product?.id}`}
+                  key={product.id}
+                  className="hover:bg-gray-100"
+                >
+                  <div className="border-b p-4 hover:bg-gray-100">
                     <div className="flex gap-3">
                       <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
                         <img
@@ -74,10 +78,13 @@ export default function Favourite({
               ))}
             </div>
 
-            <div className="p-4 text-center">
+            <div className="p-2 text-center">
               <button
-                className="text-sm font-medium text-blue-500 hover:text-blue-700"
-                onClick={() => navigate('/favourites')}
+                className="w-full p-4 text-xs font-medium text-blue-500 hover:bg-gray-100/70 hover:text-blue-700"
+                onClick={() => {
+                  navigate('/favourites');
+                  closeModal();
+                }}
               >
                 VIEW ALL FAVORITES
               </button>

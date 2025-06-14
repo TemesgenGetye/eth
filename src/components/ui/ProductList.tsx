@@ -66,7 +66,7 @@ export default function ProductList({ products }: ProductProps) {
     refetchFavorites();
   }
 
-  function handleCart(
+  async function handleCart(
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     id: number
   ) {
@@ -74,7 +74,7 @@ export default function ProductList({ products }: ProductProps) {
     if (!cart.some((item) => item === id)) {
       setCart([...cart, id]);
       localStorage.setItem('cart', JSON.stringify([...cart, id]));
-      refetchCart();
+      await refetchCart();
       toast.success('Item added to cart succesfully.');
     }
   }
@@ -107,7 +107,7 @@ export default function ProductList({ products }: ProductProps) {
                 {product.imgUrls.length > 1 && (
                   <>
                     <button
-                      className="absolute left-0.5 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full bg-white/80 p-1 ring-1 ring-gray-300 hover:bg-gray-300 hover:ring-2 hover:ring-gray-400"
+                      className="absolute left-0.5 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full bg-white/80 p-1 ring-1 ring-gray-300 hover:bg-gray-100 hover:ring-gray-400"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleImageChange(product?.id, 'prev', product.imgUrls);
@@ -116,7 +116,7 @@ export default function ProductList({ products }: ProductProps) {
                       <ChevronLeft size={16} />
                     </button>
                     <button
-                      className="absolute right-0.5 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full bg-white/80 p-1 ring-1 ring-gray-300 hover:bg-gray-300 hover:ring-2 hover:ring-gray-400"
+                      className="absolute right-0.5 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full bg-white/80 p-1 ring-1 ring-gray-300 hover:bg-gray-100 hover:ring-gray-400"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleImageChange(

@@ -16,9 +16,10 @@ import toast from 'react-hot-toast';
 import { useAuth } from '../Context/AuthContext';
 import { useOrder } from '../hooks/useOrder';
 import useCustomers from '../hooks/useCustomers';
+import { cleanString } from '../services/utils';
 
 export default function CartPage() {
-  const { cartItems } = useCartItems();
+  const { cartItems, refetchCart } = useCartItems();
   const navigate = useNavigate();
 
   const [imageIndexes, setImageIndexes] = useState<{ [key: string]: number }>(
@@ -31,8 +32,6 @@ export default function CartPage() {
   const { cart, setCart } = useCart();
   const { user } = useAuth();
   const orderMutation = useOrder();
-  console.log('cart', cart);
-  console.log('user', user);
 
   const { customers } = useCustomers();
   const filterdCustomers = customers?.filter(
@@ -64,6 +63,7 @@ export default function CartPage() {
     if (cart?.length) {
       console.log(cart);
       setCart(cart?.filter((item) => +item !== id));
+      refetchCart();
       toast.success('Item removed sucessfully.');
     }
   }
@@ -130,6 +130,10 @@ export default function CartPage() {
     }
   }
 
+  // useEffect(() => {
+
+  // }, []);
+
   return (
     <div className="mx-auto mb-5 grid max-w-7xl grid-cols-1 gap-4">
       <div className="p-10">
@@ -177,8 +181,14 @@ export default function CartPage() {
             return (
               <div
                 key={item._id}
-                className="relative rounded-lg border-b border-b-gray-200 bg-white p-4 shadow-sm"
-                onClick={() => navigate(`/detail/${item.id}`)}
+                className="relative cursor-pointer rounded-lg border-b border-b-gray-200 bg-white p-4 shadow-sm"
+                onClick={() =>
+                  navigate(
+                    `/${cleanString(item.category.name)}/${cleanString(item.subcategory.name)}/${cleanString(item.name)}`,
+                    { state: { pid: item.id } }
+                  )
+                }
+                // /:cid/:pname/:pid
               >
                 <div className="flex gap-4">
                   <div className="relative h-48 w-72 flex-shrink-0 overflow-hidden rounded-lg">

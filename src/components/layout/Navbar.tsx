@@ -10,18 +10,18 @@ const Navbar = () => {
   return (
     <nav>
       {/* Top Bar */}
-      <div className="border-b border-b-gray-200 bg-white">
+      <div className="border-b border-b-gray-200 bg-white py-2">
         <div className="m-auto max-w-6xl">
           <div className="mx-auto flex h-12 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
             <div className="flex items-center space-x-2">
               <Link to="/" className="flex items-center">
                 <img src="./logo.png" alt="888market" className="h-10 w-auto" />
+                <div className="flex items-center">
+                  <button className="flex items-center text-sm font-semibold text-gray-600 hover:text-gray-900">
+                    888Market
+                  </button>
+                </div>
               </Link>
-              <div className="flex items-center">
-                <button className="flex items-center text-sm font-semibold text-gray-600 hover:text-gray-900">
-                  888Market
-                </button>
-              </div>
             </div>
 
             {/* TopNav Component */}
@@ -163,7 +163,7 @@ const HoverMenu = () => {
                 category.subcategories &&
                 category.subcategories.length > 0 && (
                   <div
-                    className={`dropdown-pointer-menu absolute left-0 top-full z-50 mt-2 flex ${category?.name === 'Home' ? 'w-[550px]' : 'w-[280px]'} rounded-lg bg-white p-4 text-sm shadow-lg`}
+                    className={`dropdown-pointer-menu absolute left-0 top-full z-[10000] mt-2 flex ${category?.name === 'Home' ? 'w-[550px]' : 'w-[280px]'} rounded-lg bg-white p-4 text-sm shadow-lg`}
                     onMouseEnter={() => handleMouseEnterParent(category.name)}
                     onMouseLeave={handleMouseLeave}
                   >

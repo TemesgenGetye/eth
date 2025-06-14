@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { getProductsById } from '../services/products';
+import { getProdsById, getProductsById } from '../services/products';
+import { useCart } from '../Context/Cart';
+import { useEffect } from 'react';
 
 export const useFavouriteItems = () => {
   const favStr = localStorage.getItem('favourite');
@@ -24,8 +26,9 @@ export const useFavouriteItems = () => {
 };
 
 export const useCartItems = () => {
-  const cartStr = localStorage.getItem('cart');
-  const cart = JSON.parse(cartStr?.length ? cartStr : '[]');
+  const { cart } = useCart();
+  console.log('cart', cart);
+  // const numedCart =
   const {
     isLoading: isLoadingCart,
     data: cartItems,
@@ -33,8 +36,12 @@ export const useCartItems = () => {
     refetch: refetchCart,
   } = useQuery({
     queryKey: ['cart-items'],
-    queryFn: () => getProductsById(cart?.map((item: string) => +item)),
+    queryFn: () => getProdsById(cart),
   });
+
+  useEffect(() => {
+    refetchCart();
+  }, [refetchCart]);
 
   return {
     isLoadingCart,
