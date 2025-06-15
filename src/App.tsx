@@ -40,11 +40,16 @@ import SignUpPage from './pages/SignUp';
 import SearchResult from './pages/SearchResult';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import VerificationBar from './components/Verfication/verification';
+import ForgotPasswordPage from './pages/ForgotPassword';
+import ResetPasswordPage from './pages/ResetPassword';
 
 function AppContent() {
   const location = useLocation();
   const hideNavAndFooter =
-    location.pathname === '/login' || location.pathname === '/signup';
+    location.pathname === '/login' ||
+    location.pathname === '/signup' ||
+    location.pathname === '/forgot-password' ||
+    location.pathname === '/reset-password';
   const profileHideFooter = location.pathname === '/profile';
   const verifaied = true;
   return (
@@ -120,6 +125,9 @@ function AppContent() {
               </ProtectedRoute>
             }
           />
+
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
 
           {/* 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 */}
           <Route path="/motor" element={<Motor />}>
