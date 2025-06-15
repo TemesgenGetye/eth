@@ -15,6 +15,25 @@ export async function getCustomers() {
   }
 }
 
+export async function getCustomer(uuid: string) {
+  try {
+    const { data, error } = await supabase
+      .from('customers')
+      .select('*')
+      .eq('uuid', uuid)
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  } catch (err) {
+    console.error('Failed to fetch customer:', err);
+    return null;
+  }
+}
+
 export async function updateCustomer(customer) {
   try {
     const { data, error } = await supabase

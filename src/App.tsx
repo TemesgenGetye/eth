@@ -42,6 +42,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import VerificationBar from './components/Verfication/verification';
 import ForgotPasswordPage from './pages/ForgotPassword';
 import ResetPasswordPage from './pages/ResetPassword';
+import { VerficationModalProvider } from './Context/VerficationModal';
 
 function AppContent() {
   const location = useLocation();
@@ -153,19 +154,21 @@ function App() {
   return (
     <AuthProvider>
       <LanguageProvider>
-        <CartProvider>
-          <FavouriteProvider>
-            <BlurBackgroundProvider>
-              <Router>
-                <ScrollToTop />
-                <QueryClientProvider client={queryClient}>
-                  <AppContent />
-                  <ReactQueryDevtools />
-                </QueryClientProvider>
-              </Router>
-            </BlurBackgroundProvider>
-          </FavouriteProvider>
-        </CartProvider>
+        <VerficationModalProvider>
+          <CartProvider>
+            <FavouriteProvider>
+              <BlurBackgroundProvider>
+                <Router>
+                  <ScrollToTop />
+                  <QueryClientProvider client={queryClient}>
+                    <AppContent />
+                    <ReactQueryDevtools />
+                  </QueryClientProvider>
+                </Router>
+              </BlurBackgroundProvider>
+            </FavouriteProvider>
+          </CartProvider>
+        </VerficationModalProvider>
       </LanguageProvider>
     </AuthProvider>
   );

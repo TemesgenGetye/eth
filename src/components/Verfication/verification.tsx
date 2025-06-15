@@ -12,9 +12,14 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import supabase from '../../services/supabase';
-import useCustomers, { useUpdateCustomer } from '../../hooks/useCustomers';
+import useCustomers, {
+  useGetCustomer,
+  useUpdateCustomer,
+} from '../../hooks/useCustomers';
 import { useAuth } from '../../Context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+
+import { useVerficationModal } from '../../Context/VerficationModal';
+import { s } from 'framer-motion/client';
 
 type VerificationStep =
   | 'initial'
@@ -37,7 +42,7 @@ interface CapturedMedia {
 }
 
 const VerificationBar = () => {
-  const [open, setOpen] = useState(false);
+  const { open, setOpen } = useVerficationModal();
   const [step, setStep] = useState<VerificationStep>('initial');
   const [selectedIdType, setSelectedIdType] = useState<'emirates' | 'passport'>(
     'emirates'
@@ -57,14 +62,23 @@ const VerificationBar = () => {
   const streamRef = useRef<MediaStream | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const { customers } = useCustomers();
-  const { user } = useAuth();
-  const navigate = useNavigate();
+  const stopVideoRecordingCalled = useRef(false);
+
+  // const { customers } = useCustomers();
+  // const navigate = useNavigate();
 
   const { updateCustomerMutate, isPendingCustomer } = useUpdateCustomer();
-  const filterdCustomers = customers?.filter(
-    (customer) => customer.uuid === user?.identities?.at(0)?.user_id
+  const { user } = useAuth();
+  const { customer, isLoadingCustomer } = useGetCustomer(
+    user?.identities?.at(0)?.user_id as string
   );
+
+  // const filterdCustomers = customers?.filter(
+  //   (customer) => customer.uuid === user?.identities?.at(0)?.user_id
+  // );
+
+  // console.log('filterdCustomers', filterdCustomers);
+  console.log('customer', customer);
 
   // Initialize camera
   const initializeCamera = useCallback(async () => {
@@ -139,72 +153,6 @@ const VerificationBar = () => {
     stopCamera();
   }, [currentPhotoType, stopCamera]);
 
-  // Start video recording
-  const startVideoRecording = useCallback(async () => {
-    if (!streamRef.current) return;
-
-    try {
-      const mediaRecorder = new MediaRecorder(streamRef.current, {
-        mimeType: 'video/webm;codecs=vp9',
-      });
-
-      const chunks: Blob[] = [];
-
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          chunks.push(event.data);
-        }
-      };
-
-      mediaRecorder.onstop = () => {
-        const videoBlob = new Blob(chunks, { type: 'video/webm' });
-        setCapturedMedia((prev) => ({
-          ...prev,
-          videoBlob,
-        }));
-
-        // Extract frame from video for preview
-        extractVideoFrame(videoBlob);
-        console.log('Video recording completed:', videoBlob);
-      };
-
-      mediaRecorderRef.current = mediaRecorder;
-      mediaRecorder.start();
-      setIsRecording(true);
-      setRecordingTime(0);
-
-      // Start recording timer
-      recordingIntervalRef.current = setInterval(() => {
-        setRecordingTime((prev) => {
-          const newTime = prev + 1;
-          if (newTime >= 5) {
-            stopVideoRecording();
-          }
-          return newTime;
-        });
-      }, 1000);
-
-      console.log('Video recording started');
-    } catch (error) {
-      console.error('Failed to start recording:', error);
-    }
-  }, []);
-
-  // Stop video recording
-  const stopVideoRecording = useCallback(() => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-
-      if (recordingIntervalRef.current) {
-        clearInterval(recordingIntervalRef.current);
-        recordingIntervalRef.current = null;
-      }
-
-      console.log('Video recording stopped');
-    }
-  }, [isRecording]);
-
   // Extract frame from video for preview
   const extractVideoFrame = useCallback((videoBlob: Blob) => {
     const video = document.createElement('video');
@@ -231,6 +179,72 @@ const VerificationBar = () => {
       console.log('Video frame extracted:', frameData.substring(0, 50) + '...');
     };
   }, []);
+
+  // Stop video recording
+  const stopVideoRecording = useCallback(() => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      if (recordingIntervalRef.current) {
+        clearInterval(recordingIntervalRef.current);
+        recordingIntervalRef.current = null;
+      }
+      setTimeout(() => {
+        setIsRecording(false);
+      }, 500);
+      console.log('Video recording stopped');
+    }
+  }, [isRecording]);
+
+  // Start video recording
+  const startVideoRecording = useCallback(async () => {
+    if (!streamRef.current) return;
+    stopVideoRecordingCalled.current = false;
+    try {
+      const mediaRecorder = new MediaRecorder(streamRef.current, {
+        mimeType: 'video/webm;codecs=vp9',
+      });
+
+      const chunks: Blob[] = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          chunks.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const videoBlob = new Blob(chunks, { type: 'video/webm' });
+        setCapturedMedia((prev) => ({
+          ...prev,
+          videoBlob: videoBlob,
+        }));
+        extractVideoFrame(videoBlob);
+        console.log('Video recording completed:', videoBlob);
+      };
+
+      mediaRecorderRef.current = mediaRecorder;
+      mediaRecorder.start();
+      setIsRecording(true);
+      setRecordingTime(1); // Start at 1
+
+      let count = 1;
+      recordingIntervalRef.current = setInterval(() => {
+        count++;
+        setRecordingTime(count);
+        if (count >= 5) {
+          if (!stopVideoRecordingCalled.current) {
+            stopVideoRecordingCalled.current = true;
+            stopVideoRecording();
+          }
+        }
+      }, 1000);
+
+      console.log('Video recording started');
+    } catch (error) {
+      console.error('Failed to start recording:', error);
+    }
+  }, [extractVideoFrame, stopVideoRecording]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -327,6 +341,15 @@ const VerificationBar = () => {
       stopVideoRecording();
     }
   };
+
+  // automatically stop recording after 5 seconds
+  useEffect(() => {
+    if (isRecording) {
+      setTimeout(() => {
+        stopVideoRecording();
+      }, 5000);
+    }
+  }, [isRecording, stopVideoRecording]);
 
   const handleSubmitVideo = async () => {
     setStep('uploading');
@@ -433,7 +456,7 @@ const VerificationBar = () => {
     console.log('Uploaded file URLs:', uploadedUrls);
 
     updateCustomerMutate({
-      id: filterdCustomers?.[0]?.id,
+      id: customer?.id,
       id_front: uploadedUrls.frontPhoto,
       id_back: uploadedUrls.backPhoto,
       video_url: uploadedUrls.video,
@@ -1409,6 +1432,20 @@ const VerificationBar = () => {
     }
   };
 
+  if (isLoadingCustomer) {
+    return (
+      <div className="flex w-full items-center justify-center gap-4 bg-blue-100 px-6 py-1">
+        <div className="flex w-full max-w-lg animate-pulse items-center gap-4">
+          <div className="h-10 w-10 rounded-full bg-blue-200" />
+          <div className="flex-1 space-y-2">
+            <div className="h-4 w-3/4 rounded bg-blue-200" />
+            <div className="h-3 w-1/2 rounded bg-blue-200" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+  if (customer?.verfication_status === 'approved') return null;
   return (
     <>
       <div className="flex w-full items-center justify-center gap-4 bg-blue-500 px-6 py-2 text-white">
