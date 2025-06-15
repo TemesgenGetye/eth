@@ -39,14 +39,18 @@ import { Toaster } from 'react-hot-toast';
 import SignUpPage from './pages/SignUp';
 import SearchResult from './pages/SearchResult';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import VerificationBar from './components/Verfication/verification';
 
 function AppContent() {
   const location = useLocation();
   const hideNavAndFooter =
     location.pathname === '/login' || location.pathname === '/signup';
   const profileHideFooter = location.pathname === '/profile';
+  const verifaied = true;
   return (
     <div className="flex min-h-screen flex-col">
+      {verifaied && <VerificationBar />}
+
       {!hideNavAndFooter && <Navbar />}
       <main className="flex-grow ">
         <Routes>
