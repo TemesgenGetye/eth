@@ -14,19 +14,18 @@ import Cart from '../TopNavElements/Cart';
 import Notfication from '../TopNavElements/Notfication';
 import { useAuth } from '../../Context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import useCustomers, { useGetCustomer } from '../../hooks/useCustomers';
 import supabase from '../../services/supabase';
-import { useVerficationModal } from '../../Context/VerficationModal';
+// import { useVerficationModal } from '../../Context/VerficationModal';
+import { useGetCustomer } from '../../hooks/useCustomers';
 
 const NavLinks = () => {
   const [activeModal, setActiveModal] = useState('');
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { customers } = useCustomers();
   const navlinksRef = useRef<HTMLDivElement>(null);
-  const { open, setOpen } = useVerficationModal();
+  // const { open, setOpen } = useVerficationModal(); YW unused state 
 
-  const { customer, isLoadingCustomer } = useGetCustomer(
+  const { customer } = useGetCustomer(
     user?.identities?.at(0)?.user_id as string
   );
 
@@ -161,7 +160,7 @@ const NavLinks = () => {
               <li
                 className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100"
                 onClick={() => {
-                  setOpen(true);
+                  // setOpen(true);
                   closeModal();
                 }}
               >

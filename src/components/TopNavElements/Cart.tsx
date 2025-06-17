@@ -27,7 +27,7 @@ function Cart({
         <p className="text-s text-gray-500">Cart</p>
       </div>
       {activeModal === 'cart' && (
-        <div className="dropdown-pointer shadow-3xl absolute right-0 top-11 z-50 w-[400px] rounded-lg bg-white p-0 shadow-lg">
+        <div className="dropdown-pointer shadow-3xl absolute right-0 top-11 z-[10000] w-[400px] rounded-lg bg-white p-0 shadow-lg">
           <div className="flex items-center justify-between border-b p-4">
             <h3 className="text-sm font-semibold text-gray-900">
               Cart ({cart.length})
@@ -48,14 +48,14 @@ function Cart({
                   closeModal();
                 }}
                 className="cursor-pointer"
-                key={item.id}
+                key={item?.id}
               >
                 <div className="border-b p-4 hover:bg-gray-100">
                   <div className="flex gap-3">
                     <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
                       <img
-                        src={item.imgUrls[0] || '/logo.png'}
-                        alt={item.name}
+                        src={item?.imgUrls[0] || '/logo.png'}
+                        alt={item?.name}
                         className="h-full w-full object-cover"
                       />
                     </div>

@@ -1,5 +1,4 @@
 import { Bell, X } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 function Notfication({
   activeModal,
@@ -60,7 +59,7 @@ function Notfication({
           <p className="text-s text-gray-500">Notfication</p>
         </div>
         {activeModal === 'notifications' && (
-          <div className="dropdown-pointer shadow-3xl absolute right-0 top-11 z-50 w-[400px] rounded-lg bg-white p-0 shadow-lg">
+          <div className="dropdown-pointer shadow-3xl absolute right-0 top-11 z-[10000] w-[400px] rounded-lg bg-white p-0 shadow-lg">
             <div className="flex items-center justify-between border-b p-4">
               <h3 className="text-sm font-semibold text-gray-900">
                 Notfication ({notfication.length})
