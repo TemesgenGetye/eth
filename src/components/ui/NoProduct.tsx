@@ -17,13 +17,6 @@ function NoProduct() {
     [1, 0, 0, 1]
   );
 
-  // xNumeric.onChange((latest) => {
-  //   // console.log('x numeric value:', latest);
-  // });
-  // iconOpacity.onChange((latest) => {
-  //   // console.log('iconOpacity value:', latest);
-  // });
-
   return (
     <div className="relative h-[90vh] w-full overflow-hidden bg-gradient-to-b from-white to-blue-50">
       <div className="absolute inset-0 z-10 flex flex-col items-center justify-start pt-8">

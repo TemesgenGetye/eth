@@ -29,7 +29,7 @@ import OrderConfirmationPage from './pages/Order-configration';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ProtectedRoute } from './pages/ProtectedRoute';
 import LoginForm from './pages/Login';
-import { AuthProvider } from './Context/AuthContext';
+import { AuthProvider, useAuth } from './Context/AuthContext';
 import Profile from './pages/Profile';
 import MyAds from './pages/MyAds';
 import PostAdPage from './pages/PostAds';
@@ -38,14 +38,25 @@ import { Toaster } from 'react-hot-toast';
 import SignUpPage from './pages/SignUp';
 import SearchResult from './pages/SearchResult';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import VerificationBar from './components/Verfication/verification';
+import ForgotPasswordPage from './pages/ForgotPassword';
+import ResetPasswordPage from './pages/ResetPassword';
+import { VerficationModalProvider } from './Context/VerficationModal';
 
 function AppContent() {
   const location = useLocation();
+  const { user } = useAuth();
   const hideNavAndFooter =
-    location.pathname === '/login' || location.pathname === '/signup';
+    location.pathname === '/login' ||
+    location.pathname === '/signup' ||
+    location.pathname === '/forgot-password' ||
+    location.pathname === '/reset-password';
   const profileHideFooter = location.pathname === '/profile';
+  const verifaied = true;
   return (
     <div className="flex min-h-screen flex-col">
+      {user?.email && verifaied && !hideNavAndFooter && <VerificationBar />}
+
       {!hideNavAndFooter && <Navbar />}
       <main className="flex-grow ">
         <Routes>
@@ -116,6 +127,9 @@ function AppContent() {
             }
           />
 
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+
           {/* 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 */}
           <Route path="/motor" element={<Motor />}>
             <Route index element={<Try />} />
@@ -140,19 +154,21 @@ function App() {
   return (
     <AuthProvider>
       <LanguageProvider>
-        <CartProvider>
-          <FavouriteProvider>
-            <BlurBackgroundProvider>
-              <Router>
-                <ScrollToTop />
-                <QueryClientProvider client={queryClient}>
-                  <AppContent />
-                  <ReactQueryDevtools />
-                </QueryClientProvider>
-              </Router>
-            </BlurBackgroundProvider>
-          </FavouriteProvider>
-        </CartProvider>
+        <VerficationModalProvider>
+          <CartProvider>
+            <FavouriteProvider>
+              <BlurBackgroundProvider>
+                <Router>
+                  <ScrollToTop />
+                  <QueryClientProvider client={queryClient}>
+                    <AppContent />
+                    <ReactQueryDevtools />
+                  </QueryClientProvider>
+                </Router>
+              </BlurBackgroundProvider>
+            </FavouriteProvider>
+          </CartProvider>
+        </VerficationModalProvider>
       </LanguageProvider>
     </AuthProvider>
   );

@@ -39,8 +39,6 @@ function SearchFilters({
     maxYear?: number;
   }>({ term: keyword, city: '' });
 
-  // onSetFiltProducts(filteredProducts);
-
   // Debounced function to update search term
   const debouncedSetFilterOptions = debounce((value: string) => {
     setFilterOptions((prev) => ({ ...prev, term: value.trim() }));

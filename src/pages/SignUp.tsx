@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useSignup } from '../services/auth';
 import { useNavigate } from 'react-router-dom';
 import supabase from '../services/supabase';
@@ -10,10 +10,32 @@ export default function SignUpPage() {
   const [error, setError] = useState<string>('');
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+
   const signUp = useSignup();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  // Use Supabase to send confirmation email (no code step)
+  async function sendCodeToEmail(email: string, password: string) {
+    // This will trigger Supabase to send a confirmation email
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: window.location.origin + '/login',
+      },
+    });
+    if (error) {
+      setError(error.message);
+      return false;
+    }
+    toast.success(
+      'Signup successful! Please check your email inbox and click the verification link to activate your account. You will not be able to log in until your email is verified.',
+      { duration: 8000 }
+    );
+    return true;
+  }
+
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
 
@@ -25,28 +47,16 @@ export default function SignUpPage() {
     const formData = new FormData(e.currentTarget);
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
+    const confirmPassword = formData.get('confirmPassword') as string;
 
-    try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: window.location.origin + '/login',
-        },
-      });
-      if (error) {
-        setError(error.message);
-        return;
-      }
-      // Show a message to the user to check their email for verification
-      toast.success(
-        'Signup successful! Please check your email inbox and click the verification link to activate your account. You will not be able to log in until your email is verified.',
-        { duration: 8000 }
-      );
+    if (password !== confirmPassword) {
+      setError('Passwords do not match.');
+      return;
+    }
 
+    const success = await sendCodeToEmail(email, password);
+    if (success) {
       navigate('/login');
-    } catch (error: any) {
-      setError(error.message || 'An error occurred during signup');
     }
   };
 
@@ -178,7 +188,7 @@ export default function SignUpPage() {
               </div>
             </div>
             {/* Email/Password Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleFormSubmit} className="space-y-6">
               <div>
                 <label
                   htmlFor="email"
@@ -208,6 +218,23 @@ export default function SignUpPage() {
                   name="password"
                   type="password"
                   placeholder="Enter your password"
+                  required
+                  disabled={signUp.isPending || isGoogleLoading}
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Confirm Password
+                </label>
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  placeholder="Confirm your password"
                   required
                   disabled={signUp.isPending || isGoogleLoading}
                   className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"

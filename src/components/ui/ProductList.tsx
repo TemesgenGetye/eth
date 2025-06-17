@@ -4,6 +4,11 @@ import {
   ChevronLeft,
   ChevronRight,
   ShoppingCart,
+  Mail,
+  Phone,
+  MessageCircle,
+  User,
+  VerifiedIcon,
 } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +17,7 @@ import { useCart } from '../../Context/Cart';
 import { ProductType } from '../type';
 import toast from 'react-hot-toast';
 import { useCartItems, useFavouriteItems } from '../../hooks/store';
+import { useGetCustomer, useGetCustomerById } from '../../hooks/useCustomers';
 
 interface ProductProps {
   products: ProductType[] | undefined;
@@ -62,7 +68,7 @@ export default function ProductList({ products }: ProductProps) {
         JSON.stringify(favourite.filter((fav) => fav !== id))
       );
     }
-    console.log('fav before', localStorage.getItem('favourite'));
+
     refetchFavorites();
   }
 
@@ -162,18 +168,13 @@ export default function ProductList({ products }: ProductProps) {
                               {product.price.orignal}
                             </span>
                             <span>AED</span>
-                            <div className="text-red-500">
+                            <div className="text-lg text-red-500">
                               {Number(product.price.discounted).toFixed(2)} AED
                               Downpayment
                             </div>
                           </>
                         )}
                       </span>
-                      {product.stock > 0 && (
-                        <span className="rounded bg-green-300 px-2 py-0.5 text-xs font-medium text-white">
-                          IN STOCK ( {product.stock})
-                        </span>
-                      )}
                     </div>
                     <div className="flex flex-col items-start ">
                       {/* <span>• {product.slug}</span> */}
@@ -185,18 +186,22 @@ export default function ProductList({ products }: ProductProps) {
                     </div>
                   </div>
                   <div className="flex space-x-2">
-                    <button
-                      className="rounded-lg bg-green-300 p-2 text-white"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCart(e, product?.id);
-                      }}
-                    >
-                      <div className="flex w-full items-center gap-2 text-sm font-medium text-white">
-                        <p>Add to Cart</p>
-                        <ShoppingCart className="h-4 w-4" />
-                      </div>
-                    </button>
+                    {!product.createdBy ? (
+                      <button
+                        className="rounded-lg bg-green-300 p-2 text-white"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCart(e, product?.id);
+                        }}
+                      >
+                        <div className="flex w-full items-center gap-2 text-sm font-medium text-white">
+                          <p>Add to Cart</p>
+                          <ShoppingCart className="h-4 w-4" />
+                        </div>
+                      </button>
+                    ) : (
+                      ''
+                    )}
                     <button
                       className="h-7 w-7 text-red-500"
                       onClick={(e) => {
@@ -211,15 +216,108 @@ export default function ProductList({ products }: ProductProps) {
                     </button>
                   </div>
                 </div>
+                {product.stock > 0 && (
+                  <span className="rounded bg-green-300 px-2 py-0.5 text-xs font-medium text-white">
+                    IN STOCK ( {product.stock})
+                  </span>
+                )}
                 <p className="line-clamp-2 pr-10 text-sm text-gray-600">
                   {product.description}
                 </p>
                 <div className="space-y-2 text-sm text-gray-500">{'dubai'}</div>
+                {!product?.createdBy && (
+                  <div className="flex items-center gap-1">
+                    <VerifiedIcon className="h-5 w-5 text-green-600" />
+                    <span className="text-sm  text-green-700">verified</span>
+                  </div>
+                )}
+                {product?.createdBy ? (
+                  <SellerContact createdBy={product?.createdBy} />
+                ) : (
+                  ''
+                )}
               </div>
             </div>
           </li>
         );
       })}
     </ul>
+  );
+}
+
+function SellerContact({ createdBy }: { createdBy: number | string }) {
+  const { customer, isLoadingCustomer } = useGetCustomerById(String(createdBy));
+
+  if (isLoadingCustomer) {
+    return (
+      <div className="flex items-center gap-2 rounded-xl border border-gray-100 bg-gray-50 p-4">
+        <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600"></div>
+        <span className="text-sm font-medium text-gray-500">
+          Loading seller information...
+        </span>
+      </div>
+    );
+  }
+
+  if (!customer) {
+    return (
+      <div className="flex items-center gap-2 rounded-xl border border-gray-100 bg-gray-50 p-4">
+        <User className="h-4 w-4 text-gray-400" />
+        <span className="text-sm font-medium text-gray-500">
+          Seller information unavailable
+        </span>
+      </div>
+    );
+  }
+
+  let waNum = customer.phoneNum?.replace(/\D/g, '');
+  if (waNum && waNum.length === 10 && waNum.startsWith('0'))
+    waNum = '971' + waNum.slice(1);
+
+  return (
+    <div className="space-y-2">
+      {customer?.verification_status === 'verified' && (
+        <div className="flex items-center gap-1">
+          <VerifiedIcon className="h-5 w-5 text-green-600" />
+          <span className="text-sm  text-green-700">verified</span>
+        </div>
+      )}
+
+      <div className="mb-3 flex items-center gap-1">
+        <User className="h-4 w-4 text-blue-600" />
+        <span className="text-sm  text-blue-700">Contact Seller</span>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        <a
+          href={`mailto:${customer.email}`}
+          className="group flex items-center gap-2 rounded-lg border border-blue-200 bg-white px-4 py-2.5 text-sm font-medium text-blue-700 shadow-sm transition-all duration-200 hover:border-blue-300 hover:bg-blue-50 hover:shadow-md"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Mail className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
+          <span>Email</span>
+        </a>
+
+        <a
+          href={`tel:${customer.phoneNum}`}
+          className="group flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition-all duration-200 hover:border-red-300 hover:bg-red-50 hover:shadow-md"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Phone className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
+          <span>Call</span>
+        </a>
+
+        <a
+          href={`https://wa.me/${waNum}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex items-center gap-2 rounded-lg border border-green-200 bg-white px-4 py-2.5 text-sm font-medium text-green-700 shadow-sm transition-all duration-200 hover:border-green-300 hover:bg-green-50 hover:shadow-md"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <MessageCircle className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
+          <span>WhatsApp</span>
+        </a>
+      </div>
+    </div>
   );
 }

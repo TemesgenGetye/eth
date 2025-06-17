@@ -35,7 +35,7 @@ const Home = () => {
         }`}
       ></div>
       <div
-        className="relative m-auto mt-3 items-center rounded-xl bg-cover bg-center py-16"
+        className="relative m-auto mt-3 items-center rounded-xl bg-cover bg-center py-8"
         style={{
           backgroundImage:
             "url('https://images.unsplash.com/photo-1624314138470-5a2f24623f10?q=80&w=3474&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
@@ -44,10 +44,10 @@ const Home = () => {
         <div className="absolute inset-0 z-10 rounded-xl bg-black bg-opacity-50"></div>
         <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-white sm:text-5xl">
+            <h1 className="text-2xl font-bold text-white sm:text-4xl">
               Find Anything in Dubai
             </h1>
-            <p className="mt-5 text-lg font-semibold text-gray-300">
+            <p className="mt-5 text-sm font-semibold text-gray-300">
               The largest market place in the country
             </p>
           </div>

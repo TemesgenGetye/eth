@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Share2,
   Heart,
@@ -6,22 +6,80 @@ import {
   Gauge,
   ChevronLeft,
   ChevronRight,
+  ShoppingCart,
+  User,
+  Phone,
+  Mail,
+  MessageCircle,
+  VerifiedIcon,
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useProducts from '../hooks/useProducts';
 import SimilarProducts from '../components/SimilarProducts';
 import { cleanString } from '../services/utils';
+import { useFavourite } from '../Context/Favourite';
+import { useCart } from '../Context/Cart';
+import { useCartItems, useFavouriteItems } from '../hooks/store';
+import toast from 'react-hot-toast';
+import { useGetCustomerById } from '../hooks/useCustomers';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// NOTE: If you haven't already, install leaflet and react-leaflet:
+// pnpm add leaflet react-leaflet
 
 export default function Detail() {
   const [currentImage, setCurrentImage] = useState(0);
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(
+    null
+  );
+  const [geoError, setGeoError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { products } = useProducts();
+  const { products, isLoading } = useProducts();
+  const { favourite, setFavourite } = useFavourite();
+  const { cart, setCart } = useCart();
+  const { refetchCart } = useCartItems();
+  const { refetchFavorites } = useFavouriteItems();
 
-  const {
-    state: { pid },
-  } = useLocation();
+  // Always call hooks at the top level
+  const location = useLocation();
+  const pid = location.state?.pid;
 
   const product = products?.find((product) => product.id == pid);
+  const { customer: seller } = useGetCustomerById(
+    product?.createdBy ? String(product.createdBy) : ''
+  );
+
+  useEffect(() => {
+    if (seller?.location) {
+      fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          seller.location
+        )}`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && data.length > 0) {
+            setCoords({
+              lat: parseFloat(data[0].lat),
+              lng: parseFloat(data[0].lon),
+            });
+            setGeoError(null);
+          } else {
+            setCoords(null);
+            setGeoError('Location not found');
+          }
+        })
+        .catch(() => {
+          setCoords(null);
+          setGeoError('Failed to geocode location');
+        });
+    } else {
+      setCoords(null);
+      setGeoError(null);
+    }
+  }, [seller?.location]);
 
   if (!product) {
     return <div>Product not found</div>;
@@ -36,7 +94,20 @@ export default function Detail() {
     sales,
     category,
     subcategory,
+    createdBy,
+    phoneNum,
+    email,
+    contactName,
   } = product;
+
+  // const { customer: singleCustomer, isLoadingCustomer } = useGetCustomerById(
+  //   product?.createdBy
+  // );
+
+  // const singleCustomer = customer.customers?.find(
+  //   (customer) => customer.id === product?.createdBy
+  // );
+  // console.log('singleCustomer', singleCustomer);
 
   // Safely get prices and other properties
   const displayPrice = product ? price.discounted : 'N/A';
@@ -61,6 +132,58 @@ export default function Detail() {
   const goToImage = (index: number) => {
     setCurrentImage(index);
   };
+
+  function handleFavourite(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    id: number
+  ) {
+    e.stopPropagation();
+
+    if (!favourite.some((fav) => fav === id)) {
+      setFavourite([...favourite, id]);
+      localStorage.setItem('favourite', JSON.stringify([...favourite, id]));
+    } else {
+      setFavourite(favourite.filter((fav) => fav !== id));
+      localStorage.setItem(
+        'favourite',
+        JSON.stringify(favourite.filter((fav) => fav !== id))
+      );
+    }
+    console.log('fav before', localStorage.getItem('favourite'));
+    refetchFavorites();
+  }
+
+  async function handleCart(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    id: number
+  ) {
+    e.stopPropagation();
+    if (!cart.some((item) => item === id)) {
+      setCart([...cart, id]);
+      localStorage.setItem('cart', JSON.stringify([...cart, id]));
+      await refetchCart();
+      toast.success('Item added to cart succesfully.');
+    }
+  }
+
+  if (isLoading && !product)
+    return (
+      <div className="mx-auto max-w-7xl animate-pulse p-4">
+        <div className="mb-4 h-6 w-1/3 rounded bg-gray-200" />
+        <div className="mb-6 h-[400px] w-full rounded-lg bg-gray-200" />
+        <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
+          <div className="w-1/2 space-y-4">
+            <div className="h-8 w-1/3 rounded bg-gray-200" />
+            <div className="h-6 w-1/4 rounded bg-gray-200" />
+            <div className="h-6 w-1/2 rounded bg-gray-200" />
+          </div>
+          <div className="h-12 w-32 rounded bg-gray-200" />
+        </div>
+        <div className="mb-8 h-24 w-full rounded bg-gray-200" />
+        <div className="mb-8 h-8 w-1/4 rounded bg-gray-200" />
+        <div className="mt-10 h-48 max-w-sm rounded-2xl border border-gray-100 bg-gray-100 p-6 shadow-sm" />
+      </div>
+    );
 
   return (
     <div className="mx-auto max-w-7xl p-4">
@@ -97,7 +220,6 @@ export default function Detail() {
         <span>›</span>
         <span className="text-gray-400">{name || 'N/A'}</span>
       </div>
-
       {/* Image Gallery */}
       <div className="relative mb-6">
         {/* Main Image */}
@@ -159,7 +281,6 @@ export default function Detail() {
           </div>
         )}
       </div>
-
       {/* Price and Details Section */}
       <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
@@ -189,15 +310,36 @@ export default function Detail() {
         </div>
 
         <div className="flex gap-2">
-          <button className="rounded-lg border p-2 hover:bg-gray-50">
-            <Heart className="h-5 w-5" />
-          </button>
-          <button className="rounded-lg border p-2 hover:bg-gray-50">
-            <Share2 className="h-5 w-5" />
-          </button>
+          <div className="flex space-x-2">
+            {!product?.createdBy && (
+              <button
+                className="rounded-lg bg-green-300 p-2 text-white"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleCart(e, product?.id);
+                }}
+              >
+                <div className="flex w-full items-center gap-2 text-sm font-medium text-white">
+                  <p>Add to Cart</p>
+                  <ShoppingCart className="h-4 w-4" />
+                </div>
+              </button>
+            )}
+            <button
+              className="h-7 w-7 text-red-500"
+              onClick={(e) => {
+                handleFavourite(e, product?.id);
+              }}
+            >
+              {favourite.some((fav) => fav === product.id) ? (
+                <Heart className="h-5 w-5 " fill="red" />
+              ) : (
+                <Heart className="h-5 w-5" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
-
       {/* Description Section */}
       <div className="mb-8">
         <h3 className="mb-4 text-lg font-semibold">Description</h3>
@@ -205,12 +347,106 @@ export default function Detail() {
           {description || 'No description available'}
         </p>
       </div>
-
       {/* Slug Section */}
       <div>
         <h3 className="mb-4 text-lg font-semibold">Slug</h3>
         <p className="text-gray-600">{'N/A'}</p>
       </div>
+      {/* Contact Seller Section */}
+      {createdBy && (
+        <div className="mt-10 max-w-sm rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+          {/* Profile Section */}
+          <div className="mb-6 flex items-start gap-4">
+            <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-2xl">
+              <img
+                src={seller?.img_url || '/logo.png'}
+                alt={seller?.name || 'Seller'}
+                className="h-full w-full object-cover"
+              />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h2 className="mb-2 text-xl font-semibold text-gray-900">
+                {seller?.name || 'Seller'}
+              </h2>
+              <p>{seller?.location || 'Location'}</p>
+              {seller?.verification_status === 'verified' ? (
+                <div className="flex items-center gap-2">
+                  <VerifiedIcon className="h-5 w-5 text-green-600" />
+                  <span className="text-sm  text-green-700">verified</span>
+                </div>
+              ) : (
+                <div className="mt-2 flex items-center gap-2">
+                  <VerifiedIcon className="h-5 w-5 text-red-600" />
+                  <span className="text-sm  text-red-700">unverified</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+
+          <div className="flex flex-wrap gap-2">
+            <a
+              href={`mailto:${seller?.email}`}
+              className="group flex items-center gap-2 rounded-lg border border-blue-200 bg-white px-4 py-2.5 text-sm font-medium text-blue-700 shadow-sm transition-all duration-200 hover:border-blue-300 hover:bg-blue-50 hover:shadow-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Mail className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
+              <span>Email</span>
+            </a>
+
+            <a
+              href={`tel:${seller?.phoneNum}`}
+              className="group flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition-all duration-200 hover:border-red-300 hover:bg-red-50 hover:shadow-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Phone className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
+              <span>Call</span>
+            </a>
+
+            <a
+              href={`https://wa.me/${phoneNum?.replace(/\D/g, '')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center gap-2 rounded-lg border border-green-200 bg-white px-4 py-2.5 text-sm font-medium text-green-700 shadow-sm transition-all duration-200 hover:border-green-300 hover:bg-green-50 hover:shadow-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <MessageCircle className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
+              <span>WhatsApp</span>
+            </a>
+          </div>
+        </div>
+      )}
+      {/* Map Section */}
+      {seller?.location && coords && (
+        <div className="m-auto mt-6 max-w-7xl rounded-2xl border border-gray-100 bg-white p-4 py-1 shadow-sm">
+          <h3 className="mb-2 text-lg font-semibold">Seller Location</h3>
+          <MapContainer
+            center={[coords.lat, coords.lng]}
+            zoom={13}
+            scrollWheelZoom={false}
+            style={{ height: '250px', width: '100%' }}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Marker
+              position={[coords.lat, coords.lng]}
+              icon={L.icon({
+                iconUrl:
+                  'https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+              })}
+            >
+              <Popup>{seller.location}</Popup>
+            </Marker>
+          </MapContainer>
+        </div>
+      )}
+      {geoError && <div className="mt-2 text-xs text-red-500">{geoError}</div>}
+      {/* Similar Products Section */}
       <div className="mt-36">
         <SimilarProducts id={product?.subcategory?.id} filterBy="subcategory" />
       </div>

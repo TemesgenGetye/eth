@@ -31,4 +31,5 @@ export interface ProductType {
   description: string;
   category: CategoryType;
   subcategory: Subcategory;
+  createdBy?: number | string; // Add this line for seller reference
 }

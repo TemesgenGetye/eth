@@ -1,12 +1,22 @@
 import { useState, useEffect, useRef } from 'react';
-import { Heart, MessageCircle, User, X, List, LogOutIcon } from 'lucide-react';
+import {
+  Heart,
+  MessageCircle,
+  User,
+  X,
+  List,
+  LogOutIcon,
+  LogInIcon,
+  LucideVerified,
+} from 'lucide-react';
 import Favourite from '../TopNavElements/Favourite';
 import Cart from '../TopNavElements/Cart';
 import Notfication from '../TopNavElements/Notfication';
 import { useAuth } from '../../Context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import useCustomers from '../../hooks/useCustomers';
+import useCustomers, { useGetCustomer } from '../../hooks/useCustomers';
 import supabase from '../../services/supabase';
+import { useVerficationModal } from '../../Context/VerficationModal';
 
 const NavLinks = () => {
   const [activeModal, setActiveModal] = useState('');
@@ -14,13 +24,14 @@ const NavLinks = () => {
   const { user } = useAuth();
   const { customers } = useCustomers();
   const navlinksRef = useRef<HTMLDivElement>(null);
+  const { open, setOpen } = useVerficationModal();
 
-  const filterdCustomers = customers?.filter(
-    (customer) => customer.uuid === user?.identities?.at(0)?.user_id
+  const { customer, isLoadingCustomer } = useGetCustomer(
+    user?.identities?.at(0)?.user_id as string
   );
 
   const handleLinkClick = (modalName: string) => {
-    if (filterdCustomers?.length === 0) {
+    if (!user?.email) {
       navigate('/login');
     } else {
       setActiveModal(activeModal === modalName ? '' : modalName);
@@ -100,7 +111,7 @@ const NavLinks = () => {
         >
           <User className="mr-1 h-4 w-4" />
           <p className="text-sm text-gray-500">
-            {filterdCustomers?.at(0)?.name || user?.email}
+            {customer?.name || user?.email}
           </p>
         </div>
         {activeModal === 'profile' && (
@@ -146,6 +157,31 @@ const NavLinks = () => {
                   <p className="text-sm text-gray-500">Favorites</p>
                 </button>
               </li>
+
+              <li
+                className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100"
+                onClick={() => {
+                  setOpen(true);
+                  closeModal();
+                }}
+              >
+                <button className="flex items-center space-x-2">
+                  <LucideVerified
+                    className="h-4 w-4"
+                    color={`${
+                      customer?.verification_status === 'verified'
+                        ? '#00C38C'
+                        : '#FF0000'
+                    }`}
+                  />
+                  <p className="text-sm text-gray-500">
+                    {customer?.verification_status === 'verified'
+                      ? 'Verified'
+                      : 'Verify your account'}
+                  </p>
+                </button>
+              </li>
+
               <li
                 className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100"
                 onClick={() => {
@@ -167,8 +203,17 @@ const NavLinks = () => {
                 }}
               >
                 <button className="flex items-center space-x-2">
-                  <LogOutIcon className="h-4 w-4" />
-                  <p className="text-sm text-gray-500">Logout</p>
+                  {customer?.email ? (
+                    <>
+                      <LogOutIcon className="h-4 w-4" />
+                      <p className="text-sm text-gray-500">Logout</p>
+                    </>
+                  ) : (
+                    <>
+                      <LogInIcon className="h-4 w-4" />
+                      <p className="text-sm text-gray-500">Login</p>
+                    </>
+                  )}
                 </button>
               </li>
             </ul>
