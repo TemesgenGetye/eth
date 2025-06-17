@@ -188,7 +188,7 @@ export default function ProductList({ products }: ProductProps) {
                   <div className="flex space-x-2">
                     {!product.createdBy ? (
                       <button
-                        className="rounded-lg bg-green-300 p-2 text-white"
+                        className="rounded-lg bg-[#40b740] p-2 text-white hover:bg-[#42c242]" // YW color scheme change
                         onClick={(e) => {
                           e.stopPropagation();
                           handleCart(e, product?.id);
@@ -217,7 +217,7 @@ export default function ProductList({ products }: ProductProps) {
                   </div>
                 </div>
                 {product.stock > 0 && (
-                  <span className="rounded bg-green-300 px-2 py-0.5 text-xs font-medium text-white">
+                  <span className="rounded bg-[#40b740] px-2 py-0.5 text-xs font-medium text-white">
                     IN STOCK ( {product.stock})
                   </span>
                 )}
@@ -227,8 +227,11 @@ export default function ProductList({ products }: ProductProps) {
                 <div className="space-y-2 text-sm text-gray-500">{'dubai'}</div>
                 {!product?.createdBy && (
                   <div className="flex items-center gap-1">
-                    <VerifiedIcon className="h-5 w-5 text-green-600" />
-                    <span className="text-sm  text-green-700">verified</span>
+                    <VerifiedIcon className="h-5 w-5 text-[#40b740]" />
+                    <span className="text-sm  text-[#40b740]">
+                      verified
+                    </span>{' '}
+                    {/* YW color scheme change */}
                   </div>
                 )}
                 {product?.createdBy ? (

@@ -3,7 +3,8 @@ import type React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useFilteredProducts } from '../../hooks/useFilteredProducts';
-import debounce from 'lodash/debounce'; // Install lodash for debouncing
+// import debounce from 'lodash/debounce'; // Install lodash for debouncing
+import { ProductType } from '../type';
 
 function SearchFilters({
   use,
@@ -17,10 +18,11 @@ function SearchFilters({
   const [isCitySelectOpen, setIsCitySelectOpen] = useState(false);
   const [isYearOpen, setIsYearOpen] = useState(false);
   const [isPriceOpen, setIsPriceOpen] = useState(false);
-  const [city, setCity] = useState('');
+  const [city, setCity] = useState(query.get('city') || '');
   const [yearRange, setYearRange] = useState('Select');
   const [priceRange, setPriceRange] = useState('Select');
   const [key, setKey] = useState(keyword);
+  const [isLoading, setIsLoading] = useState(false);
 
   const cityRef = useRef<HTMLDivElement>(null);
   const yearRef = useRef<HTMLDivElement>(null);
@@ -37,73 +39,89 @@ function SearchFilters({
     maxPrice?: number;
     minYear?: number;
     maxYear?: number;
-  }>({ term: keyword, city: '' });
-
-  // Debounced function to update search term
-  const debouncedSetFilterOptions = debounce((value: string) => {
-    setFilterOptions((prev) => ({ ...prev, term: value.trim() }));
-  }, 500);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (cityRef.current && !cityRef.current.contains(event.target as Node)) {
-        setIsCitySelectOpen(false);
-      }
-      if (yearRef.current && !yearRef.current.contains(event.target as Node)) {
-        setIsYearOpen(false);
-      }
-      if (
-        priceRef.current &&
-        !priceRef.current.contains(event.target as Node)
-      ) {
-        setIsPriceOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+  }>({
+    term: keyword,
+    city: query.get('city') || '',
+    minPrice: query.get('minPrice') ? Number(query.get('minPrice')) : undefined,
+    maxPrice: query.get('maxPrice') ? Number(query.get('maxPrice')) : undefined,
+    minYear: query.get('minYear') ? Number(query.get('minYear')) : undefined,
+    maxYear: query.get('maxYear') ? Number(query.get('maxYear')) : undefined,
+  });
 
   // Handle search input change
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onFilterApplied?.(true);
     const value = e.target.value;
     setKey(value);
-    debouncedSetFilterOptions(value);
+    setFilterOptions((prev) => ({ ...prev, term: value.trim() }));
+    onFilterApplied?.(true);
   };
 
   // Handle city selection
-  const handleCitySelect = (selectedCity: string) => {
-    onFilterApplied?.(true);
+  const handleCitySelect = async (selectedCity: string) => {
+    setIsLoading(true);
     setCity(selectedCity);
     setFilterOptions((prev) => ({ ...prev, city: selectedCity }));
     setIsCitySelectOpen(false);
-    refetchFiltered();
+    onFilterApplied?.(true);
+    await refetchFiltered();
+    setIsLoading(false);
   };
 
   // Handle price range application
-  const handlePriceRangeApply = (range: string, min: number, max: number) => {
-    onFilterApplied?.(true);
+  const handlePriceRangeApply = async (
+    range: string,
+    min: number,
+    max: number
+  ) => {
+    setIsLoading(true);
     setPriceRange(range);
     setFilterOptions((prev) => ({ ...prev, minPrice: min, maxPrice: max }));
     setIsPriceOpen(false);
+    onFilterApplied?.(true);
+    await refetchFiltered();
+    setIsLoading(false);
   };
 
   // Handle year range application
-  const handleYearRangeApply = (range: string, min: number, max: number) => {
-    onFilterApplied?.(true);
+  const handleYearRangeApply = async (
+    range: string,
+    min: number,
+    max: number
+  ) => {
+    setIsLoading(true);
     setYearRange(range);
     setFilterOptions((prev) => ({ ...prev, minYear: min, maxYear: max }));
     setIsYearOpen(false);
+    onFilterApplied?.(true);
+    await refetchFiltered();
+    setIsLoading(false);
+  };
+
+  // Handle clearing filters
+  const handleClearFilters = async () => {
+    setIsLoading(true);
+    setCity('');
+    setYearRange('Select');
+    setPriceRange('Select');
+    setKey('');
+    setFilterOptions({
+      term: '',
+      city: '',
+      minPrice: undefined,
+      maxPrice: undefined,
+      minYear: undefined,
+      maxYear: undefined,
+    });
+    onFilterApplied?.(false);
+    await refetchFiltered();
+    setIsLoading(false);
   };
 
   useEffect(() => {
     setQuery(
       Object.fromEntries(
         Object.entries(filterOptions || {})
-          .filter(([_, v]) => v !== undefined && v !== '')
+          .filter(([, v]) => v !== undefined && v !== '')
           .map(([k, v]) => [k, String(v)])
       )
     );
@@ -126,7 +144,7 @@ function SearchFilters({
               className="w-full border-r border-r-gray-100 px-4 text-left"
             >
               <p className="mb-1 text-xs font-bold text-gray-800">City</p>
-              <p className="text-xs text-gray-400">{city}</p>
+              <p className="text-xs text-gray-400">{city || 'Select City'}</p>
               {isCitySelectOpen ? (
                 <ChevronUp
                   size={16}
@@ -143,7 +161,7 @@ function SearchFilters({
               <FilterCityComponent
                 onSetCity={handleCitySelect}
                 city={city}
-                isLoading={isLoadingFiltered}
+                isLoading={isLoading || isLoadingFiltered}
                 result={filteredProducts}
               />
             )}
@@ -197,7 +215,7 @@ function SearchFilters({
                 type="price"
                 defaultFrom="0"
                 defaultUpto="1000000"
-                isLoading={isLoadingFiltered}
+                isLoading={isLoading || isLoadingFiltered}
                 result={filteredProducts}
               />
             )}
@@ -234,11 +252,24 @@ function SearchFilters({
                 type="year"
                 defaultFrom="2020"
                 defaultUpto="2026"
-                isLoading={isLoadingFiltered}
+                isLoading={isLoading || isLoadingFiltered}
                 result={filteredProducts}
               />
             )}
           </div>
+
+          {(city ||
+            yearRange !== 'Select' ||
+            priceRange !== 'Select' ||
+            key) && (
+            <button
+              onClick={handleClearFilters}
+              className="ml-4 flex items-center justify-center px-4 text-sm text-blue-600 hover:text-blue-800"
+              disabled={isLoading || isLoadingFiltered}
+            >
+              {isLoading || isLoadingFiltered ? 'Clearing...' : 'Clear Filters'}
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -265,7 +296,7 @@ function FilterCityComponent({
   onSetCity: (city: string) => void;
   city: string;
   isLoading: boolean;
-  result: any[] | undefined;
+  result: ProductType[] | undefined;
 }) {
   const [selectedCity, setSelectedCity] = useState(city);
 
@@ -304,12 +335,13 @@ function FilterCityComponent({
       </div>
       <button
         onClick={handleApplyFilters}
-        className="w-full rounded-lg bg-blue-700 px-6 py-4 font-semibold text-white transition-colors duration-200 hover:bg-blue-800"
+        disabled={isLoading}
+        className="w-full rounded-lg bg-blue-700 px-6 py-4 font-semibold text-white transition-colors duration-200 hover:bg-blue-800 disabled:bg-blue-400"
       >
         {isLoading
-          ? 'Loading ...'
+          ? 'Loading...'
           : result?.length
-            ? `Show ${result?.length} Result`
+            ? `Show ${result.length} Results`
             : 'Apply Filters'}
       </button>
     </div>
@@ -322,7 +354,7 @@ interface RangeFilterProps {
   type: 'price' | 'year';
   defaultFrom: string;
   defaultUpto: string;
-  result: any[] | undefined;
+  result: ProductType[] | undefined;
   isLoading: boolean;
 }
 
@@ -403,18 +435,20 @@ function RangeFilter({
       <div className="grid gap-4" style={{ gridTemplateColumns: '80px 180px' }}>
         <button
           onClick={handleClear}
-          className="rounded-lg border border-gray-300 bg-white px-1 py-0 font-medium text-gray-700 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50 focus:outline-none"
+          disabled={isLoading}
+          className="rounded-lg border border-gray-300 bg-white px-1 py-0 font-medium text-gray-700 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50 focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
         >
           Clear
         </button>
         <button
           onClick={handleApplyFilters}
-          className="w-full rounded-lg bg-blue-700 px-6 py-4 font-semibold text-white transition-colors duration-200 hover:bg-blue-800"
+          disabled={isLoading}
+          className="w-full rounded-lg bg-blue-700 px-6 py-4 font-semibold text-white transition-colors duration-200 hover:bg-blue-800 disabled:bg-blue-400"
         >
           {isLoading
-            ? 'Loading ...'
+            ? 'Loading...'
             : result?.length
-              ? `Show ${result?.length} Result`
+              ? `Show ${result.length} Results`
               : 'Apply Filters'}
         </button>
       </div>

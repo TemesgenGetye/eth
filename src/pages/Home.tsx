@@ -18,7 +18,10 @@ const Home = () => {
   const [active, setActive] = useState('all');
   const { categories } = useCategories();
 
-  const { data: searchResults, isLoading } = useSearchProducts(searchValue);
+  const { data: searchResults, isLoading } = useSearchProducts(
+    searchValue,
+    active
+  );
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -80,7 +83,6 @@ const Home = () => {
                   type="text"
                   placeholder={`Search for ${active === 'all' ? 'anything' : active}`}
                   className="flex-1 border-0 px-4 py-2 focus:outline-none focus:ring-0"
-                  // onClick={()=>set}
                 />
                 <button className="rounded-lg bg-blue-600 px-6 py-2 text-white hover:bg-blue-700">
                   Search

@@ -3,6 +3,7 @@ import SearchFilters from '../components/Motor/Searchfilter';
 import ProductList from '../components/ui/ProductList';
 import Pagination from '../components/Motor/Pagination';
 import NoProduct from '../components/ui/NoProduct';
+import NoSearchResult from '../components/TopNavElements/NoSearchResult';
 import useProducts from '../hooks/useProducts';
 import { ProductType } from '../components/type';
 import { useState } from 'react';
@@ -15,7 +16,7 @@ function Product() {
   const [filtereApplied, setFilterApplied] = useState(false);
 
   const { products } = useProducts();
-  const { filteredProducts } = useFilteredProducts();
+  const { filteredProducts, isLoadingFiltered } = useFilteredProducts();
 
   const _filteredProducts: ProductType[] | undefined = pname
     ? filtereApplied
@@ -41,7 +42,27 @@ function Product() {
       )
     : [];
 
-  if (_filteredProducts?.length === 0) return <NoProduct />;
+  // Show NoProduct if no products exist for the category
+  if (!filtereApplied && _filteredProducts?.length === 0) return <NoProduct />;
+
+  // Show NoSearchResult if filters are applied but no results found
+  if (
+    filtereApplied &&
+    !isLoadingFiltered &&
+    (!_filteredProducts || _filteredProducts.length === 0)
+  ) {
+    return (
+      <div className="mx-auto min-h-screen max-w-6xl px-4 py-4">
+        <SearchFilters use="motor" onFilterApplied={setFilterApplied} />
+        <div className="mt-8">
+          <NoSearchResult
+            title="No products found matching your filters"
+            message="Try adjusting your search criteria or clear some filters to see more results"
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto min-h-screen max-w-6xl px-4 py-4">
@@ -90,13 +111,15 @@ function Product() {
         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-1">
           <ProductList products={paginatedProducts} />
         </div>
-        <div className="p-6">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={(page) => setCurrentPage(page)}
-          />
-        </div>
+        {totalPages > 1 && (
+          <div className="p-6">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={(page) => setCurrentPage(page)}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -224,11 +224,13 @@ export const getAds = async (id: number) => {
   }
 };
 
-export const getSearchedProducts = async (term: string) => {
+export const getSearchedProducts = async (term: string, category?: string) => {
+  console.log('category', category);
+  console.log('term', term);
   if (!term || term.trim() === '') return [];
 
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('products')
       .select(
         `
@@ -239,6 +241,7 @@ export const getSearchedProducts = async (term: string) => {
         img_urls,
         views,
         description,
+        category_name,
         category:categories (
           id,
           name
@@ -250,6 +253,12 @@ export const getSearchedProducts = async (term: string) => {
       `
       )
       .ilike('name', `%${term}%`);
+
+    if (category && category !== 'all') {
+      query = query.ilike('category_name', `%${category}%`);
+    }
+
+    const { data, error } = await query;
 
     if (error) throw new Error(error.message);
     console.log(data);
@@ -270,15 +279,9 @@ export const getFilteredProducts = async (filterOptions: {
   maxYear?: number | null;
   pname?: string | null;
 }) => {
-  const {
-    // term = '',
-    // minPrice,
-    // maxPrice,
-    // minYear,
-    // maxYear,
-    city,
-    pname,
-  } = filterOptions;
+  const { term, city, minPrice, maxPrice, minYear, maxYear, pname } =
+    filterOptions;
+
   try {
     let query = supabase.from('products').select(
       `
@@ -301,40 +304,44 @@ export const getFilteredProducts = async (filterOptions: {
         )
       `
     );
-    // if (term && term.trim() !== '') {
-    //   query = query.ilike('name', `%${term.trim()}%`);
-    // }
-    console.log('pname', pname);
+
+    if (term && term.trim() !== '') {
+      query = query.ilike('name', `%${term.trim()}%`);
+    }
 
     if (city) {
       query = query.ilike('city', `%${city}%`);
     }
 
-    // if (minPrice !== undefined) {
-    //   query = query.filter('price->>discounted', 'gte', minPrice?.toString());
-    // }
+    if (minPrice !== undefined && minPrice !== null) {
+      query = query.gte('price', minPrice);
+    }
 
-    // if (maxPrice !== undefined) {
-    //   query = query.filter('price->>discounted', 'lte', maxPrice?.toString());
-    // }
+    if (maxPrice !== undefined && maxPrice !== null) {
+      query = query.lte('price', maxPrice);
+    }
 
-    // if (minYear !== undefined) {
-    //   query = query.gte('year', minYear);
-    // }
+    if (minYear !== undefined && minYear !== null) {
+      query = query.gte('year', minYear);
+    }
 
-    // if (maxYear !== undefined) {
-    //   query = query.lte('year', maxYear);
-    // }
+    if (maxYear !== undefined && maxYear !== null) {
+      query = query.lte('year', maxYear);
+    }
 
     const { data, error } = await query;
 
     if (error) throw new Error(error.message);
-    console.log('filtered Data', data);
-    const result = data?.filter(
-      (item) => cleanString(item?.subcategory.name) === pname
-    );
-    console.log('result', result);
-    return result?.map((product) => camelCase(product)) || [];
+
+    // Filter by subcategory if pname is provided
+    let filteredData = data;
+    if (pname) {
+      filteredData = data?.filter(
+        (item) => cleanString(item?.subcategory?.name) === pname
+      );
+    }
+
+    return filteredData?.map((product) => camelCase(product)) || [];
   } catch (err) {
     console.error('Error fetching filtered products:', err);
     throw err;
