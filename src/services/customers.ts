@@ -21,7 +21,7 @@ export async function getCustomer(uuid: string) {
       .from('customers')
       .select('*')
       .eq('uuid', uuid)
-      .single();
+      .maybeSingle();
 
     if (error) {
       throw error;

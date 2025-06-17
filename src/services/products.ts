@@ -14,6 +14,12 @@ export const getPopularProducts = async () => {
         stock,
         img_urls,
         views,
+        contact_name,
+        phone_num,
+        email,
+        created_by,
+        status,
+        city,
         description,
         category:categories (
           id,
@@ -93,8 +99,9 @@ export const getProductById = async (id: number) => {
           )
         `
       )
+
       .eq('id', id)
-      .single(); // expects exactly one row
+      .maybeSingle();
     if (error) throw new Error(error?.message);
     return camelCase(data);
   } catch (err) {
@@ -131,14 +138,15 @@ export const getProdsById = async (ids: number[]) => {
             `
           )
           .eq('id', id)
-          .single(); // fetch one product
+          .maybeSingle(); // fetch one product or null
 
         if (error) throw new Error(error.message);
-        return camelCase(data);
+        return data ? camelCase(data) : null;
       })
     );
 
-    return results;
+    // Filter out nulls (not found)
+    return results.filter(Boolean);
   } catch (err) {
     console.error('Error fetching products by ID:', err);
     throw err;
@@ -256,10 +264,10 @@ export const getSearchedProducts = async (term: string) => {
 export const getFilteredProducts = async (filterOptions: {
   term?: string;
   city?: string;
-  // minPrice?: number;
-  // maxPrice?: number;
-  // minYear?: number;
-  // maxYear?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  minYear?: number;
+  maxYear?: number;
 }) => {
   const {
     term = '',

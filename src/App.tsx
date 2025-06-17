@@ -30,7 +30,7 @@ import OrderConfirmationPage from './pages/Order-configration';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ProtectedRoute } from './pages/ProtectedRoute';
 import LoginForm from './pages/Login';
-import { AuthProvider } from './Context/AuthContext';
+import { AuthProvider, useAuth } from './Context/AuthContext';
 import Profile from './pages/Profile';
 import MyAds from './pages/MyAds';
 import PostAdPage from './pages/PostAds';
@@ -46,6 +46,7 @@ import { VerficationModalProvider } from './Context/VerficationModal';
 
 function AppContent() {
   const location = useLocation();
+  const { user } = useAuth();
   const hideNavAndFooter =
     location.pathname === '/login' ||
     location.pathname === '/signup' ||
@@ -55,7 +56,7 @@ function AppContent() {
   const verifaied = true;
   return (
     <div className="flex min-h-screen flex-col">
-      {verifaied && <VerificationBar />}
+      {user?.email && verifaied && !hideNavAndFooter && <VerificationBar />}
 
       {!hideNavAndFooter && <Navbar />}
       <main className="flex-grow ">

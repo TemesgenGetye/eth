@@ -6,6 +6,7 @@ import { useGetCustomer, useUpdateCustomer } from '../hooks/useCustomers';
 import { useAuth } from '../Context/AuthContext';
 import supabase from '../services/supabase';
 import { useNavigate } from 'react-router-dom';
+import { i } from 'framer-motion/client';
 
 export default function CustomerProfile() {
   const { user } = useAuth();

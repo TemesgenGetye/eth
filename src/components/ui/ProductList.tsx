@@ -4,6 +4,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ShoppingCart,
+  User,
 } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -185,18 +186,25 @@ export default function ProductList({ products }: ProductProps) {
                     </div>
                   </div>
                   <div className="flex space-x-2">
-                    <button
-                      className="rounded-lg bg-green-300 p-2 text-white"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCart(e, product?.id);
-                      }}
-                    >
-                      <div className="flex w-full items-center gap-2 text-sm font-medium text-white">
-                        <p>Add to Cart</p>
-                        <ShoppingCart className="h-4 w-4" />
+                    {!product?.createdBy ? (
+                      <button
+                        className="rounded-lg bg-green-300 p-2 text-white"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCart(e, product?.id);
+                        }}
+                      >
+                        <div className="flex w-full items-center gap-2 text-sm font-medium text-white">
+                          <p>Add to Cart</p>
+                          <ShoppingCart className="h-4 w-4" />
+                        </div>
+                      </button>
+                    ) : (
+                      <div className="flex w-full items-center gap-2 text-lg font-medium text-blue-600">
+                        <User className="h-5 w-5" />
+                        <p>Contact The Seller</p>
                       </div>
-                    </button>
+                    )}
                     <button
                       className="h-7 w-7 text-red-500"
                       onClick={(e) => {

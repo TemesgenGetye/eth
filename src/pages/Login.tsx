@@ -26,10 +26,24 @@ export default function LoginPage() {
     const password = formData.get('password') as string;
 
     try {
-      await login.mutateAsync({ email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) {
+        setError(error.message || 'An error occurred during login');
+        return;
+      }
+      if (!data?.user?.email_confirmed_at) {
+        setError(
+          'Please verify your email before logging in. Check your inbox for the confirmation link.'
+        );
+        await supabase.auth.signOut();
+        return;
+      }
       navigate('/');
-    } catch (error: any) {
-      setError(error.message || 'An error occurred during login');
+    } catch (err) {
+      setError((err as Error).message || 'An error occurred during login');
     }
   };
 
