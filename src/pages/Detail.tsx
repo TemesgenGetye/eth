@@ -36,7 +36,7 @@ export default function Detail() {
   );
   const [geoError, setGeoError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { products } = useProducts();
+  const { products, isLoading } = useProducts();
   const { favourite, setFavourite } = useFavourite();
   const { cart, setCart } = useCart();
   const { refetchCart } = useCartItems();
@@ -99,8 +99,6 @@ export default function Detail() {
     email,
     contactName,
   } = product;
-
-  console.log(phoneNum, contactName, email);
 
   // const { customer: singleCustomer, isLoadingCustomer } = useGetCustomerById(
   //   product?.createdBy
@@ -167,6 +165,25 @@ export default function Detail() {
       toast.success('Item added to cart succesfully.');
     }
   }
+
+  if (isLoading && !product)
+    return (
+      <div className="mx-auto max-w-7xl animate-pulse p-4">
+        <div className="mb-4 h-6 w-1/3 rounded bg-gray-200" />
+        <div className="mb-6 h-[400px] w-full rounded-lg bg-gray-200" />
+        <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
+          <div className="w-1/2 space-y-4">
+            <div className="h-8 w-1/3 rounded bg-gray-200" />
+            <div className="h-6 w-1/4 rounded bg-gray-200" />
+            <div className="h-6 w-1/2 rounded bg-gray-200" />
+          </div>
+          <div className="h-12 w-32 rounded bg-gray-200" />
+        </div>
+        <div className="mb-8 h-24 w-full rounded bg-gray-200" />
+        <div className="mb-8 h-8 w-1/4 rounded bg-gray-200" />
+        <div className="mt-10 h-48 max-w-sm rounded-2xl border border-gray-100 bg-gray-100 p-6 shadow-sm" />
+      </div>
+    );
 
   return (
     <div className="mx-auto max-w-7xl p-4">
