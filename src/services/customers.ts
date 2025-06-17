@@ -34,6 +34,25 @@ export async function getCustomer(uuid: string) {
   }
 }
 
+export async function getCustomerById(id: string) {
+  try {
+    const { data, error } = await supabase
+      .from('customers')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  } catch (err) {
+    console.error('Failed to fetch customer:', err);
+    return null;
+  }
+}
+
 export async function updateCustomer(customer) {
   try {
     const { data, error } = await supabase

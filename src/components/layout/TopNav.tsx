@@ -30,8 +30,6 @@ const NavLinks = () => {
     user?.identities?.at(0)?.user_id as string
   );
 
-  console.log('user ', user);
-
   const handleLinkClick = (modalName: string) => {
     if (!user?.email) {
       navigate('/login');
@@ -171,13 +169,13 @@ const NavLinks = () => {
                   <LucideVerified
                     className="h-4 w-4"
                     color={`${
-                      customer?.verfication_status === 'approved'
+                      customer?.verification_status === 'verified'
                         ? '#00C38C'
                         : '#FF0000'
                     }`}
                   />
                   <p className="text-sm text-gray-500">
-                    {customer?.verfication_status === 'approved'
+                    {customer?.verification_status === 'verified'
                       ? 'Verified'
                       : 'Verify your account'}
                   </p>

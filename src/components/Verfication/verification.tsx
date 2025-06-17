@@ -69,6 +69,7 @@ const VerificationBar = () => {
 
   const { updateCustomerMutate, isPendingCustomer } = useUpdateCustomer();
   const { user } = useAuth();
+
   const { customer, isLoadingCustomer } = useGetCustomer(
     user?.identities?.at(0)?.user_id as string
   );
@@ -78,7 +79,6 @@ const VerificationBar = () => {
   // );
 
   // console.log('filterdCustomers', filterdCustomers);
-  console.log('customer', customer);
 
   // Initialize camera
   const initializeCamera = useCallback(async () => {
@@ -97,8 +97,6 @@ const VerificationBar = () => {
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
       }
-
-      console.log('Camera initialized successfully');
     } catch (error) {
       console.error('Camera initialization failed:', error);
       setCameraError('Unable to access camera. Please check permissions.');
@@ -114,7 +112,6 @@ const VerificationBar = () => {
     if (videoRef.current) {
       videoRef.current.srcObject = null;
     }
-    console.log('Camera stopped');
   }, []);
 
   // Capture photo
@@ -142,11 +139,6 @@ const VerificationBar = () => {
       ...prev,
       [currentPhotoType === 'front' ? 'frontPhoto' : 'backPhoto']: imageData,
     }));
-
-    console.log(
-      `${currentPhotoType} photo captured:`,
-      imageData.substring(0, 50) + '...'
-    );
 
     // Move to captured state
     setStep('photo-captured');
@@ -176,7 +168,6 @@ const VerificationBar = () => {
       }));
 
       URL.revokeObjectURL(video.src);
-      console.log('Video frame extracted:', frameData.substring(0, 50) + '...');
     };
   }, []);
 
@@ -192,7 +183,6 @@ const VerificationBar = () => {
       setTimeout(() => {
         setIsRecording(false);
       }, 500);
-      console.log('Video recording stopped');
     }
   }, [isRecording]);
 
@@ -460,6 +450,7 @@ const VerificationBar = () => {
       id_front: uploadedUrls.frontPhoto,
       id_back: uploadedUrls.backPhoto,
       video_url: uploadedUrls.video,
+      verification_status: 'requested',
     });
 
     //     {
@@ -499,7 +490,7 @@ const VerificationBar = () => {
               />
             </div>
             <h2 className="mb-4 text-center text-3xl font-bold text-gray-900">
-              Get verified on dubizzle!
+              Get verified on 888Market!
             </h2>
             <div className="mb-2 flex flex-row items-center justify-center gap-2 text-center text-base font-medium text-gray-700">
               <span className="text-sm">Build Trust</span>
@@ -1445,7 +1436,7 @@ const VerificationBar = () => {
       </div>
     );
   }
-  if (customer?.verfication_status === 'approved') return null;
+  if (customer?.verification_status === 'verified') return null;
   return (
     <>
       <div className="flex w-full items-center justify-center gap-4 bg-blue-500 px-6 py-2 text-white">

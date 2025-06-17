@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getCustomer,
+  getCustomerById,
   getCustomers,
   updateCustomer,
 } from '../services/customers';
@@ -28,6 +29,19 @@ export function useGetCustomer(id: string) {
   } = useQuery({
     queryKey: ['customers', id],
     queryFn: () => getCustomer(id),
+  });
+
+  return { customer, isLoadingCustomer, error };
+}
+
+export function useGetCustomerById(id: string) {
+  const {
+    data: customer,
+    isLoading: isLoadingCustomer,
+    error,
+  } = useQuery({
+    queryKey: ['customers', id],
+    queryFn: () => getCustomerById(id),
   });
 
   return { customer, isLoadingCustomer, error };

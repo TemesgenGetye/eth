@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Share2,
   Heart,
@@ -10,6 +10,8 @@ import {
   User,
   Phone,
   Mail,
+  MessageCircle,
+  VerifiedIcon,
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useProducts from '../hooks/useProducts';
@@ -19,23 +21,65 @@ import { useFavourite } from '../Context/Favourite';
 import { useCart } from '../Context/Cart';
 import { useCartItems, useFavouriteItems } from '../hooks/store';
 import toast from 'react-hot-toast';
-import useCustomers from '../hooks/useCustomers';
+import { useGetCustomerById } from '../hooks/useCustomers';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// NOTE: If you haven't already, install leaflet and react-leaflet:
+// pnpm add leaflet react-leaflet
 
 export default function Detail() {
   const [currentImage, setCurrentImage] = useState(0);
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(
+    null
+  );
+  const [geoError, setGeoError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { products } = useProducts();
   const { favourite, setFavourite } = useFavourite();
   const { cart, setCart } = useCart();
   const { refetchCart } = useCartItems();
   const { refetchFavorites } = useFavouriteItems();
-  const customer = useCustomers();
 
-  const {
-    state: { pid },
-  } = useLocation();
+  // Always call hooks at the top level
+  const location = useLocation();
+  const pid = location.state?.pid;
 
   const product = products?.find((product) => product.id == pid);
+  const { customer: seller } = useGetCustomerById(
+    product?.createdBy ? String(product.createdBy) : ''
+  );
+
+  useEffect(() => {
+    if (seller?.location) {
+      fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          seller.location
+        )}`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && data.length > 0) {
+            setCoords({
+              lat: parseFloat(data[0].lat),
+              lng: parseFloat(data[0].lon),
+            });
+            setGeoError(null);
+          } else {
+            setCoords(null);
+            setGeoError('Location not found');
+          }
+        })
+        .catch(() => {
+          setCoords(null);
+          setGeoError('Failed to geocode location');
+        });
+    } else {
+      setCoords(null);
+      setGeoError(null);
+    }
+  }, [seller?.location]);
 
   if (!product) {
     return <div>Product not found</div>;
@@ -53,9 +97,14 @@ export default function Detail() {
     createdBy,
     phoneNum,
     email,
+    contactName,
   } = product;
 
-  console.log(phoneNum);
+  console.log(phoneNum, contactName, email);
+
+  // const { customer: singleCustomer, isLoadingCustomer } = useGetCustomerById(
+  //   product?.createdBy
+  // );
 
   // const singleCustomer = customer.customers?.find(
   //   (customer) => customer.id === product?.createdBy
@@ -154,7 +203,6 @@ export default function Detail() {
         <span>›</span>
         <span className="text-gray-400">{name || 'N/A'}</span>
       </div>
-
       {/* Image Gallery */}
       <div className="relative mb-6">
         {/* Main Image */}
@@ -216,7 +264,6 @@ export default function Detail() {
           </div>
         )}
       </div>
-
       {/* Price and Details Section */}
       <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
@@ -276,7 +323,6 @@ export default function Detail() {
           </div>
         </div>
       </div>
-
       {/* Description Section */}
       <div className="mb-8">
         <h3 className="mb-4 text-lg font-semibold">Description</h3>
@@ -284,60 +330,106 @@ export default function Detail() {
           {description || 'No description available'}
         </p>
       </div>
-
       {/* Slug Section */}
       <div>
         <h3 className="mb-4 text-lg font-semibold">Slug</h3>
         <p className="text-gray-600">{'N/A'}</p>
       </div>
-
       {/* Contact Seller Section */}
       {createdBy && (
-        <div className="max-w-sm rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+        <div className="mt-10 max-w-sm rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
           {/* Profile Section */}
           <div className="mb-6 flex items-start gap-4">
             <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-2xl">
-              <img src={'/logo.png'} alt={'honme'} className="object-cover" />
+              <img
+                src={seller?.img_url || '/logo.png'}
+                alt={seller?.name || 'Seller'}
+                className="h-full w-full object-cover"
+              />
             </div>
             <div className="min-w-0 flex-1">
               <h2 className="mb-2 text-xl font-semibold text-gray-900">
-                {createdBy}
+                {seller?.name || 'Seller'}
               </h2>
-              <button className="mb-3 text-sm font-medium text-blue-500 transition-colors hover:text-blue-600">
-                View All Properties
-              </button>
+              <p>{seller?.location || 'Location'}</p>
+              {seller?.verification_status === 'verified' ? (
+                <div className="flex items-center gap-2">
+                  <VerifiedIcon className="h-5 w-5 text-green-600" />
+                  <span className="text-sm  text-green-700">verified</span>
+                </div>
+              ) : (
+                <div className="mt-2 flex items-center gap-2">
+                  <VerifiedIcon className="h-5 w-5 text-red-600" />
+                  <span className="text-sm  text-red-700">unverified</span>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="grid grid-cols-3 gap-3">
+
+          <div className="flex flex-wrap gap-2">
             <a
-              href={`mailto:${email}`}
-              className="flex items-center justify-center gap-2 rounded-xl bg-blue-50 px-4 py-3 text-blue-600 transition-colors hover:bg-blue-100"
+              href={`mailto:${seller?.email}`}
+              className="group flex items-center gap-2 rounded-lg border border-blue-200 bg-white px-4 py-2.5 text-sm font-medium text-blue-700 shadow-sm transition-all duration-200 hover:border-blue-300 hover:bg-blue-50 hover:shadow-md"
+              onClick={(e) => e.stopPropagation()}
             >
-              <Mail className="h-5 w-5" />
-              <span className="font-medium">Email</span>
+              <Mail className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
+              <span>Email</span>
             </a>
 
             <a
-              href={`tel:${phoneNum}`}
-              className="flex items-center justify-center gap-2 rounded-xl bg-red-50 px-4 py-3 text-red-600 transition-colors hover:bg-red-100"
+              href={`tel:${seller?.phoneNum}`}
+              className="group flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition-all duration-200 hover:border-red-300 hover:bg-red-50 hover:shadow-md"
+              onClick={(e) => e.stopPropagation()}
             >
-              <Phone className="h-5 w-5" />
-              <span className="font-medium">Call</span>
+              <Phone className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
+              <span>Call</span>
             </a>
 
             <a
-              href={`https://wa.me/${phoneNum.replace(/\D/g, '')}`}
-              className="flex items-center justify-center gap-2 rounded-xl bg-green-50 px-4 py-3 text-green-600 transition-colors hover:bg-green-100"
+              href={`https://wa.me/${phoneNum?.replace(/\D/g, '')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center gap-2 rounded-lg border border-green-200 bg-white px-4 py-2.5 text-sm font-medium text-green-700 shadow-sm transition-all duration-200 hover:border-green-300 hover:bg-green-50 hover:shadow-md"
+              onClick={(e) => e.stopPropagation()}
             >
-              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488" />
-              </svg>
+              <MessageCircle className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
+              <span>WhatsApp</span>
             </a>
           </div>
         </div>
       )}
+      {/* Map Section */}
+      {seller?.location && coords && (
+        <div className="m-auto mt-6 max-w-7xl rounded-2xl border border-gray-100 bg-white p-4 py-1 shadow-sm">
+          <h3 className="mb-2 text-lg font-semibold">Seller Location</h3>
+          <MapContainer
+            center={[coords.lat, coords.lng]}
+            zoom={13}
+            scrollWheelZoom={false}
+            style={{ height: '250px', width: '100%' }}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Marker
+              position={[coords.lat, coords.lng]}
+              icon={L.icon({
+                iconUrl:
+                  'https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+              })}
+            >
+              <Popup>{seller.location}</Popup>
+            </Marker>
+          </MapContainer>
+        </div>
+      )}
+      {geoError && <div className="mt-2 text-xs text-red-500">{geoError}</div>}
+      {/* Similar Products Section */}
       <div className="mt-36">
         <SimilarProducts id={product?.subcategory?.id} filterBy="subcategory" />
       </div>

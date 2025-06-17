@@ -33,9 +33,6 @@ function SearchFilters({ use }: { use: string }) {
   const { filteredProducts, isLoadingFiltered } =
     useFilteredProducts(filterOptions);
 
-  console.log(filteredProducts);
-  console.log(isLoadingFiltered);
-
   // Debounced function to update search term
   const debouncedSetFilterOptions = debounce((value: string) => {
     setFilterOptions((prev) => ({ ...prev, term: value.trim() }));
