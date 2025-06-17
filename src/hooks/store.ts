@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 export const useFavouriteItems = () => {
   const favStr = localStorage.getItem('favourite');
   const favourite = JSON.parse(favStr?.length ? favStr : '[]');
-  console.log('favvv', favourite);
+  // console.log('favvv', favourite);
   const {
     isLoading: isLoadingFavorites,
     data: favoriteProducts,
@@ -27,7 +27,7 @@ export const useFavouriteItems = () => {
 
 export const useCartItems = () => {
   const { cart } = useCart();
-  console.log('cart', cart);
+  // console.log('cart', cart);
   // const numedCart =
   const {
     isLoading: isLoadingCart,

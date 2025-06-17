@@ -1,8 +1,8 @@
 import supabase from './supabase';
-import { camelCase } from './utils';
+import { camelCase, cleanString } from './utils';
 
 export const getPopularProducts = async () => {
-  console.log('Fetching popular products...');
+  // console.log('Fetching popular products...');
   try {
     const { data, error } = await supabase
       .from('products')
@@ -254,23 +254,23 @@ export const getSearchedProducts = async (term: string) => {
 };
 
 export const getFilteredProducts = async (filterOptions: {
-  term?: string;
-  city?: string;
-  // minPrice?: number;
-  // maxPrice?: number;
-  // minYear?: number;
-  // maxYear?: number;
+  term?: string | null;
+  city?: string | null;
+  minPrice?: number | null;
+  maxPrice?: number | null;
+  minYear?: number | null;
+  maxYear?: number | null;
+  pname?: string | null;
 }) => {
   const {
     term = '',
     city,
     minPrice,
     maxPrice,
-    // minYear,
-    // maxYear,
+    minYear,
+    maxYear,
+    pname,
   } = filterOptions;
-  console.log('filterOptionsParam');
-  console.log(filterOptions);
   try {
     let query = supabase.from('products').select(
       `
@@ -293,21 +293,21 @@ export const getFilteredProducts = async (filterOptions: {
         )
       `
     );
-
-    if (term && term.trim() !== '') {
-      query = query.ilike('name', `%${term.trim()}%`);
-    }
+    // if (term && term.trim() !== '') {
+    //   query = query.ilike('name', `%${term.trim()}%`);
+    // }
+    console.log('pname', pname);
 
     if (city) {
-      query = query.ilike('city', city);
+      query = query.ilike('city', `%${city}%`);
     }
 
-    if (minPrice !== undefined) {
-      query = query.filter('price->>discounted', 'gte', minPrice.toString());
-    }
+    // if (minPrice !== undefined) {
+    //   query = query.filter('price->>discounted', 'gte', minPrice?.toString());
+    // }
 
     // if (maxPrice !== undefined) {
-    //   query = query.filter('price->>discounted', 'lte', maxPrice.toString());
+    //   query = query.filter('price->>discounted', 'lte', maxPrice?.toString());
     // }
 
     // if (minYear !== undefined) {
@@ -322,8 +322,11 @@ export const getFilteredProducts = async (filterOptions: {
 
     if (error) throw new Error(error.message);
     console.log('filtered Data', data);
-
-    return data?.map((product) => camelCase(product)) || [];
+    const result = data?.filter(
+      (item) => cleanString(item?.subcategory.name) === pname
+    );
+    console.log('result', result);
+    return result?.map((product) => camelCase(product)) || [];
   } catch (err) {
     console.error('Error fetching filtered products:', err);
     throw err;

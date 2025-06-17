@@ -13,7 +13,6 @@ import Property from './pages/Property';
 import Job from './pages/Job';
 import Classified from './pages/Classified';
 import Phone from './pages/Phone';
-import Furniture from './pages/Furniture';
 import Community from './pages/Community';
 import Detail from './pages/Detail';
 import Try from './pages/Try';

@@ -5,13 +5,19 @@ import { useSearchParams } from 'react-router-dom';
 import { useFilteredProducts } from '../../hooks/useFilteredProducts';
 import debounce from 'lodash/debounce'; // Install lodash for debouncing
 
-function SearchFilters({ use }: { use: string }) {
-  const [searchParams] = useSearchParams();
-  const keyword = searchParams.get('keyword') || '';
+function SearchFilters({
+  use,
+  onFilterApplied,
+}: {
+  use: string;
+  onFilterApplied?: (state: boolean) => void;
+}) {
+  const [query, setQuery] = useSearchParams();
+  const keyword = query.get('keyword') || '';
   const [isCitySelectOpen, setIsCitySelectOpen] = useState(false);
   const [isYearOpen, setIsYearOpen] = useState(false);
   const [isPriceOpen, setIsPriceOpen] = useState(false);
-  const [city, setCity] = useState('Dubai');
+  const [city, setCity] = useState('');
   const [yearRange, setYearRange] = useState('Select');
   const [priceRange, setPriceRange] = useState('Select');
   const [key, setKey] = useState(keyword);
@@ -19,6 +25,9 @@ function SearchFilters({ use }: { use: string }) {
   const cityRef = useRef<HTMLDivElement>(null);
   const yearRef = useRef<HTMLDivElement>(null);
   const priceRef = useRef<HTMLDivElement>(null);
+
+  const { isLoadingFiltered, filteredProducts, refetchFiltered } =
+    useFilteredProducts();
 
   // Initialize filterOptions with all possible filters
   const [filterOptions, setFilterOptions] = useState<{
@@ -28,13 +37,9 @@ function SearchFilters({ use }: { use: string }) {
     maxPrice?: number;
     minYear?: number;
     maxYear?: number;
-  }>({ term: keyword, city: 'Dubai' });
+  }>({ term: keyword, city: '' });
 
-  const { filteredProducts, isLoadingFiltered } =
-    useFilteredProducts(filterOptions);
-
-  console.log(filteredProducts);
-  console.log(isLoadingFiltered);
+  // onSetFiltProducts(filteredProducts);
 
   // Debounced function to update search term
   const debouncedSetFilterOptions = debounce((value: string) => {
@@ -65,6 +70,7 @@ function SearchFilters({ use }: { use: string }) {
 
   // Handle search input change
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onFilterApplied?.(true);
     const value = e.target.value;
     setKey(value);
     debouncedSetFilterOptions(value);
@@ -72,13 +78,16 @@ function SearchFilters({ use }: { use: string }) {
 
   // Handle city selection
   const handleCitySelect = (selectedCity: string) => {
+    onFilterApplied?.(true);
     setCity(selectedCity);
     setFilterOptions((prev) => ({ ...prev, city: selectedCity }));
     setIsCitySelectOpen(false);
+    refetchFiltered();
   };
 
   // Handle price range application
   const handlePriceRangeApply = (range: string, min: number, max: number) => {
+    onFilterApplied?.(true);
     setPriceRange(range);
     setFilterOptions((prev) => ({ ...prev, minPrice: min, maxPrice: max }));
     setIsPriceOpen(false);
@@ -86,10 +95,21 @@ function SearchFilters({ use }: { use: string }) {
 
   // Handle year range application
   const handleYearRangeApply = (range: string, min: number, max: number) => {
+    onFilterApplied?.(true);
     setYearRange(range);
     setFilterOptions((prev) => ({ ...prev, minYear: min, maxYear: max }));
     setIsYearOpen(false);
   };
+
+  useEffect(() => {
+    setQuery(
+      Object.fromEntries(
+        Object.entries(filterOptions || {})
+          .filter(([_, v]) => v !== undefined && v !== '')
+          .map(([k, v]) => [k, String(v)])
+      )
+    );
+  }, [filterOptions, setQuery]);
 
   return (
     <div
@@ -122,7 +142,12 @@ function SearchFilters({ use }: { use: string }) {
               )}
             </button>
             {isCitySelectOpen && (
-              <FilterCityComponent onSetCity={handleCitySelect} city={city} />
+              <FilterCityComponent
+                onSetCity={handleCitySelect}
+                city={city}
+                isLoading={isLoadingFiltered}
+                result={filteredProducts}
+              />
             )}
           </div>
 
@@ -174,6 +199,8 @@ function SearchFilters({ use }: { use: string }) {
                 type="price"
                 defaultFrom="0"
                 defaultUpto="1000000"
+                isLoading={isLoadingFiltered}
+                result={filteredProducts}
               />
             )}
           </div>
@@ -209,6 +236,8 @@ function SearchFilters({ use }: { use: string }) {
                 type="year"
                 defaultFrom="2020"
                 defaultUpto="2026"
+                isLoading={isLoadingFiltered}
+                result={filteredProducts}
               />
             )}
           </div>
@@ -232,9 +261,13 @@ const cities = [
 function FilterCityComponent({
   onSetCity,
   city,
+  isLoading,
+  result,
 }: {
   onSetCity: (city: string) => void;
   city: string;
+  isLoading: boolean;
+  result: any[] | undefined;
 }) {
   const [selectedCity, setSelectedCity] = useState(city);
 
@@ -275,7 +308,11 @@ function FilterCityComponent({
         onClick={handleApplyFilters}
         className="w-full rounded-lg bg-blue-700 px-6 py-4 font-semibold text-white transition-colors duration-200 hover:bg-blue-800"
       >
-        Apply Filters
+        {isLoading
+          ? 'Loading ...'
+          : result?.length
+            ? `Show ${result?.length} Result`
+            : 'Apply Filters'}
       </button>
     </div>
   );
@@ -287,6 +324,8 @@ interface RangeFilterProps {
   type: 'price' | 'year';
   defaultFrom: string;
   defaultUpto: string;
+  result: any[] | undefined;
+  isLoading: boolean;
 }
 
 function RangeFilter({
@@ -295,6 +334,8 @@ function RangeFilter({
   type,
   defaultFrom,
   defaultUpto,
+  result,
+  isLoading,
 }: RangeFilterProps) {
   const [from, setFrom] = useState(defaultFrom);
   const [upto, setUpto] = useState(defaultUpto);
@@ -370,9 +411,13 @@ function RangeFilter({
         </button>
         <button
           onClick={handleApplyFilters}
-          className="w-full rounded-lg bg-blue-700 px-6 py-3 font-semibold text-white transition-colors duration-200 hover:bg-blue-800"
+          className="w-full rounded-lg bg-blue-700 px-6 py-4 font-semibold text-white transition-colors duration-200 hover:bg-blue-800"
         >
-          Apply Filters
+          {isLoading
+            ? 'Loading ...'
+            : result?.length
+              ? `Show ${result?.length} Result`
+              : 'Apply Filters'}
         </button>
       </div>
     </div>

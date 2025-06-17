@@ -5,7 +5,7 @@ import useProducts from '../../hooks/useProducts';
 import { cleanString } from '../../services/utils';
 
 function PopularSubcatagory({ id }: { id: string }) {
-  console.log('PopularSubcatagory', id);
+  // console.log('PopularSubcatagory', id);
   const { categories } = useCategories();
   const { products } = useProducts();
   const category = categories?.find(

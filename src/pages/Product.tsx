@@ -1,4 +1,4 @@
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import SearchFilters from '../components/Motor/Searchfilter';
 import ProductList from '../components/ui/ProductList';
 import Pagination from '../components/Motor/Pagination';
@@ -7,46 +7,46 @@ import useProducts from '../hooks/useProducts';
 import { ProductType } from '../components/type';
 import { useState } from 'react';
 import { cleanString } from '../services/utils';
+import { useFilteredProducts } from '../hooks/useFilteredProducts';
 
 function Product() {
   const { pname } = useParams<{ pname: string }>();
-  // console.log('pid', pid);
-  const [searchParams] = useSearchParams();
-  const keyword = searchParams.get('keyword')?.split('-').join(' ') || '';
   const pName = pname?.split('-')?.join(' ');
-  console.log('keyword', keyword);
-  console.log('pname', pName);
+  const [filtereApplied, setFilterApplied] = useState(false);
 
   const { products } = useProducts();
+  const { filteredProducts } = useFilteredProducts();
 
-  const filteredProducts: ProductType[] | undefined = pname
-    ? products?.filter((product): product is ProductType =>
-        product?.subcategory?.name.toLowerCase()?.includes(pName)
-      )
+  const _filteredProducts: ProductType[] | undefined = pname
+    ? filtereApplied
+      ? filteredProducts
+      : products?.filter((product): product is ProductType =>
+          product?.subcategory?.name.toLowerCase()?.includes(pName)
+        )
     : [];
 
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 10;
 
   // Calculate total pages
-  const totalPages = filteredProducts
-    ? Math.ceil(filteredProducts.length / productsPerPage)
+  const totalPages = _filteredProducts
+    ? Math.ceil(_filteredProducts.length / productsPerPage)
     : 1;
 
   // Get products for current page
-  const paginatedProducts = filteredProducts
-    ? filteredProducts.slice(
+  const paginatedProducts = _filteredProducts
+    ? _filteredProducts.slice(
         (currentPage - 1) * productsPerPage,
         currentPage * productsPerPage
       )
     : [];
 
-  if (filteredProducts?.length === 0) return <NoProduct />;
+  if (_filteredProducts?.length === 0) return <NoProduct />;
 
   return (
     <div className="mx-auto min-h-screen max-w-6xl px-4 py-4">
       {/* Search Filters */}
-      <SearchFilters use="motor" />
+      <SearchFilters use="motor" onFilterApplied={setFilterApplied} />
 
       {/* Breadcrumbs */}
       <div className="container mx-auto py-4 text-sm">
@@ -56,14 +56,14 @@ function Product() {
           </Link>
           <span className="text-gray-400 hover:underline">&gt;</span>
           <Link
-            to={`/${cleanString(filteredProducts?.[0]?.category?.name || '')}`}
+            to={`/${cleanString(_filteredProducts?.[0]?.category?.name || '')}`}
             className="hover:underline"
           >
-            {filteredProducts?.[0]?.category?.name}
+            {_filteredProducts?.[0]?.category?.name}
           </Link>
           <span className="text-gray-400">&gt;</span>
           <span className="text-gray-400">
-            {filteredProducts?.[0]?.subcategory?.name}
+            {_filteredProducts?.[0]?.subcategory?.name}
           </span>
         </div>
       </div>
@@ -72,8 +72,8 @@ function Product() {
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">
-            {filteredProducts?.[0]?.subcategory?.name} sale in dubai •{' '}
-            {filteredProducts?.length} Ads
+            {_filteredProducts?.[0]?.subcategory?.name} sale in dubai •{' '}
+            {_filteredProducts?.length} Ads
           </h2>
           <div className="flex items-center space-x-4">
             {/* <button className="flex items-center space-x-2 text-sm">

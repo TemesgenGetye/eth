@@ -1,6 +1,6 @@
 import { ShoppingCart, X } from 'lucide-react';
 import { useCart } from '../../Context/Cart';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import NoProductSmall from '../ui/NoProductSmall';
 import { useCartItems } from '../../hooks/store';
 
@@ -75,9 +75,9 @@ function Cart({
               </div>
             ))}
           </div>
-          <div className="p-4 text-center">
+          <div className="p-2 text-center">
             <button
-              className="w-full p-2 text-xs font-medium text-blue-500 hover:bg-gray-100/70 hover:text-blue-700"
+              className="w-full p-4 text-xs font-medium text-blue-500 hover:bg-gray-100/70 hover:text-blue-700"
               onClick={() => {
                 navigate('/cart');
                 closeModal();
