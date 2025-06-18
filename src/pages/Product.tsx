@@ -10,6 +10,79 @@ import { useEffect, useState } from 'react';
 import { cleanString } from '../services/utils';
 import { useFilteredProducts } from '../hooks/useFilteredProducts';
 
+const ProductSkeleton = () => {
+  return (
+    <div className="mx-auto min-h-screen max-w-6xl px-4 py-4">
+      {/* Search Filters - Keep static */}
+      <SearchFilters use="motor" onFilterApplied={() => {}} />
+
+      {/* Breadcrumbs - Keep static */}
+      <div className="container mx-auto py-4 text-sm">
+        <div className="flex items-center space-x-2 text-sm text-blue-600">
+          <Link to="/" className="hover:underline">
+            Dubai
+          </Link>
+          <span className="text-gray-400">&gt;</span>
+          <div className="h-4 w-24 animate-pulse rounded bg-gray-200" />
+          <span className="text-gray-400">&gt;</span>
+          <div className="h-4 w-32 animate-pulse rounded bg-gray-200" />
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="container mx-auto">
+        {/* Header - Keep static structure, skeleton for dynamic content */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="h-6 w-48 animate-pulse rounded bg-gray-200" />
+            <span className="text-gray-400">•</span>
+            <div className="h-6 w-16 animate-pulse rounded bg-gray-200" />
+          </div>
+        </div>
+
+        {/* Product List Skeleton */}
+        <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-1">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <div
+              key={index}
+              className="flex gap-4 rounded-lg border-b border-gray-100 p-4"
+            >
+              {/* Image Skeleton */}
+              <div className="h-32 w-32 flex-shrink-0 animate-pulse rounded-lg bg-gray-200" />
+
+              {/* Content Skeleton */}
+              <div className="flex flex-1 flex-col gap-2">
+                <div className="h-5 w-3/4 animate-pulse rounded bg-gray-200" />
+                <div className="h-4 w-1/2 animate-pulse rounded bg-gray-200" />
+                <div className="mt-2 flex items-center gap-2">
+                  <div className="h-4 w-16 animate-pulse rounded bg-gray-200" />
+                  <div className="h-4 w-16 animate-pulse rounded bg-gray-200" />
+                </div>
+                <div className="mt-auto flex items-center justify-between">
+                  <div className="h-6 w-24 animate-pulse rounded bg-gray-200" />
+                  <div className="h-8 w-24 animate-pulse rounded bg-gray-200" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Pagination Skeleton */}
+        <div className="mt-6 flex justify-center">
+          <div className="flex gap-2">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div
+                key={index}
+                className="h-8 w-8 animate-pulse rounded bg-gray-200"
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 function Product() {
   const { pname } = useParams<{ pname: string }>();
   const pName = pname?.split('-')?.join(' ');
@@ -21,8 +94,8 @@ function Product() {
     hasActiveFilters,
     refetchFiltered,
   } = useFilteredProducts();
-  console.log('hasActiveFilters', hasActiveFilters);
-  const { products } = useProducts();
+
+  const { products, isLoading: isLoadingProducts } = useProducts();
 
   const _filteredProducts: ProductType[] | undefined = pname
     ? filtereApplied || hasActiveFilters
@@ -51,6 +124,11 @@ function Product() {
   useEffect(() => {
     refetchFiltered();
   }, [refetchFiltered]);
+
+  // Show loading skeleton while loading
+  if (isLoadingProducts || isLoadingFiltered) {
+    return <ProductSkeleton />;
+  }
 
   // Show NoProduct if no products exist for the category
   if (!filtereApplied && !hasActiveFilters && _filteredProducts?.length === 0)
@@ -86,7 +164,7 @@ function Product() {
           <Link to="/" className="hover:underline">
             Dubai
           </Link>
-          <span className="text-gray-400 hover:underline">&gt;</span>
+          <span className="text-gray-400">&gt;</span>
           <Link
             to={`/${cleanString(_filteredProducts?.[0]?.category?.name || '')}`}
             className="hover:underline"
@@ -107,11 +185,9 @@ function Product() {
             {_filteredProducts?.[0]?.subcategory?.name} sale in dubai •{' '}
             {_filteredProducts?.length} Ads
           </h2>
-          <div className="flex items-center space-x-4">
-          </div>
+          <div className="flex items-center space-x-4"></div>
         </div>
 
-        {/* <BrandFilter brands={brands} /> */}
         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-1">
           <ProductList products={paginatedProducts} />
         </div>
