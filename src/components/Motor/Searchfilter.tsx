@@ -19,10 +19,24 @@ function SearchFilters({
   const [isYearOpen, setIsYearOpen] = useState(false);
   const [isPriceOpen, setIsPriceOpen] = useState(false);
   const [city, setCity] = useState(query.get('city') || '');
-  const [yearRange, setYearRange] = useState('Select');
-  const [priceRange, setPriceRange] = useState('Select');
+
+  // Get min/max values from URL
+  const minPrice = query.get('minPrice');
+  const maxPrice = query.get('maxPrice');
+  const minYear = query.get('minYear');
+  const maxYear = query.get('maxYear');
+
+  // Set initial range states based on URL parameters
+  const [yearRange, setYearRange] = useState(
+    minYear && maxYear ? `${minYear}-${maxYear}` : 'Select'
+  );
+  const [priceRange, setPriceRange] = useState(
+    minPrice && maxPrice ? `${minPrice}-${maxPrice}` : 'Select'
+  );
+
   const [key, setKey] = useState(keyword);
-  const [isLoading, setIsLoading] = useState(false);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
 
   const cityRef = useRef<HTMLDivElement>(null);
   const yearRef = useRef<HTMLDivElement>(null);
@@ -53,18 +67,49 @@ function SearchFilters({
     const value = e.target.value;
     setKey(value);
     setFilterOptions((prev) => ({ ...prev, term: value.trim() }));
+    setShowSearchResults(value.length >= 2);
     onFilterApplied?.(true);
   };
 
+  // Handle search result selection
+  const handleSearchSelect = (product: ProductType) => {
+    setKey(product.name);
+    setFilterOptions((prev) => ({ ...prev, term: product.name }));
+    setShowSearchResults(false);
+    onFilterApplied?.(true);
+  };
+
+  // Highlight matching text
+  const highlightMatch = (text: string, query: string) => {
+    if (!query) return text;
+    const regex = new RegExp(`(${query})`, 'gi');
+    return text.replace(regex, '<span class="underline">$1</span>');
+  };
+
+  // Close search results when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setShowSearchResults(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   // Handle city selection
   const handleCitySelect = async (selectedCity: string) => {
-    setIsLoading(true);
     setCity(selectedCity);
     setFilterOptions((prev) => ({ ...prev, city: selectedCity }));
     setIsCitySelectOpen(false);
     onFilterApplied?.(true);
     await refetchFiltered();
-    setIsLoading(false);
   };
 
   // Handle price range application
@@ -73,13 +118,11 @@ function SearchFilters({
     min: number,
     max: number
   ) => {
-    setIsLoading(true);
     setPriceRange(range);
     setFilterOptions((prev) => ({ ...prev, minPrice: min, maxPrice: max }));
     setIsPriceOpen(false);
     onFilterApplied?.(true);
     await refetchFiltered();
-    setIsLoading(false);
   };
 
   // Handle year range application
@@ -88,18 +131,36 @@ function SearchFilters({
     min: number,
     max: number
   ) => {
-    setIsLoading(true);
     setYearRange(range);
     setFilterOptions((prev) => ({ ...prev, minYear: min, maxYear: max }));
     setIsYearOpen(false);
     onFilterApplied?.(true);
     await refetchFiltered();
-    setIsLoading(false);
+  };
+
+  // Handle clearing specific filters
+  const handleClearRange = async (type: 'price' | 'year') => {
+    if (type === 'price') {
+      setPriceRange('Select');
+      setFilterOptions((prev) => ({
+        ...prev,
+        minPrice: undefined,
+        maxPrice: undefined,
+      }));
+    } else {
+      setYearRange('Select');
+      setFilterOptions((prev) => ({
+        ...prev,
+        minYear: undefined,
+        maxYear: undefined,
+      }));
+    }
+    onFilterApplied?.(true);
+    await refetchFiltered();
   };
 
   // Handle clearing filters
   const handleClearFilters = async () => {
-    setIsLoading(true);
     setCity('');
     setYearRange('Select');
     setPriceRange('Select');
@@ -114,7 +175,6 @@ function SearchFilters({
     });
     onFilterApplied?.(false);
     await refetchFiltered();
-    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -126,6 +186,34 @@ function SearchFilters({
       )
     );
   }, [filterOptions, setQuery]);
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // Close city dropdown
+      if (cityRef.current && !cityRef.current.contains(event.target as Node)) {
+        setIsCitySelectOpen(false);
+      }
+
+      // Close year dropdown
+      if (yearRef.current && !yearRef.current.contains(event.target as Node)) {
+        setIsYearOpen(false);
+      }
+
+      // Close price dropdown
+      if (
+        priceRef.current &&
+        !priceRef.current.contains(event.target as Node)
+      ) {
+        setIsPriceOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div
@@ -161,13 +249,16 @@ function SearchFilters({
               <FilterCityComponent
                 onSetCity={handleCitySelect}
                 city={city}
-                isLoading={isLoading || isLoadingFiltered}
+                isLoading={isLoadingFiltered}
                 result={filteredProducts}
               />
             )}
           </div>
 
-          <div className="w-full py-2 hover:bg-gray-100">
+          <div
+            className="relative w-full py-2 hover:bg-gray-100"
+            ref={searchRef}
+          >
             <div>
               <button className="w-full border-r border-r-gray-100 px-4 text-left">
                 <p className="mb-1 text-xs font-bold text-gray-800">
@@ -179,9 +270,34 @@ function SearchFilters({
                   style={{ background: 'none' }}
                   value={key}
                   onChange={handleSearchChange}
+                  placeholder="Search..."
                 />
               </button>
             </div>
+            {showSearchResults &&
+              filteredProducts &&
+              filteredProducts.length > 0 && (
+                <div className="absolute left-0 top-full z-50 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg">
+                  <div className="max-h-60 overflow-y-auto">
+                    {filteredProducts.map((product, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleSearchSelect(product)}
+                        className="flex w-full items-center justify-between border-b border-gray-200 px-4 py-2 text-left hover:bg-gray-50"
+                      >
+                        <div>
+                          <div
+                            className="text-sm font-medium"
+                            dangerouslySetInnerHTML={{
+                              __html: highlightMatch(product.name, key),
+                            }}
+                          />
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
           </div>
 
           <div
@@ -212,17 +328,22 @@ function SearchFilters({
             {isPriceOpen && (
               <RangeFilter
                 onApplyFilters={handlePriceRangeApply}
+                onClear={() => handleClearRange('price')}
                 type="price"
-                defaultFrom="0"
-                defaultUpto="1000000"
-                isLoading={isLoading || isLoadingFiltered}
+                defaultFrom={minPrice || '0'}
+                defaultUpto={maxPrice || '1000000'}
+                isLoading={isLoadingFiltered}
                 result={filteredProducts}
               />
             )}
           </div>
 
           <div
-            className="relative w-full rounded-br-xl rounded-tr-xl py-2 hover:bg-gray-100"
+            className={`relative w-full ${
+              city || yearRange !== 'Select' || priceRange !== 'Select' || key
+                ? 'rounded-br-xl rounded-tr-xl py-2'
+                : ''
+            } hover:bg-gray-100`}
             ref={yearRef}
           >
             <button
@@ -249,10 +370,11 @@ function SearchFilters({
             {isYearOpen && (
               <RangeFilter
                 onApplyFilters={handleYearRangeApply}
+                onClear={() => handleClearRange('year')}
                 type="year"
-                defaultFrom="2020"
-                defaultUpto="2026"
-                isLoading={isLoading || isLoadingFiltered}
+                defaultFrom={minYear || '2020'}
+                defaultUpto={maxYear || '2026'}
+                isLoading={isLoadingFiltered}
                 result={filteredProducts}
               />
             )}
@@ -264,10 +386,10 @@ function SearchFilters({
             key) && (
             <button
               onClick={handleClearFilters}
-              className="ml-4 flex items-center justify-center px-4 text-sm text-blue-600 hover:text-blue-800"
-              disabled={isLoading || isLoadingFiltered}
+              className="ml-4 flex items-center justify-center rounded-br-lg rounded-tr-lg bg-blue-600 px-4 text-sm text-white hover:bg-blue-700"
+              disabled={isLoadingFiltered}
             >
-              {isLoading || isLoadingFiltered ? 'Clearing...' : 'Clear Filters'}
+              {isLoadingFiltered ? 'Clearing...' : 'Clear Filters'}
             </button>
           )}
         </div>
@@ -277,6 +399,7 @@ function SearchFilters({
 }
 
 const cities = [
+  'All Cities',
   'Dubai',
   'Abu Dhabi',
   'Ras Al Khaimah',
@@ -377,8 +500,8 @@ function RangeFilter({
   };
 
   const handleClear = () => {
-    setFrom('');
-    setUpto('');
+    setFrom(defaultFrom);
+    setUpto(defaultUpto);
     onClear?.();
   };
 
@@ -397,7 +520,7 @@ function RangeFilter({
   };
 
   return (
-    <div className="absolute right-0 top-[calc(100%+15px)] z-[100000] rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+    <div className="absolute left-0 top-[calc(100%+15px)] z-[100000] rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
       <div className="mb-6 grid grid-cols-2 gap-6">
         <div>
           <label

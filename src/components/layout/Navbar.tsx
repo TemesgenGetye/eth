@@ -15,7 +15,7 @@ const Navbar = () => {
           <div className="mx-auto flex h-12 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
             <div className="flex items-center space-x-2">
               <Link to="/" className="flex items-center">
-                <img src="./logo.png" alt="888market" className="h-10 w-auto" />
+                <img src="/logo.png" alt="888market" className="h-10 w-auto" />
                 <div className="flex items-center">
                   <button className="flex items-center text-sm font-semibold text-gray-600 hover:text-gray-900">
                     888Market

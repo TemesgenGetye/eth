@@ -314,11 +314,11 @@ export const getFilteredProducts = async (filterOptions: {
     }
 
     if (minPrice !== undefined && minPrice !== null) {
-      query = query.gte('price', minPrice);
+      query = query.gte('price->>discounted', minPrice);
     }
 
     if (maxPrice !== undefined && maxPrice !== null) {
-      query = query.lte('price', maxPrice);
+      query = query.lte('price->>discounted', maxPrice);
     }
 
     if (minYear !== undefined && minYear !== null) {

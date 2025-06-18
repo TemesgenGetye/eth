@@ -17,7 +17,7 @@ import { useCart } from '../../Context/Cart';
 import { ProductType } from '../type';
 import toast from 'react-hot-toast';
 import { useCartItems, useFavouriteItems } from '../../hooks/store';
-import { useGetCustomer, useGetCustomerById } from '../../hooks/useCustomers';
+import { useGetCustomerById } from '../../hooks/useCustomers';
 
 interface ProductProps {
   products: ProductType[] | undefined;

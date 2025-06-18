@@ -12,12 +12,33 @@ export const useFilteredProducts = () => {
   const maxPrice = query.get('maxPrice');
   const minYear = query.get('minYear');
   const maxYear = query.get('maxYear');
+
+  // Check if any filter is active
+  const hasActiveFilters = !!(
+    term?.trim() ||
+    city ||
+    minPrice ||
+    maxPrice ||
+    minYear ||
+    maxYear ||
+    pname
+  );
+
   const {
     data: filteredProducts,
     isLoading: isLoadingFiltered,
     refetch: refetchFiltered,
   } = useQuery({
-    queryKey: ['filtered-products'],
+    queryKey: [
+      'filtered-products',
+      term,
+      city,
+      minPrice,
+      maxPrice,
+      minYear,
+      maxYear,
+      pname,
+    ],
     queryFn: () =>
       getFilteredProducts({
         term,
@@ -25,23 +46,17 @@ export const useFilteredProducts = () => {
         minPrice: minPrice !== null ? +minPrice : undefined,
         maxPrice: maxPrice !== null ? +maxPrice : undefined,
         minYear: minYear !== null ? +minYear : undefined,
-        maxYear: maxPrice !== null ? +maxPrice : undefined,
+        maxYear: maxYear !== null ? +maxYear : undefined,
         pname,
       }),
-    enabled:
-      !!term?.trim() ||
-      !!city ||
-      !!minPrice ||
-      !!maxPrice ||
-      !!minYear ||
-      !!maxYear,
+    enabled: hasActiveFilters,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
-  // console.log('error stack', error?.stack);
-  // console.log('error', error?.message);
+
   return {
     filteredProducts: filteredProducts as ProductType[] | undefined,
     isLoadingFiltered,
     refetchFiltered,
+    hasActiveFilters,
   };
 };

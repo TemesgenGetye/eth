@@ -16,10 +16,11 @@ function Product() {
   const [filtereApplied, setFilterApplied] = useState(false);
 
   const { products } = useProducts();
-  const { filteredProducts, isLoadingFiltered } = useFilteredProducts();
+  const { filteredProducts, isLoadingFiltered, hasActiveFilters } =
+    useFilteredProducts();
 
   const _filteredProducts: ProductType[] | undefined = pname
-    ? filtereApplied
+    ? filtereApplied || hasActiveFilters
       ? filteredProducts
       : products?.filter((product): product is ProductType =>
           product?.subcategory?.name.toLowerCase()?.includes(pName)
@@ -43,11 +44,12 @@ function Product() {
     : [];
 
   // Show NoProduct if no products exist for the category
-  if (!filtereApplied && _filteredProducts?.length === 0) return <NoProduct />;
+  if (!filtereApplied && !hasActiveFilters && _filteredProducts?.length === 0)
+    return <NoProduct />;
 
   // Show NoSearchResult if filters are applied but no results found
   if (
-    filtereApplied &&
+    (filtereApplied || hasActiveFilters) &&
     !isLoadingFiltered &&
     (!_filteredProducts || _filteredProducts.length === 0)
   ) {
