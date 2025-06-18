@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Listing from '../components/Listing';
 import useMyAds from '../hooks/useMyAds';
 import useCustomers from '../hooks/useCustomers';
+import { ProductType } from '../components/type'; 
 
 export default function MyAds() {
   const uId = localStorage.getItem('user-id');
@@ -12,9 +13,29 @@ export default function MyAds() {
   const loggedUser = customers?.find((customer) => customer.uuid === uId);
   console.log('loggedUser', loggedUser);
   const [activeTab, setActiveTab] = useState('all');
-  const { myAdds, refetchAds } = useMyAds(loggedUser?.id);
+  const { myAdds } = useMyAds(loggedUser?.id);
 
-  const grouped = myAdds?.reduce(
+  // Filter products based on active tab
+  const filteredAds = myAdds?.filter((ad) => {
+    switch (activeTab) {
+      case 'all':
+        return true;
+      case 'live':
+        return ad.status === 'live';
+      case 'drafts':
+        return ad.status === 'draft';
+      case 'review':
+        return ad.status === 'pending';
+      case 'rejected':
+        return ad.status === 'rejected';
+      case 'expired':
+        return ad.status === 'expired';
+      default:
+        return true;
+    }
+  });
+
+  const grouped = filteredAds?.reduce(
     (acc, product) => {
       const categoryName = product.category?.name || 'Uncategorized';
       const subcategoryName = product.subcategory?.name || 'Uncategorized';
@@ -31,23 +52,61 @@ export default function MyAds() {
 
       return acc;
     },
-    {} as Record<string, Record<string, typeof products>>
+    {} as Record<string, Record<string, ProductType[]>>
   );
   console.log(grouped);
 
   const tabs = [
     { id: 'all', label: 'All Ads', count: myAdds?.length || 0 },
-    { id: 'live', label: 'Live', count: 0 },
-    { id: 'drafts', label: 'Drafts', count: 0 },
-    // { id: 'payment', label: 'Payment Pending', count: 0 },
-    { id: 'review', label: 'Under Review', count: 0 },
-    { id: 'rejected', label: 'Rejected', count: 0 },
-    { id: 'expired', label: 'Expired', count: 0 },
+    {
+      id: 'live',
+      label: 'Live',
+      count: myAdds?.filter((ad) => ad.status === 'live').length || 0,
+    },
+    {
+      id: 'drafts',
+      label: 'Drafts',
+      count: myAdds?.filter((ad) => ad.status === 'draft').length || 0,
+    },
+    {
+      id: 'review',
+      label: 'Under Review',
+      count: myAdds?.filter((ad) => ad.status === 'pending').length || 0,
+    },
+    {
+      id: 'rejected',
+      label: 'Rejected',
+      count: myAdds?.filter((ad) => ad.status === 'rejected').length || 0,
+    },
+    {
+      id: 'expired',
+      label: 'Expired',
+      count: myAdds?.filter((ad) => ad.status === 'expired').length || 0,
+    },
   ];
+
+  const getNoAdsMessage = () => {
+    switch (activeTab) {
+      case 'all':
+        return "You haven't placed any ads yet";
+      case 'live':
+        return "You don't have any live ads";
+      case 'drafts':
+        return "You don't have any draft ads";
+      case 'review':
+        return "You don't have any ads under review";
+      case 'rejected':
+        return "You don't have any rejected ads";
+      case 'expired':
+        return "You don't have any expired ads";
+      default:
+        return "You haven't placed any ads yet";
+    }
+  };
 
   return (
     <div className="flex min-h-screen justify-center bg-gray-50">
-      <div className="mx-auto max-w-6xl p-6">
+      <div className="mx-auto w-[65rem] p-6">
         {/* Header */}
         <h1 className="mb-8 text-2xl font-bold text-black">My Ads</h1>
 
@@ -59,7 +118,7 @@ export default function MyAds() {
               onClick={() => setActiveTab(tab.id)}
               className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
                 activeTab === tab.id
-                  ? 'bg-black/80 text-white'
+                  ? 'bg-blue-700 text-white'
                   : 'border border-gray-200 bg-white text-gray-600 hover:bg-gray-100'
               }`}
             >
@@ -67,12 +126,14 @@ export default function MyAds() {
             </button>
           ))}
         </div>
-        {grouped && Object.keys(grouped).length > 0 ? (
+
+        {filteredAds && filteredAds.length > 0 && grouped ? (
           Object.entries(grouped).map(([categoryName, subcategories]) => (
             <Listing
               key={categoryName}
               title={categoryName}
               subcategories={subcategories}
+              showEditButton={activeTab === 'live'}
             />
           ))
         ) : (
@@ -85,13 +146,15 @@ export default function MyAds() {
               />
             </div>
             <h2 className="mb-8 text-xl font-semibold text-black">
-              You haven't placed any ads yet
+              {getNoAdsMessage()}
             </h2>
-            <a href="/post-ad">
-              <button className="rounded-lg bg-blue-600 px-8 py-3 font-semibold text-white transition-colors hover:bg-blue-700">
-                Post ad now
-              </button>
-            </a>
+            {activeTab === 'all' && (
+              <a href="/post-ad">
+                <button className="rounded-lg bg-blue-600 px-8 py-3 font-semibold text-white transition-colors hover:bg-blue-700">
+                  Post ad now
+                </button>
+              </a>
+            )}
           </div>
         )}
       </div>

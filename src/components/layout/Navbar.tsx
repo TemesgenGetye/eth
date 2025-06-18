@@ -80,7 +80,11 @@ const HoverMenu = () => {
   // Top-level: Home + first 5 categories
   const topLevelCategories: CategoryType[] = [
     homeCategory,
-    ...categories.slice(0, 5),
+    ...categories.slice(0, 5).map(cat => ({
+      id: cat.id,
+      name: cat.name,
+      subcategories: cat.subcategories || []
+    }))
   ];
 
   const handleMouseEnterParent = (category: string) => {
@@ -264,7 +268,7 @@ const HoverMenu = () => {
 
           {/* "See More" button */}
           <button
-            className="flex items-center rounded-full bg-blue-600 p-2 text-sm font-semibold text-white hover:bg-blue-700"
+            className="flex items-center rounded-full bg-blue-700 py-2 px-4 text-sm font-semibold text-white hover:bg-blue-800"
             onClick={() => hanldleShowAllCategories()}
           >
             All categories

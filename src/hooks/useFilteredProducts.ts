@@ -23,6 +23,7 @@ export const useFilteredProducts = () => {
     maxYear ||
     pname
   );
+  // console.log('hasActiveFilters', hasActiveFilters);
 
   const {
     data: filteredProducts,

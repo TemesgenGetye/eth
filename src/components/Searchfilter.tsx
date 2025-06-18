@@ -83,7 +83,10 @@ function SearchFilters({
   const highlightMatch = (text: string, query: string) => {
     if (!query) return text;
     const regex = new RegExp(`(${query})`, 'gi');
-    return text.replace(regex, '<span class="underline">$1</span>');
+    return text.replace(
+      regex,
+      '<span class="underline decoration-blue-500 decoration-2 underline-offset-4">$1</span>'
+    );
   };
 
   // Close search results when clicking outside

@@ -6,7 +6,7 @@ import NoProduct from '../components/ui/NoProduct';
 import NoSearchResult from '../components/TopNavElements/NoSearchResult';
 import useProducts from '../hooks/useProducts';
 import { ProductType } from '../components/type';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cleanString } from '../services/utils';
 import { useFilteredProducts } from '../hooks/useFilteredProducts';
 
@@ -15,9 +15,14 @@ function Product() {
   const pName = pname?.split('-')?.join(' ');
   const [filtereApplied, setFilterApplied] = useState(false);
 
+  const {
+    filteredProducts,
+    isLoadingFiltered,
+    hasActiveFilters,
+    refetchFiltered,
+  } = useFilteredProducts();
+  console.log('hasActiveFilters', hasActiveFilters);
   const { products } = useProducts();
-  const { filteredProducts, isLoadingFiltered, hasActiveFilters } =
-    useFilteredProducts();
 
   const _filteredProducts: ProductType[] | undefined = pname
     ? filtereApplied || hasActiveFilters
@@ -42,6 +47,10 @@ function Product() {
         currentPage * productsPerPage
       )
     : [];
+
+  useEffect(() => {
+    refetchFiltered();
+  }, [refetchFiltered]);
 
   // Show NoProduct if no products exist for the category
   if (!filtereApplied && !hasActiveFilters && _filteredProducts?.length === 0)
@@ -99,13 +108,6 @@ function Product() {
             {_filteredProducts?.length} Ads
           </h2>
           <div className="flex items-center space-x-4">
-            {/* <button className="flex items-center space-x-2 text-sm">
-              <span>Sort: Default</span>
-              <ChevronDown className="h-4 w-4" />
-            </button>
-            <button className="flex items-center space-x-2 text-sm">
-              <span>Save Search</span>
-            </button> */}
           </div>
         </div>
 

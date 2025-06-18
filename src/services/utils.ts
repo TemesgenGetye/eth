@@ -20,8 +20,8 @@ export function camelCase(obj: any) {
 export function cleanString(str: string) {
   return str
     .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9-]/g, '')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/[^a-z0-9-&]/g, '') // Allow letters, numbers, hyphens, and ampersands
+    .replace(/-+/g, '-') // Collapse multiple hyphens
+    .replace(/^-|-$/g, ''); // Trim leading/trailing hyphens
 }

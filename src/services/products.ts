@@ -225,8 +225,6 @@ export const getAds = async (id: number) => {
 };
 
 export const getSearchedProducts = async (term: string, category?: string) => {
-  console.log('category', category);
-  console.log('term', term);
   if (!term || term.trim() === '') return [];
 
   try {
