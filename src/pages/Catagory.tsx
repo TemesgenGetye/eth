@@ -122,7 +122,7 @@ export default function CatagoryInfo() {
                                     onClick={() => {
                                       setSearchValue(item.name);
                                       setShowSuggestions(false);
-                                      setQuery({ term: searchValue });
+                                      // setQuery({ term: searchValue });
                                       console.log('searchValue', searchValue);
                                       // refetchFiltered();
                                       navigate(
@@ -153,7 +153,7 @@ export default function CatagoryInfo() {
                                       setShowSuggestions(false);
                                       setActiveCategory(cleanString(cat.name));
 
-                                      setQuery({ term: searchValue });
+                                      // setQuery({ term: searchValue });
                                       console.log('searchValue', searchValue);
                                       // refetchFiltered();
                                       navigate(

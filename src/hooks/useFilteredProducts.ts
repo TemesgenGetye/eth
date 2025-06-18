@@ -6,7 +6,7 @@ import { ProductType } from '../components/type';
 export const useFilteredProducts = () => {
   const [query] = useSearchParams();
   const { pname } = useParams();
-  const term = query.get('term');
+  const keyword = query.get('keyword');
   const city = query.get('city');
   const minPrice = query.get('minPrice');
   const maxPrice = query.get('maxPrice');
@@ -15,7 +15,7 @@ export const useFilteredProducts = () => {
 
   // Check if any filter is active
   const hasActiveFilters = !!(
-    term?.trim() ||
+    keyword?.trim() ||
     city ||
     minPrice ||
     maxPrice ||
@@ -31,7 +31,7 @@ export const useFilteredProducts = () => {
   } = useQuery({
     queryKey: [
       'filtered-products',
-      term,
+      keyword,
       city,
       minPrice,
       maxPrice,
@@ -41,7 +41,7 @@ export const useFilteredProducts = () => {
     ],
     queryFn: () =>
       getFilteredProducts({
-        term,
+        keyword,
         city,
         minPrice: minPrice !== null ? +minPrice : undefined,
         maxPrice: maxPrice !== null ? +maxPrice : undefined,

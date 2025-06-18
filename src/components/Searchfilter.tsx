@@ -5,8 +5,6 @@ import { useSearchParams } from 'react-router-dom';
 import { useFilteredProducts } from '../hooks/useFilteredProducts';
 // import debounce from 'lodash/debounce'; // Install lodash for debouncing
 import { ProductType } from './type';
-import FilterCityComponent from './ProductFilters/FilterCityComponent';
-import RangeFilter from './ProductFilters/RangeFilters';
 
 function SearchFilters({
   use,
@@ -17,6 +15,7 @@ function SearchFilters({
 }) {
   const [query, setQuery] = useSearchParams();
   const keyword = query.get('keyword') || '';
+  console.log('keyword', keyword);
   const [isCitySelectOpen, setIsCitySelectOpen] = useState(false);
   const [isYearOpen, setIsYearOpen] = useState(false);
   const [isPriceOpen, setIsPriceOpen] = useState(false);
@@ -47,16 +46,16 @@ function SearchFilters({
   const { isLoadingFiltered, filteredProducts, refetchFiltered } =
     useFilteredProducts();
 
-  // Initialize filterOptions with all possible filters
+  // Initialize filterOptions with all possible filters (excluding search term)
   const [filterOptions, setFilterOptions] = useState<{
-    term?: string;
+    keyword?: string;
     city?: string;
     minPrice?: number;
     maxPrice?: number;
     minYear?: number;
     maxYear?: number;
   }>({
-    term: query.get('term') || '',
+    keyword: query.get('keyword') || '',
     city: query.get('city') || '',
     minPrice: query.get('minPrice') ? Number(query.get('minPrice')) : undefined,
     maxPrice: query.get('maxPrice') ? Number(query.get('maxPrice')) : undefined,
@@ -64,32 +63,34 @@ function SearchFilters({
     maxYear: query.get('maxYear') ? Number(query.get('maxYear')) : undefined,
   });
 
-  // Handle search input change
+  // Handle search input change - only update local state and show dropdown
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    // console.log('value', value);
     setKey(value);
-    setFilterOptions((prev) => ({ ...prev, term: value.trim() }));
-    // setShowSearchResults(value.length >= 2);
-    // onFilterApplied?.(true);
+    setShowSearchResults(value.length >= 2);
+    // Don't update filterOptions or query for search term
   };
 
-  // Handle search result selection
-  const handleSearchSelect = (product: ProductType) => {
+  // Handle search result selection - update URL query when product is selected
+  const handleSearchSelect = async (product: ProductType) => {
     setKey(product.name);
-    setFilterOptions((prev) => ({ ...prev, term: product.name }));
     setShowSearchResults(false);
+    // Update URL query directly when product is selected
+    // setQuery((prev) => {
+    //   const newParams = new URLSearchParams(prev);
+    //   newParams.set('keyword', product.name);
+    //   return newParams;
+    // });
     onFilterApplied?.(true);
+    // Trigger refetch to get filtered results with the selected product and current filters
+    setFilterOptions((prev) => ({ ...prev, keyword: product.name }));
   };
 
   // Highlight matching text
   const highlightMatch = (text: string, query: string) => {
     if (!query) return text;
     const regex = new RegExp(`(${query})`, 'gi');
-    return text.replace(
-      regex,
-      '<span class="underline decoration-blue-500 decoration-2 underline-offset-4">$1</span>'
-    );
+    return text.replace(regex, '<span class="underline">$1</span>');
   };
 
   // Close search results when clicking outside
@@ -172,31 +173,64 @@ function SearchFilters({
     setPriceRange('Select');
     setKey('');
     setFilterOptions({
-      term: '',
       city: '',
       minPrice: undefined,
       maxPrice: undefined,
       minYear: undefined,
       maxYear: undefined,
     });
+    // Clear search term from URL
+    setQuery((prev) => {
+      const newParams = new URLSearchParams(prev);
+      newParams.delete('keyword');
+      return newParams;
+    });
     onFilterApplied?.(false);
     await refetchFiltered();
   };
 
+  // Update URL query only for non-search filters
   useEffect(() => {
     console.log('filterOptions', filterOptions);
-    setQuery(
-      Object.fromEntries(
-        Object.entries(filterOptions || {})
-          .filter(([, v]) => v !== undefined && v !== '')
-          .map(([k, v]) => [k, String(v)])
-      )
-    );
-    console.log('query', query);
-    console.log('filterOptions', filterOptions);
-  }, [filterOptions, setQuery, query]);
+    setQuery((prev) => {
+      const newParams = new URLSearchParams(prev);
+      // Only update non-search filters
+      if (filterOptions.city) {
+        newParams.set('city', filterOptions.city);
+      } else {
+        newParams.delete('city');
+      }
+      if (filterOptions.minPrice !== undefined) {
+        newParams.set('minPrice', filterOptions.minPrice.toString());
+      } else {
+        newParams.delete('minPrice');
+      }
+      if (filterOptions.maxPrice !== undefined) {
+        newParams.set('maxPrice', filterOptions.maxPrice.toString());
+      } else {
+        newParams.delete('maxPrice');
+      }
+      if (filterOptions.minYear !== undefined) {
+        newParams.set('minYear', filterOptions.minYear.toString());
+      } else {
+        newParams.delete('minYear');
+      }
+      if (filterOptions.maxYear !== undefined) {
+        newParams.set('maxYear', filterOptions.maxYear.toString());
+      } else {
+        newParams.delete('maxYear');
+      }
+      if (filterOptions.keyword) {
+        newParams.set('keyword', filterOptions.keyword);
+      } else {
+        newParams.delete('keyword');
+      }
+      return newParams;
+    });
+  }, [filterOptions, setQuery]);
 
   // Close dropdowns when clicking outside
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       // Close city dropdown
@@ -232,7 +266,6 @@ function SearchFilters({
     >
       <div className="mx-auto mb-5 w-full max-w-6xl rounded-xl border border-gray-400 bg-white text-sm shadow-md">
         <div className="flex flex-col items-stretch md:flex-row">
-          {/* City Filter */}
           <div
             className="relative w-full rounded-bl-xl rounded-tl-xl py-2 hover:bg-gray-100"
             ref={cityRef}
@@ -265,7 +298,6 @@ function SearchFilters({
             )}
           </div>
 
-          {/* Search Filter */}
           <div
             className="relative w-full py-2 hover:bg-gray-100"
             ref={searchRef}
@@ -311,7 +343,6 @@ function SearchFilters({
               )}
           </div>
 
-          {/* Price Filter */}
           <div
             className="relative w-full py-2 hover:bg-gray-100"
             ref={priceRef}
@@ -350,7 +381,6 @@ function SearchFilters({
             )}
           </div>
 
-          {/* Year Filter */}
           <div
             className={`relative w-full ${
               city || yearRange !== 'Select' || priceRange !== 'Select' || key
@@ -393,7 +423,6 @@ function SearchFilters({
             )}
           </div>
 
-          {/* Clear Filters */}
           {(city ||
             yearRange !== 'Select' ||
             priceRange !== 'Select' ||
@@ -407,6 +436,187 @@ function SearchFilters({
             </button>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+const cities = [
+  'All Cities',
+  'Dubai',
+  'Abu Dhabi',
+  'Ras Al Khaimah',
+  'Sharjah',
+  'Fujairah',
+  'Ajman',
+  'Umm Al Quwain',
+  'Al Ain',
+];
+
+function FilterCityComponent({
+  onSetCity,
+  city,
+  isLoading,
+  result,
+}: {
+  onSetCity: (city: string) => void;
+  city: string;
+  isLoading: boolean;
+  result: ProductType[] | undefined;
+}) {
+  const [selectedCity, setSelectedCity] = useState(city);
+
+  // Reorder cities to put the selected city first
+  const orderedCities = selectedCity
+    ? [selectedCity, ...cities.filter((c) => c !== selectedCity)]
+    : cities;
+
+  const handleCitySelect = (city: string) => {
+    setSelectedCity(city);
+  };
+
+  const handleApplyFilters = () => {
+    onSetCity(selectedCity);
+  };
+
+  return (
+    <div className="absolute top-[calc(100%+5px)] z-[9000] min-w-[400px] rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="mb-6 flex flex-wrap gap-3">
+        {orderedCities.map((city) => (
+          <button
+            key={city}
+            onClick={() => handleCitySelect(city)}
+            className={`
+              rounded-full border px-6 py-3 text-sm font-medium transition-all duration-200
+              ${
+                selectedCity === city
+                  ? 'border-blue-400 bg-blue-50 text-blue-700'
+                  : 'border-gray-300 bg-white text-gray-700 hover:border-blue-400 hover:bg-blue-50'
+              }
+            `}
+          >
+            {city}
+          </button>
+        ))}
+      </div>
+      <button
+        onClick={handleApplyFilters}
+        disabled={isLoading}
+        className="w-full rounded-lg bg-blue-700 px-6 py-4 font-semibold text-white transition-colors duration-200 hover:bg-blue-800 disabled:bg-blue-400"
+      >
+        {isLoading
+          ? 'Loading...'
+          : result?.length
+            ? `Show ${result.length} Results`
+            : 'Apply Filters'}
+      </button>
+    </div>
+  );
+}
+
+interface RangeFilterProps {
+  onApplyFilters: (range: string, min: number, max: number) => void;
+  onClear?: () => void;
+  type: 'price' | 'year';
+  defaultFrom: string;
+  defaultUpto: string;
+  result: ProductType[] | undefined;
+  isLoading: boolean;
+}
+
+function RangeFilter({
+  onApplyFilters,
+  onClear,
+  type,
+  defaultFrom,
+  defaultUpto,
+  result,
+  isLoading,
+}: RangeFilterProps) {
+  const [from, setFrom] = useState(defaultFrom);
+  const [upto, setUpto] = useState(defaultUpto);
+
+  const handleApplyFilters = () => {
+    const min = parseInt(from) || 0;
+    const max = parseInt(upto) || (type === 'year' ? 2026 : 1000000);
+    onApplyFilters(`${from}-${upto}`, min, max);
+  };
+
+  const handleClear = () => {
+    setFrom(defaultFrom);
+    setUpto(defaultUpto);
+    onClear?.();
+  };
+
+  const handleFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === '' || /^\d+$/.test(value)) {
+      setFrom(value);
+    }
+  };
+
+  const handleUptoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === '' || /^\d+$/.test(value)) {
+      setUpto(value);
+    }
+  };
+
+  return (
+    <div className="absolute left-0 top-[calc(100%+15px)] z-[100000] rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="mb-6 grid grid-cols-2 gap-6">
+        <div>
+          <label
+            htmlFor={`from-${type}`}
+            className="mb-1 block text-sm font-medium text-gray-400"
+          >
+            From
+          </label>
+          <input
+            id={`from-${type}`}
+            type="number"
+            value={from}
+            onChange={handleFromChange}
+            placeholder={type === 'year' ? '2000' : '0'}
+            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-1 font-medium text-gray-900 transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          />
+        </div>
+        <div>
+          <label
+            htmlFor={`upto-${type}`}
+            className="mb-1 block text-sm font-medium text-gray-400"
+          >
+            Upto
+          </label>
+          <input
+            id={`upto-${type}`}
+            type="number"
+            value={upto}
+            onChange={handleUptoChange}
+            placeholder={type === 'year' ? '2026' : '1000000'}
+            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-1 font-medium text-gray-900 transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          />
+        </div>
+      </div>
+      <div className="grid gap-4" style={{ gridTemplateColumns: '80px 180px' }}>
+        <button
+          onClick={handleClear}
+          disabled={isLoading}
+          className="rounded-lg border border-gray-300 bg-white px-1 py-0 font-medium text-gray-700 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50 focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
+        >
+          Clear
+        </button>
+        <button
+          onClick={handleApplyFilters}
+          disabled={isLoading}
+          className="w-full rounded-lg bg-blue-700 px-6 py-4 font-semibold text-white transition-colors duration-200 hover:bg-blue-800 disabled:bg-blue-400"
+        >
+          {isLoading
+            ? 'Loading...'
+            : result?.length
+              ? `Show ${result.length} Results`
+              : 'Apply Filters'}
+        </button>
       </div>
     </div>
   );

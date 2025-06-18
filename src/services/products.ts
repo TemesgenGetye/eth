@@ -292,7 +292,7 @@ export const getSearchedProducts = async (term: string, category?: string) => {
 };
 
 export const getFilteredProducts = async (filterOptions: {
-  term?: string | null;
+  keyword?: string | null;
   city?: string | null;
   minPrice?: number | null;
   maxPrice?: number | null;
@@ -300,7 +300,7 @@ export const getFilteredProducts = async (filterOptions: {
   maxYear?: number | null;
   pname?: string | null;
 }) => {
-  const { term, city, minPrice, maxPrice, minYear, maxYear, pname } =
+  const { keyword, city, minPrice, maxPrice, minYear, maxYear, pname } =
     filterOptions;
 
   try {
@@ -326,8 +326,8 @@ export const getFilteredProducts = async (filterOptions: {
       `
     );
 
-    if (term && term.trim() !== '') {
-      query = query.ilike('name', `%${term.trim()}%`);
+    if (keyword && keyword.trim() !== '') {
+      query = query.ilike('name', `%${keyword.trim()}%`);
     }
 
     if (city) {
