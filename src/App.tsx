@@ -44,6 +44,7 @@ import ResetPasswordPage from './pages/ResetPassword';
 import { VerficationModalProvider } from './Context/VerficationModal';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfUse from './pages/TermsOfUse';
+import Pricing from './pages/pricing';
 
 function AppContent() {
   const location = useLocation();
@@ -125,6 +126,14 @@ function AppContent() {
             element={
               <ProtectedRoute>
                 <MyAds />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/pricing"
+            element={
+              <ProtectedRoute>
+                <Pricing />
               </ProtectedRoute>
             }
           />

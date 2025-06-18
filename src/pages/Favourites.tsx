@@ -155,7 +155,7 @@ export default function Favourites() {
                         )}
                       </span>
                       {product.stock > 0 && (
-                        <span className="rounded bg-green-300 px-2 py-0.5 text-xs font-medium text-white">
+                        <span className="rounded bg-[#40b740] px-2 py-0.5 text-xs font-medium text-white">
                           IN STOCK ( {product.stock})
                         </span>
                       )}

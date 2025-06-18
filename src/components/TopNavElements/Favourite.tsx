@@ -3,6 +3,7 @@ import { useFavourite } from '../../Context/Favourite';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useFavouriteItems } from '../../hooks/store';
+import { cleanString } from '../../services/utils';
 
 export default function Favourite({
   activeModal,
@@ -45,12 +46,22 @@ export default function Favourite({
               />
             </div>
 
-            <div className="max-h-[500px] overflow-y-auto">
+            <ul className="max-h-[500px] overflow-y-auto">
               {favoriteProducts?.map((product) => (
-                <Link
-                  to={`/detail/${product?.id}`}
+                <li
+                  onClick={() => {
+                    navigate(
+                      `/${cleanString(product?.category?.name)}/${cleanString(product?.subcategory?.name)}`,
+                      {
+                        state: {
+                          pid: product.id,
+                        },
+                      }
+                    );
+                    closeModal();
+                  }}
                   key={product.id}
-                  className="hover:bg-gray-100"
+                  className="cursor-pointer hover:bg-gray-100"
                 >
                   <div className="border-b p-4 hover:bg-gray-100">
                     <div className="flex gap-3">
@@ -74,9 +85,9 @@ export default function Favourite({
                       </div>
                     </div>
                   </div>
-                </Link>
+                </li>
               ))}
-            </div>
+            </ul>
 
             <div className="p-2 text-center">
               <button

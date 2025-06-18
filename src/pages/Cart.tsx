@@ -330,7 +330,7 @@ export default function CartPage() {
                             )}
                           </span>
                           {item?.stock > 0 && (
-                            <span className="rounded bg-green-300 px-2 py-0.5 text-xs font-medium text-white">
+                            <span className="rounded bg-[#40b740] px-2 py-0.5 text-xs font-medium text-white">
                               IN STOCK ({item?.stock})
                             </span>
                           )}

@@ -96,8 +96,8 @@ export default function Detail() {
     subcategory,
     createdBy,
     phoneNum,
-    email,
-    contactName,
+    // email,
+    // contactName,
   } = product;
 
   // const { customer: singleCustomer, isLoadingCustomer } = useGetCustomerById(
@@ -313,7 +313,7 @@ export default function Detail() {
           <div className="flex space-x-2">
             {!product?.createdBy && (
               <button
-                className="rounded-lg bg-green-300 p-2 text-white"
+                className="rounded-lg bg-[#40b740] p-2 text-white hover:bg-[#42c242]"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleCart(e, product?.id);
