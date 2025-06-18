@@ -1,7 +1,17 @@
+import React, { useState } from 'react';
 import { useLanguage } from '../../Context/Languge';
+import InfoModal from '../ui/InfoModal';
+import ContactIcons from '../ui/ContactIcons';
+import toast from 'react-hot-toast';
 
 const Footer = () => {
   const { setLanguage } = useLanguage();
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
+  const [countryModal, setCountryModal] = useState<{
+    open: boolean;
+    country: string | null;
+  }>({ open: false, country: null });
 
   const handleLanguageChange = (lang: string) => {
     setLanguage(lang);
@@ -10,6 +20,60 @@ const Footer = () => {
 
   return (
     <footer className="bg-gray-100 px-4 py-8">
+      {/* About Us Modal */}
+      {aboutOpen && (
+        <InfoModal
+          open={aboutOpen}
+          onClose={() => setAboutOpen(false)}
+          title="About 888Market"
+        >
+          888Market is a leading online marketplace in the UAE, offering a wide
+          range of products and services to customers across the region. Our
+          mission is to provide a seamless, secure, and enjoyable shopping
+          experience, connecting buyers and sellers with trust and convenience.
+          We are committed to quality, customer satisfaction, and innovation in
+          the e-commerce space.
+        </InfoModal>
+      )}
+      {/* Contact Us Modal */}
+      {contactOpen && (
+        <InfoModal
+          open={contactOpen}
+          onClose={() => setContactOpen(false)}
+          title="Contact 888Market"
+        >
+          <div>
+            For any inquiries, support, or feedback, please reach out to us
+            through the following channels:
+            <ContactIcons />
+          </div>
+        </InfoModal>
+      )}
+      {/* Country Coming Soon Modal */}
+      {countryModal.open && (
+        <InfoModal
+          open={countryModal.open}
+          onClose={() => setCountryModal({ open: false, country: null })}
+          title={
+            countryModal.country
+              ? `${countryModal.country} - Coming Soon!`
+              : 'Coming Soon!'
+          }
+        >
+          <div className="flex flex-col items-center justify-center">
+            <img
+              src="/alert.gif"
+              alt="Coming Soon"
+              className="mb-4 h-32 w-32"
+            />
+            <p className="text-center text-lg font-semibold">
+              We're working hard to bring 888Market to{' '}
+              {countryModal.country || 'this country'}! Stay tuned for updates.
+            </p>
+          </div>
+        </InfoModal>
+      )}
+
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-6">
           {/* Company Column */}
@@ -17,27 +81,36 @@ const Footer = () => {
             <h3 className="mb-4 font-semibold text-gray-700">Company</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-sm text-blue-400 hover:underline">
+                <button
+                  type="button"
+                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
+                  onClick={() => setAboutOpen(true)}
+                >
                   About Us
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Advertising
-                </a>
+                <button
+                  type="button"
+                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
+                  onClick={() => setContactOpen(true)}
+                >
+                  Contact Us
+                </button>
               </li>
               <li>
-                <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Careers
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-sm text-blue-400 hover:underline">
+                <a
+                  href="/terms"
+                  className="text-sm text-blue-400 hover:underline"
+                >
                   Terms of Use
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-blue-400 hover:underline">
+                <a
+                  href="/privacy"
+                  className="text-sm text-blue-400 hover:underline"
+                >
                   Privacy Policy
                 </a>
               </li>
@@ -47,7 +120,14 @@ const Footer = () => {
           {/* UAE Column */}
           <div>
             <h3 className="mb-4 font-semibold text-gray-700">UAE</h3>
-            <ul className="space-y-2">
+            <ul
+              className="space-y-2"
+              onClick={() => {
+                toast.success(
+                  'We have product all around UAE select what you want to buy'
+                );
+              }}
+            >
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
                   Dubai
@@ -98,57 +178,114 @@ const Footer = () => {
             </h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-sm text-blue-400 hover:underline">
+                <button
+                  type="button"
+                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
+                  onClick={() =>
+                    setCountryModal({ open: true, country: 'France' })
+                  }
+                >
                   France
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" className="text-sm text-blue-400 hover:underline">
+                <button
+                  type="button"
+                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
+                  onClick={() =>
+                    setCountryModal({ open: true, country: 'Spain' })
+                  }
+                >
                   Spain
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" className="text-sm text-blue-400 hover:underline">
+                <button
+                  type="button"
+                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
+                  onClick={() =>
+                    setCountryModal({ open: true, country: 'USA' })
+                  }
+                >
                   USA
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" className="text-sm text-blue-400 hover:underline">
+                <button
+                  type="button"
+                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
+                  onClick={() =>
+                    setCountryModal({ open: true, country: 'China' })
+                  }
+                >
                   China
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" className="text-sm text-blue-400 hover:underline">
+                <button
+                  type="button"
+                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
+                  onClick={() =>
+                    setCountryModal({ open: true, country: 'Italy' })
+                  }
+                >
                   Italy
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" className="text-sm text-blue-400 hover:underline">
+                <button
+                  type="button"
+                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
+                  onClick={() =>
+                    setCountryModal({ open: true, country: 'Turkey' })
+                  }
+                >
                   Turkey
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" className="text-sm text-blue-400 hover:underline">
+                <button
+                  type="button"
+                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
+                  onClick={() =>
+                    setCountryModal({ open: true, country: 'Mexico' })
+                  }
+                >
                   Mexico
-                </a>
+                </button>
               </li>
-
               <li>
-                <a href="#" className="text-sm text-blue-400 hover:underline">
+                <button
+                  type="button"
+                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
+                  onClick={() =>
+                    setCountryModal({ open: true, country: 'Germany' })
+                  }
+                >
                   Germany
-                </a>
+                </button>
               </li>
-
               <li>
-                <a href="#" className="text-sm text-blue-400 hover:underline">
+                <button
+                  type="button"
+                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
+                  onClick={() =>
+                    setCountryModal({ open: true, country: 'United Kingdom' })
+                  }
+                >
                   United Kingdom
-                </a>
+                </button>
               </li>
-
               <li>
-                <a href="#" className="text-sm text-blue-400 hover:underline">
+                <button
+                  type="button"
+                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
+                  onClick={() =>
+                    setCountryModal({ open: true, country: 'Japan' })
+                  }
+                >
                   Japan
-                </a>
+                </button>
               </li>
             </ul>
           </div>
@@ -189,15 +326,19 @@ const Footer = () => {
           <div>
             <h3 className="mb-4 font-semibold text-gray-700">Support</h3>
             <ul className="space-y-2">
-              <li>
+              {/* <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
                   Help
                 </a>
-              </li>
+              </li> */}
               <li>
-                <a href="#" className="text-sm text-blue-400 hover:underline">
+                <button
+                  type="button"
+                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
+                  onClick={() => setContactOpen(true)}
+                >
                   Contact Us
-                </a>
+                </button>
               </li>
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
