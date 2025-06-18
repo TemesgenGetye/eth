@@ -42,6 +42,8 @@ import VerificationBar from './components/Verfication/verification';
 import ForgotPasswordPage from './pages/ForgotPassword';
 import ResetPasswordPage from './pages/ResetPassword';
 import { VerficationModalProvider } from './Context/VerficationModal';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfUse from './pages/TermsOfUse';
 
 function AppContent() {
   const location = useLocation();
@@ -123,6 +125,23 @@ function AppContent() {
             element={
               <ProtectedRoute>
                 <MyAds />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/privacy"
+            element={
+              <ProtectedRoute>
+                <PrivacyPolicy />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/terms"
+            element={
+              <ProtectedRoute>
+                <TermsOfUse />
               </ProtectedRoute>
             }
           />

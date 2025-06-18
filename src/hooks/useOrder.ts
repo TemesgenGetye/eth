@@ -18,7 +18,7 @@ export const useOrder = () =>
       const { data, error } = await supabase.from('orders').insert({
         customer_order,
         detail,
-      });
+      }).select();
 
       console.log(data);
       console.log(error);

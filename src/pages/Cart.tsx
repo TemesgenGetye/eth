@@ -15,12 +15,19 @@ import { useCartItems } from '../hooks/store';
 import toast from 'react-hot-toast';
 import { useAuth } from '../Context/AuthContext';
 import { useOrder } from '../hooks/useOrder';
-import useCustomers from '../hooks/useCustomers';
+import { useGetCustomer } from '../hooks/useCustomers';
 import { cleanString } from '../services/utils';
+import OrderConfirmationEmail from '../components/ui/OrderConformationEmail';
 
 export default function CartPage() {
   const { cartItems, isLoadingCart, refetchCart } = useCartItems();
   const navigate = useNavigate();
+  const { cart, setCart } = useCart();
+  const { user } = useAuth();
+  const orderMutation = useOrder();
+  const { customer } = useGetCustomer(
+    user?.identities?.at(0)?.user_id as string
+  );
 
   const [imageIndexes, setImageIndexes] = useState<{ [key: string]: number }>(
     {}
@@ -28,15 +35,23 @@ export default function CartPage() {
   const [paymentModal, setPaymentModal] = useState<'cash' | 'credit' | null>(
     null
   );
+  const [orderEmailData, setOrderEmailData] = useState<null | {
+    orderId: string;
+    orders: Array<{
+      name: string;
+      units: number;
+      price: number;
+      image?: string;
+      description?: string;
+    }>;
+    cost: { shipping: number; tax: number };
+    customerEmail: string;
+  }>(null);
 
-  const { cart, setCart } = useCart();
-  const { user } = useAuth();
-  const orderMutation = useOrder();
-
-  const { customers } = useCustomers();
-  const filterdCustomers = customers?.filter(
-    (customer) => customer.uuid === user?.identities?.at(0)?.user_id
-  );
+  // const { customers } = useCustomers();
+  // const filterdCustomers = customers?.filter(
+  //   (customer) => customer.uuid === user?.identities?.at(0)?.user_id
+  // );
 
   const handleImageChange = (
     id: string,
@@ -70,12 +85,11 @@ export default function CartPage() {
 
   const [quantities, setQuantities] = useState<{ [id: number]: number }>({});
 
-  // Initialize quantities from cartItems on mount or when cartItems change
   useEffect(() => {
     if (cartItems) {
       const initialQuantities: { [id: number]: number } = {};
-      cartItems.forEach((item) => {
-        initialQuantities[item.id] = item.quantity || 1;
+      cartItems?.forEach((item) => {
+        initialQuantities[item?.id] = item?.quantity || 1;
       });
       setQuantities(initialQuantities);
     }
@@ -96,35 +110,61 @@ export default function CartPage() {
   }
 
   const calculateTotal = () => {
-    return cartItems
-      ?.reduce((total, item) => {
-        return total + item.price.orignal * (quantities[item.id] || 1);
-      }, 0)
-      .toFixed(2);
+    if (!cartItems || cartItems.length === 0) return '0.00';
+    const total = cartItems.reduce((sum, item) => {
+      // Use discounted price if available, otherwise fallback to original, otherwise 0
+      const price = Number(
+        item?.price?.discounted ??
+          item?.price?.original ??
+          item?.price?.orignal ??
+          0
+      );
+      const quantity = Number(quantities[item?.id] || 1);
+      return sum + price * quantity;
+    }, 0);
+    return total.toFixed(2);
   };
 
   function handleCashOnDelivery() {
-    console.log('user', user);
-
     setPaymentModal('cash');
     const orderProducts = cartItems?.map((item) => ({
-      product: +item.id,
-      quantity: quantities[item.id] || 1,
+      product: +item?.id,
+      quantity: quantities[item?.id] || 1,
     }));
 
     if (orderProducts && orderProducts.length > 0) {
-      console.log({
-        customer_order: filterdCustomers?.at(0)?.id,
-        detail: orderProducts,
-      });
-
-      orderMutation.mutate({
-        customer_order: String(filterdCustomers?.at(0)?.id),
-        detail: orderProducts as [{ product: number; quantity: number }],
-      });
-
-      toast.success('Order placed successfully!');
-      localStorage.removeItem('cart');
+      orderMutation.mutate(
+        {
+          customer_order: String(customer?.id),
+          detail: orderProducts as [{ product: number; quantity: number }],
+        },
+        {
+          onSuccess: (data) => {
+            console.log('order mutation data', data);
+            const orderId = data?.[0]?.id || 'N/A';
+            const orders = (cartItems || []).map((item) => ({
+              name: item?.name || '',
+              units: quantities[item?.id] || 1,
+              price: item?.price.discounted || 0,
+              image: item?.imgUrls?.[0] || '',
+              description: item?.description || '',
+            }));
+            // Example cost calculation (customize as needed)
+            const cost = { shipping: 0, tax: 0 };
+            setOrderEmailData({
+              orderId: String(orderId),
+              orders,
+              cost,
+              customerEmail: customer?.email || '',
+            });
+            toast.success('Order placed successfully!');
+            localStorage.removeItem('cart');
+          },
+          onError: () => {
+            toast.error('Failed to place order.');
+          },
+        }
+      );
     } else {
       toast.error('No items in cart to order.');
     }
@@ -210,29 +250,29 @@ export default function CartPage() {
       ) : (
         <>
           {cartItems?.map((item) => {
-            const currentImageIndex = imageIndexes[item.id] ?? 0;
+            const currentImageIndex = imageIndexes[item?.id] ?? 0;
 
             return (
               <div
-                key={item._id}
+                key={item?.id}
                 className="relative cursor-pointer rounded-lg border-b border-b-gray-200 bg-white p-4 shadow-sm"
                 onClick={() =>
                   navigate(
-                    `/${cleanString(item.category.name)}/${cleanString(item.subcategory.name)}/${cleanString(item.name)}`,
-                    { state: { pid: item.id } }
+                    `/${cleanString(item?.category.name)}/${cleanString(item?.subcategory.name)}/${cleanString(item?.name)}`,
+                    { state: { pid: item?.id } }
                   )
                 }
                 // /:cid/:pname/:pid
               >
                 <div className="flex gap-4">
                   <div className="relative h-48 w-72 flex-shrink-0 overflow-hidden rounded-lg">
-                    {item.imgUrls.length > 1 && (
+                    {item?.imgUrls.length > 1 && (
                       <>
                         <button
                           className="absolute left-0.5 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full bg-white/80 p-1 ring-1 ring-gray-300 hover:bg-gray-300 hover:ring-2 hover:ring-gray-400"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleImageChange(item.id, 'prev', item.imgUrls);
+                            handleImageChange(item?.id, 'prev', item?.imgUrls);
                           }}
                         >
                           <ChevronLeft size={16} />
@@ -241,7 +281,7 @@ export default function CartPage() {
                           className="absolute right-0.5 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full bg-white/80 p-1 ring-1 ring-gray-300 hover:bg-gray-300 hover:ring-2 hover:ring-gray-400"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleImageChange(item._id, 'next', item.imgUrls);
+                            handleImageChange(item?._id, 'next', item?.imgUrls);
                           }}
                         >
                           <ChevronRight size={16} />
@@ -250,17 +290,17 @@ export default function CartPage() {
                     )}
                     <img
                       src={
-                        item.imgUrls[currentImageIndex] || '/placeholder.svg'
+                        item?.imgUrls[currentImageIndex] || '/placeholder.svg'
                       }
-                      alt={item.name}
+                      alt={item?.name}
                       className="h-full w-full object-cover transition-transform duration-500 ease-in-out"
                     />
-                    {item.imgUrls.length > 1 && (
+                    {item?.imgUrls.length > 1 && (
                       <div className="absolute bottom-2 left-2 flex items-center space-x-1 rounded bg-black/70 px-1.5 py-0.5 text-xs text-white">
                         <span>
                           <Image size={14} />
                         </span>
-                        <span>{`${currentImageIndex + 1} / ${item.imgUrls.length}`}</span>
+                        <span>{`${currentImageIndex + 1} / ${item?.imgUrls.length}`}</span>
                       </div>
                     )}
                   </div>
@@ -268,35 +308,35 @@ export default function CartPage() {
                     <div className="flex items-start justify-between">
                       <div>
                         <p className="text-lg font-medium text-gray-900">
-                          {item.name}
+                          {item?.name}
                         </p>
                         <div className="flex items-center space-x-2">
                           <span className="text-2xl font-bold">
-                            {item.price.discounted === item.price.orignal ? (
-                              <span>{item.price.orignal} AED</span>
+                            {item?.price.discounted === item?.price.orignal ? (
+                              <span>{item?.price.orignal} AED</span>
                             ) : (
                               <>
-                                <span>{item.price.discounted} AED </span>
+                                <span>{item?.price.discounted} AED </span>
                                 <span>•</span>
                                 <span className="text-gray-500 line-through">
-                                  {item.price.orignal}
+                                  {item?.price.orignal}
                                 </span>
                                 <span>AED</span>
                                 <div className="text-red-500">
-                                  {item.price.orignal - item.price.discounted}{' '}
+                                  {item?.price.orignal - item?.price.discounted}{' '}
                                   AED Downpayment
                                 </div>
                               </>
                             )}
                           </span>
-                          {item.stock > 0 && (
+                          {item?.stock > 0 && (
                             <span className="rounded bg-green-300 px-2 py-0.5 text-xs font-medium text-white">
-                              IN STOCK ({item.stock})
+                              IN STOCK ({item?.stock})
                             </span>
                           )}
                         </div>
                         <div className="flex flex-col items-start">
-                          <span>• {item.slug}</span>
+                          <span>• {item?.slug}</span>
                           {/* <p className="cursor-pointer text-sm text-blue-500 hover:underline">
                             {item.variants.length > 0
                               ? item.variants.length + ' variants'
@@ -311,18 +351,18 @@ export default function CartPage() {
                             <button
                               className="px-2 py-1 text-gray-600 hover:bg-gray-100"
                               onClick={(e) =>
-                                updateQuantity(e, { id: item.id }, 'decrease')
+                                updateQuantity(e, { id: item?.id }, 'decrease')
                               }
                             >
                               <Minus size={16} />
                             </button>
                             <span className="px-3 py-1">
-                              {quantities[item.id] || 1}
+                              {quantities[item?.id] || 1}
                             </span>
                             <button
                               className="px-2 py-1 text-gray-600 hover:bg-gray-100"
                               onClick={(e) =>
-                                updateQuantity(e, { id: item.id }, 'increase')
+                                updateQuantity(e, { id: item?.id }, 'increase')
                               }
                             >
                               <Plus size={16} />
@@ -331,7 +371,8 @@ export default function CartPage() {
                           <span className="ml-4 font-medium">
                             Total:{' '}
                             {(
-                              item.price.discounted * (quantities[item.id] || 1)
+                              item?.price.discounted *
+                              (quantities[item?.id] || 1)
                             ).toFixed(2)}{' '}
                             AED
                           </span>
@@ -341,7 +382,7 @@ export default function CartPage() {
                         <button
                           className="h-7 w-7 text-red-500"
                           onClick={(e) => {
-                            handleRemoveFromCart(e, item.id);
+                            handleRemoveFromCart(e, item?.id);
                           }}
                         >
                           <Trash2 className="h-5 w-5" />
@@ -349,7 +390,7 @@ export default function CartPage() {
                       </div>
                     </div>
                     <p className="line-clamp-2 pr-10 text-sm text-gray-600">
-                      {item.description}
+                      {item?.description}
                     </p>
                     <div className="space-y-2 text-sm text-gray-500">
                       {'dubai'}
@@ -465,6 +506,17 @@ export default function CartPage() {
                 >
                   Close
                 </button>
+                {/* Order Confirmation Email (hidden form, auto-send) */}
+                {orderEmailData && (
+                  <div style={{ display: 'none' }}>
+                    <OrderConfirmationEmail
+                      orderId={orderEmailData.orderId}
+                      orders={orderEmailData.orders}
+                      cost={orderEmailData.cost}
+                      customerEmail={orderEmailData.customerEmail}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           )}
