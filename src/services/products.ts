@@ -32,10 +32,30 @@ export const getPopularProducts = async () => {
       `
       )
       .order('views', { ascending: false });
-    if (error) throw new Error(error?.message);
-    const camelCasedData = data?.map((product) => camelCase(product));
 
-    return camelCasedData || [];
+    if (error) throw new Error(error?.message);
+
+    // Group products by category
+    const groupedProducts = data?.reduce((acc, product) => {
+      const categoryId = product.category?.id;
+      if (!categoryId) return acc;
+
+      if (!acc[categoryId]) {
+        acc[categoryId] = [];
+      }
+      acc[categoryId].push(camelCase(product));
+      return acc;
+    }, {});
+
+    // Sort products by views within each category and take top 10
+    const popularProductsByCategory = Object.values(groupedProducts || {}).map(
+      (products) => products.slice(0, 10)
+    );
+
+    // Flatten the array to get all popular products
+    const popularProducts = popularProductsByCategory.flat();
+
+    return popularProducts || [];
   } catch (err) {
     console.error('Error fetching products:', err);
     throw err;
