@@ -1131,7 +1131,7 @@ const VerificationBar = () => {
               <h4 className="mb-2 font-semibold">{"Here's an example:"}</h4>
               <div className="flex justify-center rounded-lg bg-gray-100 p-4">
                 <img
-                  src="/person_img.png"
+                  src="/person.png"
                   alt="Video example"
                   className="h-80 w-full rounded-lg"
                 />
