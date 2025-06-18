@@ -5,6 +5,11 @@ import useCategories from '../hooks/useCategories';
 import { Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
+interface Subcategory {
+  id: number;
+  name: string;
+}
+
 export default function PostAdPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { categories = [] } = useCategories();
@@ -15,8 +20,8 @@ export default function PostAdPage() {
     setValue,
     watch,
     formState: { errors, isSubmitting },
-    onSubmit,
     reset,
+    trigger,
   } = useProductForm(
     () => {
       toast.success('Product has been successfully uploaded.');
@@ -39,7 +44,7 @@ export default function PostAdPage() {
   const removeImage = (index: number) => {
     setValue(
       'imgUrls',
-      images.filter((_: any, i: number) => i !== index)
+      images.filter((_: File, i: number) => i !== index)
     );
   };
 
@@ -49,6 +54,20 @@ export default function PostAdPage() {
     (cat) => cat.id === Number(selectedCategoryId)
   );
   const subcategories = selectedCategory?.subcategories || [];
+
+  // Handle form submission with validation check
+  const handleFormSubmit = async () => {
+    // Trigger validation for all fields
+    const isValid = await trigger();
+
+    if (isValid) {
+      // If validation passes, redirect to pricing page
+      window.location.href = '/pricing';
+    } else {
+      // If validation fails, show error message
+      toast.error('Please fill in all required fields correctly.');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -63,7 +82,7 @@ export default function PostAdPage() {
           <h1 className="text-2xl font-bold text-black">Post New Ad</h1>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-8">
           {/* Images Section */}
           <div className="rounded-lg border border-gray-200 bg-white p-6">
             <h2 className="mb-4 text-xl font-semibold text-black">
@@ -188,7 +207,7 @@ export default function PostAdPage() {
                         disabled={!selectedCategory}
                       >
                         <option value="">Select Subcategory</option>
-                        {subcategories.map((sub: any) => (
+                        {subcategories.map((sub: Subcategory) => (
                           <option key={sub.id} value={sub.id}>
                             {sub.name}
                           </option>

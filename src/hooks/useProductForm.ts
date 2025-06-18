@@ -16,7 +16,7 @@ const schema = yup.object().shape({
   imgUrls: yup
     .array()
     .min(1, 'At least one image is required')
-    .required('Image is required'),
+    .required('Product Image is required'),
   category_id: yup.number().required('Category is required'),
   subcategory_id: yup.number().required('Subcategory is required'),
   location: yup.string().required('Location is required'),

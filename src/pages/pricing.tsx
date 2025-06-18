@@ -9,8 +9,11 @@ export default function Pricing() {
       <div className="mx-auto max-w-6xl">
         {/* Header */}
         <div className="mb-12 text-center">
-          <h1 className="mb-2 text-3xl font-bold text-gray-900">dubizzle</h1>
-          <h2 className="text-xl text-gray-700">
+          {/* <h1 className="mb-2 text-3xl font-bold text-gray-900"></h1> */}
+          <div className="flex items-center justify-center">
+            <img src="/logo.png" alt="logo" className="h-40 w-40" />
+          </div>
+          <h2 className="text-xl font-bold text-gray-700">
             Select a package that works for you
           </h2>
         </div>
@@ -18,44 +21,48 @@ export default function Pricing() {
         {/* Pricing Cards */}
         <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-3">
           {/* Lite Plan */}
-          <Card className="relative border border-gray-200 bg-white shadow-sm">
-            <CardHeader className="pb-4">
-              <h3 className="text-xl font-semibold text-gray-900">Lite</h3>
-              <div className="flex items-baseline gap-1">
-                <span className="text-sm text-gray-600">AED</span>
-                <span className="text-4xl font-bold text-gray-900">229</span>
-                <span className="text-sm text-gray-600">*</span>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <h4 className="mb-3 font-medium text-gray-900">
-                  {"What's included"}
-                </h4>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-gray-400" />
-                    <span className="text-sm text-gray-600">
-                      Ad is live for 30 days
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-gray-400" />
-                    <span className="text-sm text-gray-600">
-                      1x Refresh that takes your ad to the top
-                    </span>
+          <Card className="relative flex flex-col justify-between border border-gray-200 bg-white p-4 shadow-sm">
+            <div>
+              <CardHeader className="border-b border-gray-200 pb-4">
+                <h3 className="text-xl font-semibold text-gray-900">Lite</h3>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-sm text-gray-600">AED</span>
+                  <span className="text-4xl font-bold text-gray-900">229</span>
+                  <span className="text-sm text-gray-600">*</span>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-6 mt-2">
+                <div>
+                  <h4 className="mb-3 font-medium text-gray-900">
+                    {"What's included"}
+                  </h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Check className="h-4 w-4 text-gray-400" />
+                      <span className="text-sm text-gray-600">
+                        Ad is live for 30 days
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Check className="h-4 w-4 text-gray-400" />
+                      <span className="text-sm text-gray-600">
+                        1x Refresh that takes your ad to the top
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </CardContent>
+            </div>
+            <div className="px-4">
               <Button className="w-full bg-blue-600 text-white hover:bg-blue-700">
                 Select Lite
               </Button>
-            </CardContent>
+            </div>
           </Card>
 
           {/* Basic Plan - Recommended */}
           <Card className="relative border-2 border-blue-200 bg-blue-50 shadow-lg">
-            <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 transform bg-blue-900 px-4 py-1 text-white">
+            <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 transform border-b border-gray-200 bg-blue-900 px-4 py-1 text-white">
               RECOMMENDED
             </Badge>
             <CardHeader className="pb-4 pt-6">
