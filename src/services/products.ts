@@ -36,20 +36,23 @@ export const getPopularProducts = async () => {
     if (error) throw new Error(error?.message);
 
     // Group products by category
-    const groupedProducts = data?.reduce((acc, product) => {
-      const categoryId = product.category?.id;
-      if (!categoryId) return acc;
+    const groupedProducts = data?.reduce(
+      (acc: { [key: string]: any[] }, product: any) => {
+        const categoryId = product.category?.id;
+        if (!categoryId) return acc;
 
-      if (!acc[categoryId]) {
-        acc[categoryId] = [];
-      }
-      acc[categoryId].push(camelCase(product));
-      return acc;
-    }, {});
+        if (!acc[categoryId]) {
+          acc[categoryId] = [];
+        }
+        acc[categoryId].push(camelCase(product));
+        return acc;
+      },
+      {} as { [key: string]: any[] }
+    );
 
     // Sort products by views within each category and take top 10
     const popularProductsByCategory = Object.values(groupedProducts || {}).map(
-      (products) => products.slice(0, 10)
+      (products) => products?.slice(0, 10)
     );
 
     // Flatten the array to get all popular products
