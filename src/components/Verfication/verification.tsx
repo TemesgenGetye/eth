@@ -13,14 +13,10 @@ import {
   Lock,
 } from 'lucide-react';
 import supabase from '../../services/supabase';
-import useCustomers, {
-  useGetCustomer,
-  useUpdateCustomer,
-} from '../../hooks/useCustomers';
+import { useGetCustomer, useUpdateCustomer } from '../../hooks/useCustomers';
 import { useAuth } from '../../Context/AuthContext';
 
 import { useVerficationModal } from '../../Context/VerficationModal';
-import { s } from 'framer-motion/client';
 
 type VerificationStep =
   | 'initial'
@@ -68,7 +64,7 @@ const VerificationBar = () => {
   // const { customers } = useCustomers();
   // const navigate = useNavigate();
 
-  const { updateCustomerMutate, isPendingCustomer } = useUpdateCustomer();
+  const { updateCustomerMutate } = useUpdateCustomer();
   const { user } = useAuth();
 
   const { customer, isLoadingCustomer } = useGetCustomer(
@@ -378,7 +374,7 @@ const VerificationBar = () => {
           ext: 'jpg',
           contentType: 'image/jpeg',
         });
-      } catch (e) {
+      } catch {
         alert('Front photo is invalid. Please retake.');
         setStep('front-photo');
         return;
@@ -394,7 +390,7 @@ const VerificationBar = () => {
           ext: 'jpg',
           contentType: 'image/jpeg',
         });
-      } catch (e) {
+      } catch {
         alert('Back photo is invalid. Please retake.');
         setStep('back-photo');
         return;
@@ -490,14 +486,14 @@ const VerificationBar = () => {
                 style={{ filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.06))' }}
               />
             </div>
-            <h2 className="mb-4 text-center text-3xl font-bold text-gray-900">
+            <h2 className="mb-4 text-center text-2xl font-bold text-gray-900">
               Get verified on 888Market!
             </h2>
             <div className="mb-2 flex flex-row items-center justify-center gap-2 text-center text-base font-medium text-gray-700">
               <span className="text-sm">Build Trust</span>
-              <span className="mx-1">•</span>
+              <span className="mx-1 text-lg font-bold">•</span>
               <span className="text-sm">Gain Visibility</span>
-              <span className="mx-1">•</span>
+              <span className="mx-1 text-lg font-bold">•</span>
               <span className="text-sm">Unlock Rewards</span>
             </div>
             <hr className="my-6 w-full border-white" />
@@ -538,13 +534,14 @@ const VerificationBar = () => {
                 Later
               </button>
               <button
-                className="flex items-center gap-2 rounded-lg bg-blue-600 px-8 py-2 font-semibold text-white hover:bg-blue-700"
+                className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-8 py-2 font-semibold text-white hover:bg-blue-700"
                 onClick={handleGetVerified}
               >
-                Get Verified
+                <span>Get Verified</span>
                 <svg
                   width="18"
                   height="18"
+                  className="-mt-1"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
@@ -1105,7 +1102,7 @@ const VerificationBar = () => {
               <X className="h-6 w-6" />
             </button>
 
-            <h2 className="mb-6 text-center text-2xl font-bold">
+            <h2 className="mb-6 text-center text-xl font-bold">
               {"You're almost there!"}
             </h2>
 
@@ -1118,7 +1115,7 @@ const VerificationBar = () => {
               </div>
             </div>
 
-            <h3 className="mb-4 text-xl font-semibold">
+            <h3 className="mb-4 text-lg font-semibold">
               Record a video to complete verification
             </h3>
 
@@ -1129,7 +1126,7 @@ const VerificationBar = () => {
 
             <div className="mb-6">
               <h4 className="mb-2 font-semibold">{"Here's an example:"}</h4>
-              <div className="flex justify-center rounded-lg bg-gray-100 p-4">
+              <div className="flex justify-center rounded-lg p-4">
                 <img
                   src="/person.png"
                   alt="Video example"
@@ -1212,7 +1209,7 @@ const VerificationBar = () => {
                   className="h-64 w-full object-cover"
                 />
                 <button
-                  className={`absolute bottom-4 left-1/2 flex -translate-x-1/2 transform items-center gap-2 rounded-lg px-6 py-2 font-semibold ${
+                  className={`absolute bottom-4 left-1/2 flex -translate-x-1/2 transform items-center gap-2 rounded-lg px-6 py-2 text-sm font-semibold ${
                     isRecording
                       ? 'bg-gray-600 text-white hover:bg-gray-700'
                       : 'bg-blue-600 text-white hover:bg-blue-700'

@@ -6,7 +6,7 @@ import NoProduct from '../components/ui/NoProduct';
 import NoSearchResult from '../components/TopNavElements/NoSearchResult';
 import useProducts from '../hooks/useProducts';
 import { ProductType } from '../components/type';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { cleanString } from '../services/utils';
 import { useFilteredProducts } from '../hooks/useFilteredProducts';
 
@@ -92,7 +92,6 @@ function Product() {
     filteredProducts,
     isLoadingFiltered,
     hasActiveFilters,
-    refetchFiltered,
   } = useFilteredProducts();
 
   const { products, isLoading: isLoadingProducts } = useProducts();
@@ -121,9 +120,9 @@ function Product() {
       )
     : [];
 
-  useEffect(() => {
-    refetchFiltered();
-  }, [refetchFiltered]);
+  // useEffect(() => {
+  //   refetchFiltered();
+  // }, [refetchFiltered]);
 
   // Show loading skeleton while loading
   if (isLoadingProducts || isLoadingFiltered) {

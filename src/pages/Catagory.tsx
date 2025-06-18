@@ -18,7 +18,6 @@ export default function CatagoryInfo() {
   const { cname } = useParams<{ cname: string }>();
   const { categories } = useCategories();
   const navigate = useNavigate();
-  const location = useLocation();
   const [searchValue, setSearchValue] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeCategory, setActiveCategory] = useState(cname || '');
@@ -40,14 +39,14 @@ export default function CatagoryInfo() {
     }
   }, [cname]);
 
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const keyword = params.get('keyword') || '';
-    if (keyword) {
-      setSearchValue(keyword);
-      setShowSuggestions(true);
-    }
-  }, [location.search]);
+  // useEffect(() => {
+  //   const params = new URLSearchParams(location.search);
+  //   const keyword = params.get('keyword') || '';
+  //   if (keyword) {
+  //     setSearchValue(keyword);
+  //     setShowSuggestions(true);
+  //   }
+  // }, [location.search]);
 
   const highlightText = (text: string, highlight: string) => {
     if (!highlight.trim()) return text;
@@ -125,7 +124,7 @@ export default function CatagoryInfo() {
                                       setShowSuggestions(false);
                                       setQuery({ term: searchValue });
                                       console.log('searchValue', searchValue);
-                                      refetchFiltered();
+                                      // refetchFiltered();
                                       navigate(
                                         `/${cleanString(item.category.name)}/search?keyword=${cleanString(item.name)}`
                                       );
@@ -156,7 +155,7 @@ export default function CatagoryInfo() {
 
                                       setQuery({ term: searchValue });
                                       console.log('searchValue', searchValue);
-                                      refetchFiltered();
+                                      // refetchFiltered();
                                       navigate(
                                         `/${cleanString(cat.name)}/search?keyword=${cleanString(searchValue)}`
                                       );

@@ -1,6 +1,6 @@
 import { Search } from 'lucide-react';
 import ListForHome from '../components/Home/ListHomeIcon';
-import PopularCategories from '../components/Property.tsx/PopularCategories';
+import PopularCategories from '../components/ui/PopularCategories';
 import DownloadApp from '../components/ui/DownloadApp';
 import ListProductHorizontal from '../components/ui/ListProductHorizontal';
 import { useSearchProducts } from '../hooks/useSearchProducts';
@@ -126,7 +126,7 @@ const Home = () => {
                                 }}
                               >
                                 <div>
-                                  <div className="text-sm font-semibold mb-1">
+                                  <div className="mb-1 text-sm font-semibold">
                                     {highlightText(item.name, searchValue)}
                                   </div>
                                   <div className="text-xs text-gray-500">

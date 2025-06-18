@@ -1,6 +1,6 @@
 import SearchFilters from '../components/Searchfilter';
 import Banners from '../components/Property.tsx/Banner';
-import PopularCategories from '../components/Property.tsx/PopularCategories';
+import PopularCategories from '../components/ui/PopularCategories';
 import PopularAreas from '../components/Property.tsx/PopularAreas';
 import LiatProductHorizontal from '../components/ui/ListProductHorizontal';
 import PopularSubcatagory from '../components/ui/PopularSubcatagory';
