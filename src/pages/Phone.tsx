@@ -1,5 +1,5 @@
 import { ChevronDown } from 'lucide-react';
-import SearchFilters from '../components/Motor/Searchfilter';
+import SearchFilters from '../components/Searchfilter';
 import BrandFilter from '../components/Motor/BrandFilter';
 import Pagination from '../components/Motor/Pagination';
 import PhoneListing from '../components/Phone/PhoneListing';

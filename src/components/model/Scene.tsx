@@ -1,12 +1,11 @@
 import { Suspense, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, ScrollControls, useScroll } from '@react-three/drei';
+import { OrbitControls, ScrollControls } from '@react-three/drei';
 import * as THREE from 'three';
 import Model from './Model';
 
 function MovingModel() {
   const ref = useRef<THREE.Group>(null);
-  const scroll = useScroll();
 
   useFrame(({ clock }) => {
     if (ref.current) {
@@ -27,7 +26,6 @@ function MovingModel() {
 
 function MovingModelSmall() {
   const ref = useRef<THREE.Group>(null);
-  const scroll = useScroll();
 
   useFrame(({ clock }) => {
     if (ref.current) {

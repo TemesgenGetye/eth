@@ -2,9 +2,9 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import type React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useFilteredProducts } from '../../hooks/useFilteredProducts';
+import { useFilteredProducts } from '../hooks/useFilteredProducts';
 // import debounce from 'lodash/debounce'; // Install lodash for debouncing
-import { ProductType } from '../type';
+import { ProductType } from './type';
 
 function SearchFilters({
   use,

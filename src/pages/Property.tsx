@@ -1,4 +1,4 @@
-import SearchFilters from '../components/Motor/Searchfilter';
+import SearchFilters from '../components/Searchfilter';
 import Banners from '../components/Property.tsx/Banner';
 import PopularCategories from '../components/Property.tsx/PopularCategories';
 import PopularAreas from '../components/Property.tsx/PopularAreas';
@@ -77,8 +77,8 @@ function Property() {
         <Banners />
         <PopularCategories />
         <LiatProductHorizontal
-          // list={FeaturedListings}
-          // text="Featured Listings"
+        // list={FeaturedListings}
+        // text="Featured Listings"
         />
         <PopularAreas />
       </div>

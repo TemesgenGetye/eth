@@ -24,6 +24,23 @@ const Home = () => {
   );
   const navigate = useNavigate();
 
+  const highlightText = (text: string, highlight: string) => {
+    if (!highlight.trim()) return text;
+    const regex = new RegExp(`(${highlight})`, 'gi');
+    return text.split(regex).map((part, i) =>
+      regex.test(part) ? (
+        <span
+          key={i}
+          className="underline decoration-blue-500 decoration-2 underline-offset-4"
+        >
+          {part}
+        </span>
+      ) : (
+        part
+      )
+    );
+  };
+
   useEffect(() => {
     setShowSuggestions(searchValue.length >= 2);
   }, [searchValue]);
@@ -109,11 +126,15 @@ const Home = () => {
                                 }}
                               >
                                 <div>
-                                  <div className="text-sm font-semibold">
-                                    {item.name}
+                                  <div className="text-sm font-semibold mb-1">
+                                    {highlightText(item.name, searchValue)}
                                   </div>
                                   <div className="text-xs text-gray-500">
-                                    {item.subcategory?.name}
+                                    {item.subcategory?.name &&
+                                      highlightText(
+                                        item.subcategory.name,
+                                        searchValue
+                                      )}
                                   </div>
                                 </div>
                               </li>
@@ -134,7 +155,10 @@ const Home = () => {
                                   <div className="text-sm">
                                     <span>Search in</span>
                                     <span className="pl-1 font-semibold">
-                                      {category?.name}
+                                      {highlightText(
+                                        category?.name,
+                                        searchValue
+                                      )}
                                     </span>
                                   </div>
                                 </div>

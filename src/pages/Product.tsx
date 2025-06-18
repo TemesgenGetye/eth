@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import SearchFilters from '../components/Motor/Searchfilter';
+import SearchFilters from '../components/Searchfilter';
 import ProductList from '../components/ui/ProductList';
 import Pagination from '../components/Motor/Pagination';
 import NoProduct from '../components/ui/NoProduct';

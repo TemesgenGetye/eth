@@ -1,7 +1,7 @@
 import { ChevronDown } from 'lucide-react';
 import BrandFilter from '../components/Motor/BrandFilter';
 import CarListing from '../components/ui/ProductList';
-import SearchFilters from '../components/Motor/Searchfilter';
+import SearchFilters from '../components/Searchfilter';
 import Pagination from '../components/Motor/Pagination';
 import { Outlet } from 'react-router-dom';
 
