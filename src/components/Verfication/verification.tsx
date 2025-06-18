@@ -10,6 +10,7 @@ import {
   Video,
   ThumbsUp,
   ShieldCheck,
+  Lock,
 } from 'lucide-react';
 import supabase from '../../services/supabase';
 import useCustomers, {
@@ -566,7 +567,7 @@ const VerificationBar = () => {
             >
               <X className="h-6 w-6" />
             </button>
-            <h2 className="mb-6 text-center text-3xl font-bold">
+            <h2 className="mb-6 text-center text-xl font-bold">
               Select an ID type to add
             </h2>
             {/* Progress bar */}
@@ -660,13 +661,14 @@ const VerificationBar = () => {
 
             <div className="flex w-full justify-end">
               <button
-                className="flex items-center gap-2 rounded-lg bg-blue-600 px-8 py-3 text-base font-semibold text-white hover:bg-blue-700"
+                className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-8 py-3 text-sm font-semibold text-white hover:bg-blue-700"
                 onClick={handleContinueFromIdSelection}
               >
-                Continue
+                <span>Continue</span>
                 <svg
                   width="18"
                   height="18"
+                  className="-mt-1"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
@@ -689,7 +691,7 @@ const VerificationBar = () => {
             >
               <X className="h-6 w-6" />
             </button>
-            <h2 className="mb-6 text-center text-3xl font-bold">
+            <h2 className="mb-6 text-center text-xl font-bold">
               Take the first photo - front of the ID
             </h2>
 
@@ -703,20 +705,20 @@ const VerificationBar = () => {
 
             <div className="mb-8 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-black font-bold text-white">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-black text-sm font-bold text-white">
                   1
                 </div>
-                <span className="font-semibold">Front of ID</span>
+                <span className="text-sm font-semibold">Front of ID</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300 font-bold text-gray-600">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-300 text-sm font-bold text-gray-600">
                   2
                 </div>
-                <span className="text-gray-500">Back of ID</span>
+                <span className="text-sm text-gray-500">Back of ID</span>
               </div>
             </div>
 
-            <div className="mb-8 flex justify-center rounded-2xl">
+            <div className="mx-auto mb-8 flex h-[60%] w-[60%] justify-center rounded-2xl">
               <img
                 src="/id_front.png"
                 alt="Emirates ID illustration"
@@ -725,20 +727,8 @@ const VerificationBar = () => {
             </div>
 
             <div className="mb-6 flex items-center gap-2 text-base text-gray-600">
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-100">
-                <svg
-                  width="16"
-                  height="16"
-                  fill="none"
-                  stroke="#2563eb"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 6V4a4 4 0 1 0-8 0v2" />
-                  <rect x="2" y="6" width="12" height="8" rx="2" />
-                  <path d="M8 11v2" />
-                </svg>
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100">
+                <Lock className="h-4 w-4 text-blue-600" />
               </span>
               <span>Ensure the details are clear, and ID is not expired</span>
             </div>
@@ -750,13 +740,14 @@ const VerificationBar = () => {
             {/* Take Photo Button */}
             <div className="flex w-full justify-end">
               <button
-                className="flex items-center gap-2 rounded-lg bg-blue-600 px-8 py-3 text-base font-semibold text-white hover:bg-blue-700"
+                className="flex items-center gap-1 rounded-lg bg-blue-600 px-4 py-3  text-sm font-semibold text-white hover:bg-blue-700"
                 onClick={() => handleTakePhoto('front')}
               >
                 Take Photo
                 <svg
                   width="18"
                   height="18"
+                  className="-mt-1"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
@@ -1050,7 +1041,7 @@ const VerificationBar = () => {
               <X className="h-6 w-6" />
             </button>
 
-            <h2 className="mb-6 text-center text-2xl font-bold">
+            <h2 className="mb-6 text-center text-xl font-bold">
               Second photo - flip the ID
             </h2>
 
@@ -1065,20 +1056,20 @@ const VerificationBar = () => {
 
             <div className="mb-8 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-white">
-                  <Check className="h-5 w-5" />
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-500 text-sm text-white">
+                  <Check className="h-4 w-4" />
                 </div>
-                <span className="text-gray-500">Front of ID</span>
+                <span className="text-sm text-gray-500">Front of ID</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-black font-bold text-white">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-black text-sm font-bold text-white">
                   2
                 </div>
-                <span className="font-semibold">Back of ID</span>
+                <span className="text-sm font-semibold">Back of ID</span>
               </div>
             </div>
 
-            <div className="mb-8 flex justify-center rounded-2xl">
+            <div className="mx-auto mb-8 flex h-[60%] w-[60%] justify-center rounded-2xl">
               <img
                 src="/id_back.png"
                 alt="Back of Emirates ID illustration"
