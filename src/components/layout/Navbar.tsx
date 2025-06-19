@@ -5,19 +5,24 @@ import TopNav from './TopNav';
 import useCategories from '../../hooks/useCategories';
 import type { CategoryType } from '../type';
 import { cleanString } from '../../services/utils';
+import MobileBottomNav from './MobileBottomNav';
 
 const Navbar = () => {
   return (
     <nav>
       {/* Top Bar */}
-      <div className="border-b border-b-gray-200 bg-white py-2">
+      <div className=" bg-white py-2 md:border-b md:border-gray-200">
         <div className="m-auto max-w-6xl">
-          <div className="mx-auto flex h-12 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center space-x-2">
+          <div className="mx-auto flex h-24  max-w-6xl items-center justify-center px-4 sm:px-6 mmd:h-12 mmd:justify-between lg:px-8">
+            <div className=" flex items-center space-x-2">
               <Link to="/" className="flex items-center">
-                <img src="/logo.png" alt="888market" className="h-10 w-auto" />
+                <img
+                  src="/logo.png"
+                  alt="888market"
+                  className="h-16 w-auto mmd:h-10"
+                />
                 <div className="flex items-center">
-                  <button className="flex items-center text-sm font-semibold text-gray-600 hover:text-gray-900">
+                  <button className="flex items-center text-xl font-semibold text-gray-600 hover:text-gray-900 mmd:text-sm">
                     888Market
                   </button>
                 </div>
@@ -32,6 +37,7 @@ const Navbar = () => {
 
       {/* Categories Navigation */}
       <HoverMenu />
+      <MobileBottomNav />
     </nav>
   );
 };
@@ -51,7 +57,7 @@ const HoverMenu = () => {
   // Early return if loading or no categories
   if (isLoading || !categories) {
     return (
-      <div className="flex items-center justify-around border-b border-gray-200 bg-white">
+      <div className="flex items-center justify-around bg-white md:border-b md:border-gray-200">
         <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-6">
           <div className="flex h-12 animate-pulse items-center space-x-8">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -80,11 +86,11 @@ const HoverMenu = () => {
   // Top-level: Home + first 5 categories
   const topLevelCategories: CategoryType[] = [
     homeCategory,
-    ...categories.slice(0, 5).map(cat => ({
+    ...categories.slice(0, 5).map((cat) => ({
       id: cat.id,
       name: cat.name,
-      subcategories: cat.subcategories || []
-    }))
+      subcategories: cat.subcategories || [],
+    })),
   ];
 
   const handleMouseEnterParent = (category: string) => {
@@ -135,10 +141,10 @@ const HoverMenu = () => {
 
   return (
     <div
-      className={`flex items-center justify-around border-b border-gray-200 bg-white `}
+      className={`flex items-center justify-around bg-white md:border-b md:border-gray-200 `}
     >
       <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-6">
-        <div className="flex h-12 items-center space-x-20">
+        <div className="hidden h-24 items-center space-x-10 mmd:flex mmd:h-12 llg:space-x-20 ">
           {/* Render the top-level categories */}
           {topLevelCategories.map((category) => (
             <div
@@ -268,7 +274,7 @@ const HoverMenu = () => {
 
           {/* "See More" button */}
           <button
-            className="flex items-center rounded-full bg-blue-700 py-2 px-4 text-sm font-semibold text-white hover:bg-blue-800"
+            className="flex items-center rounded-full bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800"
             onClick={() => hanldleShowAllCategories()}
           >
             All categories

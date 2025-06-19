@@ -1,9 +1,11 @@
 import useCategories from '../../hooks/useCategories';
 import Category from '../Category';
 import { CategoryType } from '../type';
+import useMediaQuery from '../../hooks/useMediaQuery';
 
 function ListForHome() {
   const { categories, isLoading } = useCategories();
+  const isMdUp = useMediaQuery('(min-width: 768px)');
 
   if (isLoading) {
     return (
@@ -13,7 +15,7 @@ function ListForHome() {
             <div className="h-8 w-40 animate-pulse rounded bg-gray-200" />
             <div className="h-10 w-10 animate-pulse rounded-full bg-gray-200" />
           </div>
-          <div className="grid grid-cols-1 gap-x-5 gap-y-3 md:grid-cols-3 lg:grid-cols-5">
+          <div className="grid grid-cols-3 gap-x-5 gap-y-3 md:grid-cols-4 lg:grid-cols-5">
             {Array.from({ length: 10 }).map((_, i) => (
               <div
                 key={i}
@@ -30,10 +32,10 @@ function ListForHome() {
     <div className="bg-white py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-5 lg:px-6">
         <div className="flex gap-2">
-          <h2 className="mb-8 text-2xl font-semibold text-gray-800">
+          <h2 className="mb-8 hidden text-2xl font-semibold text-gray-800 md:block">
             All Categories
           </h2>
-          <div>
+          <div className="hidden md:block">
             <img
               src="./all-product.gif"
               alt="icon icon"
@@ -41,11 +43,26 @@ function ListForHome() {
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-x-5 gap-y-3 md:grid-cols-3 lg:grid-cols-5">
-          {categories?.map((category) => (
-            <Category category={category as CategoryType} key={category?.id} />
-          ))}
-        </div>
+        {isMdUp ? (
+          <div className="grid grid-cols-3 gap-x-8 gap-y-6 md:grid-cols-4 lg:grid-cols-5">
+            {categories?.map((category) => (
+              <Category
+                category={category as CategoryType}
+                key={category?.id}
+                variant="list"
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-3 gap-x-5 gap-y-3 md:grid-cols-4 lg:grid-cols-5">
+            {categories?.map((category) => (
+              <Category
+                category={category as CategoryType}
+                key={category?.id}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

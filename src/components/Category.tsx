@@ -1,55 +1,76 @@
-import { ChevronRight } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { CategoryType, Subcategory } from './type';
 import { cleanString } from '../services/utils';
 
 interface CategoryProps {
   category: CategoryType;
   key: number;
+  variant?: 'card' | 'list';
 }
 
-export default function Category({ category }: CategoryProps) {
+export default function Category({
+  category,
+  variant = 'card',
+}: CategoryProps) {
   const navigate = useNavigate();
-  return (
-    <div key={category?.id}>
-      <button
-        className="mb-4 flex items-center font-semibold text-gray-900 hover:text-gray-700"
-        onClick={() => {
-          navigate('/' + cleanString(category?.name));
-        }}
-      >
-        <span className="mr-2">
+
+  if (variant === 'list') {
+    return (
+      <div className="mb-8">
+        <div className="mb-2 flex items-center">
           <img
             src={category?.iconUrl || './all-product.gif'}
             alt="icon icon"
-            className="h-5 w-5"
+            className="mr-2 h-6 w-6 object-contain"
           />
-        </span>
-        {category.name}
-      </button>
-      <ul className="space-y-2">
-        {category?.subcategories
-          ?.slice(0, 3) // must be 4
-          ?.map((subcategory: Subcategory) => (
-            <li key={subcategory?.id}>
-              <Link
-                to={`/${cleanString(category?.name)}/${cleanString(subcategory?.name)}`}
-                className="flex items-center text-sm text-gray-600 hover:text-blue-600"
-              >
-                {subcategory?.name}
-              </Link>
-            </li>
-          ))}
-      </ul>
-      {category?.subcategories?.length > 0 && (
+          <span className="text-lg font-semibold text-gray-900">
+            {category.name}
+          </span>
+        </div>
+        <ul className="mb-2 space-y-1">
+          {category?.subcategories
+            ?.slice(0, 4)
+            ?.map((subcategory: Subcategory) => (
+              <li key={subcategory?.id}>
+                <Link
+                  to={`/${cleanString(category?.name)}/${cleanString(subcategory?.name)}`}
+                  className="text-base text-gray-800 hover:text-red-600"
+                >
+                  {subcategory?.name}
+                </Link>
+              </li>
+            ))}
+        </ul>
         <Link
           to={`/category/${cleanString(category?.name)}`}
-          className="mt-3 inline-flex items-center text-xs text-blue-600 hover:text-blue-700"
+          className="group inline-flex items-center text-base font-medium text-blue-600 hover:text-blue-700"
         >
-          View all {category?.name}
-          <ChevronRight className="ml-1 h-4 w-4" />
+          All in {category.name}
+          <span className="ml-1 transition-transform group-hover:translate-x-1">
+            →
+          </span>
         </Link>
-      )}
+      </div>
+    );
+  }
+
+  // Card variant (default)
+  return (
+    <div
+      key={category?.id}
+      className="flex min-h-[180px] cursor-pointer flex-col items-center justify-center rounded-lg bg-white p-3 md:p-8 shadow-lg transition-shadow hover:shadow-md"
+      onClick={() => {
+        navigate('/' + cleanString(category?.name));
+      }}
+    >
+      <img
+        src={category?.iconUrl || './all-product.gif'}
+        alt="icon icon"
+        className="mb-4 h-6 w-6 object-contain md:h-14 md:w-14"
+      />
+      <span className="text-center text-sm font-medium text-gray-800 md:text-base">
+        {category.name}
+      </span>
     </div>
   );
 }

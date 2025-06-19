@@ -23,7 +23,7 @@ const NavLinks = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const navlinksRef = useRef<HTMLDivElement>(null);
-  // const { open, setOpen } = useVerficationModal(); YW unused state 
+  // const { open, setOpen } = useVerficationModal(); YW unused state
 
   const { customer } = useGetCustomer(
     user?.identities?.at(0)?.user_id as string
@@ -59,7 +59,7 @@ const NavLinks = () => {
 
   return (
     <div
-      className="navlinks relative flex items-center space-x-6"
+      className="navlinks mmd:flex relative hidden items-center space-x-6"
       ref={navlinksRef}
     >
       {/* Notifications */}

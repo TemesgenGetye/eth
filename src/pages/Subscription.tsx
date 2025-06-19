@@ -80,9 +80,6 @@ export default function Subscription() {
             <div className="flex items-center justify-center">
               <img src="/logo.png" alt="logo" className="h-20 w-20" />
             </div>
-            {/* <h2 className="text-center text-lg text-gray-700">
-              Secure Checkout
-            </h2> */}
           </div>
         </div>
 
@@ -95,7 +92,7 @@ export default function Subscription() {
             <div className="space-y-8 border-t border-gray-200 pt-4 lg:col-span-2">
               {/* Car Listing */}
               <div>
-                <h3 className="mb-4 text-sm font-medium text-gray-900">
+                <h3 className="mb-4 text-sm font-semibold text-gray-900">
                   Make your ad stand out with unique badges
                 </h3>
 

@@ -19,7 +19,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gray-100 px-4 py-8">
+    <footer className="hidden bg-gray-100 px-4 py-8 md:block">
       {/* About Us Modal */}
       {aboutOpen && (
         <InfoModal

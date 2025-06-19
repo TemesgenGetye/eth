@@ -92,7 +92,7 @@ export default function CatagoryInfo() {
             <div className="mt-8">
               <div className="mx-auto max-w-2xl">
                 <div className="relative">
-                  <div className="flex items-center rounded-lg bg-white p-1 shadow-lg">
+                  <div className="flex items-center rounded-lg border-2 bg-white p-1 shadow-lg focus-within:border-blue-500">
                     <Search className="ml-3 h-6 w-6 text-gray-400" />
                     <input
                       type="text"

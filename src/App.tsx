@@ -202,7 +202,7 @@ function App() {
                   <ScrollToTop />
                   <QueryClientProvider client={queryClient}>
                     <AppContent />
-                    <ReactQueryDevtools />
+                    {/* <ReactQueryDevtools /> */}
                   </QueryClientProvider>
                 </Router>
               </BlurBackgroundProvider>

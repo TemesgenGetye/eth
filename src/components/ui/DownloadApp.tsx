@@ -1,6 +1,6 @@
 function DownloadApp() {
   return (
-    <div className=" bg-white py-4">
+    <div className=" mb-20 bg-white py-4 md:mb-0 ">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row sm:gap-8">
           {/* Left section with app info */}
