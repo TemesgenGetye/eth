@@ -29,7 +29,10 @@ export const CardHeader: React.FC<CardHeaderProps> = ({
   ...props
 }) => {
   return (
-    <div className={`flex flex-col space-y-1.5 p-6 ${className}`} {...props}>
+    <div
+      className={`flex ${className?.includes('flex-row') ? 'flex-row' : 'flex-col'} space-y-1.5 ${className}`}
+      {...props}
+    >
       {children}
     </div>
   );

@@ -45,6 +45,7 @@ import { VerficationModalProvider } from './Context/VerficationModal';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfUse from './pages/TermsOfUse';
 import Pricing from './pages/pricing';
+import SubscriptionCheckout from './pages/Subscription';
 
 function AppContent() {
   const location = useLocation();
@@ -54,7 +55,9 @@ function AppContent() {
     location.pathname === '/signup' ||
     location.pathname === '/forgot-password' ||
     location.pathname === '/reset-password' ||
-    location.pathname === '/pricing';
+    location.pathname === '/pricing' ||
+    location.pathname === '/checkout' ||
+    location.pathname === '/subscription-checkout';
   const profileHideFooter = location.pathname === '/profile';
   const verifaied = true;
   return (
@@ -91,6 +94,14 @@ function AppContent() {
             element={
               <ProtectedRoute>
                 <Checkout />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/subscription-checkout"
+            element={
+              <ProtectedRoute>
+                <SubscriptionCheckout />
               </ProtectedRoute>
             }
           />

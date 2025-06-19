@@ -14,7 +14,6 @@ import {
 export default function CheckoutPage() {
   const navigate = useNavigate();
   const { cart } = useCart();
-
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',

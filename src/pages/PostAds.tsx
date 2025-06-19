@@ -61,8 +61,14 @@ export default function PostAdPage() {
     const isValid = await trigger();
 
     if (isValid) {
+      // Get the current form data
+      const formData = watch();
+
+      // Store form data in localStorage for the subscription page
+      localStorage.setItem('productFormData', JSON.stringify(formData));
+
       // If validation passes, redirect to pricing page
-      window.location.href = '/pricing';
+      window.location.href = '/pricing'; // TODO: Change to react router
     } else {
       // If validation fails, show error message
       toast.error('Please fill in all required fields correctly.');
