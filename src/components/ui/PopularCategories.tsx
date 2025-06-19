@@ -90,7 +90,7 @@ export default function PopularCategories() {
         );
         return (
           <div key={category.id} className="my-8">
-            <h3 className="mb-4 text-xl font-semibold text-gray-800">
+            <h3 className="mb-4 font-semibold text-gray-800">
               Popular in {category.name}
             </h3>
             {isMobile ? (
