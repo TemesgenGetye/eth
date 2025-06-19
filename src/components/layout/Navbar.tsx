@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ChevronDown } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { ArrowLeft, ChevronDown } from 'lucide-react';
 import TopNav from './TopNav';
 import useCategories from '../../hooks/useCategories';
 import type { CategoryType } from '../type';
@@ -8,12 +8,15 @@ import { cleanString } from '../../services/utils';
 import MobileBottomNav from './MobileBottomNav';
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isMyAds = location.pathname.includes('my-ads');
   return (
     <nav>
       {/* Top Bar */}
-      <div className=" bg-white py-2 md:border-b md:border-gray-200">
+      <div className=" bg-white md:border-b md:border-gray-200">
         <div className="m-auto max-w-6xl">
-          <div className="mx-auto flex h-24  max-w-6xl items-center justify-center px-4 sm:px-6 mmd:h-12 mmd:justify-between lg:px-8">
+          <div className="relative mx-auto flex h-[5rem]  max-w-6xl items-center justify-center px-4 sm:px-6 mmd:h-12 mmd:justify-between lg:px-8">
             <div className=" flex items-center space-x-2">
               <Link to="/" className="flex items-center">
                 <img
@@ -28,6 +31,14 @@ const Navbar = () => {
                 </div>
               </Link>
             </div>
+            {isMyAds && (
+              <button
+                className="absolute  left-5 flex h-full items-center md:hidden"
+                onClick={() => navigate(-1)}
+              >
+                <ArrowLeft size={20} />
+              </button>
+            )}
 
             {/* TopNav Component */}
             <TopNav />

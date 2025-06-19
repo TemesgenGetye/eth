@@ -77,13 +77,13 @@ export default function PopularCategories() {
         const viewAllBtn = (
           <button
             onClick={() => navigate(`/${cleanString(category.name)}`)}
-            className="group flex flex-col items-center justify-center focus:outline-none md:hidden"
+            className="group -ml-[6rem] flex flex-col items-center justify-center focus:outline-none md:hidden"
             tabIndex={0}
           >
-            <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow transition-colors duration-200 group-hover:bg-blue-50">
-              <ArrowRight className="h-7 w-7 text-gray-700" />
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow transition-colors duration-200 group-hover:bg-blue-50">
+              <ArrowRight className="h-4 w-4 text-gray-700" />
             </span>
-            <span className="mt-2 text-sm font-semibold text-gray-800 group-hover:underline group-hover:decoration-blue-500 group-hover:underline-offset-4">
+            <span className="mt-2 text-xs font-semibold text-gray-800 group-hover:underline group-hover:decoration-blue-500 group-hover:underline-offset-4">
               View All
             </span>
           </button>
@@ -94,7 +94,7 @@ export default function PopularCategories() {
               Popular in {category.name}
             </h3>
             {isMobile ? (
-              <div className="hide-scrollbar flex gap-4 overflow-x-auto px-2 pb-2">
+              <div className="hide-scrollbar flex items-stretch gap-4 overflow-x-auto px-2 pb-2">
                 {categoryProducts.map((product: ProductType, index: number) => {
                   const cName = cleanString(product?.category?.name);
                   const scName = cleanString(product?.subcategory?.name);
@@ -103,14 +103,14 @@ export default function PopularCategories() {
                   return (
                     <button
                       key={index}
-                      className="group relative w-64 flex-shrink-0 cursor-pointer"
+                      className="group relative h-full w-64 flex-shrink-0 cursor-pointer"
                       onClick={() =>
                         navigate(`/${cName}/${scName}/${pName}`, {
                           state: { pid },
                         })
                       }
                     >
-                      <div className="relative h-48 overflow-hidden rounded-lg">
+                      <div className="relative h-48 w-full overflow-hidden rounded-lg">
                         <img
                           src={product.imgUrls[0] || '/logo.png'}
                           alt={`pro_img ${index}`}
@@ -161,7 +161,7 @@ export default function PopularCategories() {
                         })
                       }
                     >
-                      <div className="relative h-48 overflow-hidden rounded-lg">
+                      <div className="relative h-48 w-full overflow-hidden rounded-lg">
                         <img
                           src={product.imgUrls[0] || '/logo.png'}
                           alt={`pro_img ${index}`}

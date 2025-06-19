@@ -108,8 +108,8 @@ export default function ProductList({ products }: ProductProps) {
               navigate(`/${cName}/${scName}/${pName}`, { state: { pid } })
             }
           >
-            <div className="flex gap-4">
-              <div className="relative h-48 w-72 flex-shrink-0 overflow-hidden rounded-lg">
+            <div className="flex flex-col gap-4 md:flex-row">
+              <div className="relative h-48 w-full flex-shrink-0 overflow-hidden rounded-lg md:w-72">
                 {product.imgUrls.length > 1 && (
                   <>
                     <button
@@ -144,7 +144,7 @@ export default function ProductList({ products }: ProductProps) {
                 {product.imgUrls.length > 1 && (
                   <div className="absolute bottom-2 left-2 flex items-center space-x-1 rounded bg-black/70 px-1.5 py-0.5 text-xs text-white">
                     <span>
-                      <Image size={14} />
+                      <Image size={14} className="w-full md:h-4 md:w-4" />
                     </span>
                     <span>{`${currentImageIndex + 1} / ${product.imgUrls.length}`}</span>
                   </div>
@@ -157,7 +157,7 @@ export default function ProductList({ products }: ProductProps) {
                       {product?.name}
                     </p>
                     <div className="flex items-center space-x-2">
-                      <span className="text-2xl font-bold">
+                      <span className="text-lg font-bold md:text-2xl">
                         {product.price.orignal === product.price.discounted ? (
                           <span>{product.price.orignal} AED</span>
                         ) : (
@@ -185,10 +185,10 @@ export default function ProductList({ products }: ProductProps) {
                       </p>
                     </div>
                   </div>
-                  <div className="flex space-x-2">
+                  <div className="absolute right-3 top-5 flex space-x-2 md:static">
                     {!product.createdBy ? (
                       <button
-                        className="rounded-lg bg-[#40b740] p-2 text-white hover:bg-[#42c242]" // YW color scheme change
+                        className="rounded-lg bg-[#40b740] p-1 text-white hover:bg-[#42c242] md:p-2 " // YW color scheme change
                         onClick={(e) => {
                           e.stopPropagation();
                           handleCart(e, product?.id);
@@ -228,7 +228,7 @@ export default function ProductList({ products }: ProductProps) {
                 {!product?.createdBy && (
                   <div className="flex items-center gap-1">
                     <VerifiedIcon className="h-5 w-5 text-[#40b740]" />
-                    <span className="text-sm  text-[#40b740]">
+                    <span className="text-sm font-bold  text-[#3ebb3e]">
                       verified
                     </span>{' '}
                     {/* YW color scheme change */}
@@ -282,7 +282,7 @@ function SellerContact({ createdBy }: { createdBy: number | string }) {
       {customer?.verification_status === 'verified' && (
         <div className="flex items-center gap-1">
           <VerifiedIcon className="h-5 w-5 text-green-600" />
-          <span className="text-sm  text-green-700">verified</span>
+          <span className="text-sm font-bold  text-green-700">verified</span>
         </div>
       )}
 

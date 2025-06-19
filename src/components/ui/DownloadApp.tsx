@@ -26,22 +26,18 @@ function DownloadApp() {
           </div>
 
           {/* Right section with download buttons */}
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col items-center gap-3 md:flex-row">
             <img
               src="./app/app-store.svg"
               alt="Get it on App Store"
               className=" object-contain"
             />
-            <a
-              href="#"
-              className="group flex items-center gap-2 rounded-lg px-4 py-2 transition-all hover:border-blue-100 hover:bg-blue-50"
-            >
-              <img
-                src="./app/play-store.svg"
-                alt="Get it on Google Play"
-                className=" object-contain"
-              />
-            </a>
+
+            <img
+              src="./app/play-store.svg"
+              alt="Get it on Google Play"
+              className=" object-contain"
+            />
           </div>
         </div>
       </div>

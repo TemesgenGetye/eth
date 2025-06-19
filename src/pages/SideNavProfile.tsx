@@ -24,7 +24,7 @@ function SideNavProfile() {
           </div>
 
           {/* Saved Homes */}
-          <div className="flex cursor-pointer items-center gap-3 rounded-lg px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50">
+          <div className="flex cursor-pointer items-center gap-3 rounded-lg px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50 ">
             <svg
               className="h-5 w-5"
               fill="none"

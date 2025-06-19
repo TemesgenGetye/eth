@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Listing from '../components/Listing';
 import useMyAds from '../hooks/useMyAds';
 import useCustomers from '../hooks/useCustomers';
-import { ProductType } from '../components/type'; 
+import { ProductType } from '../components/type';
 
 export default function MyAds() {
   const uId = localStorage.getItem('user-id');
@@ -106,12 +106,14 @@ export default function MyAds() {
 
   return (
     <div className="flex min-h-screen justify-center bg-gray-50">
-      <div className="mx-auto w-[65rem] p-6">
+      <div className="mx-auto w-[65rem]">
         {/* Header */}
-        <h1 className="mb-8 text-2xl font-bold text-black">My Ads</h1>
+        <h1 className="mb-8 hidden p-6 text-2xl font-bold text-black md:block">
+          My Ads
+        </h1>
 
         {/* Filter Tabs */}
-        <div className="mb-8 flex flex-wrap gap-4 ">
+        <div className="mb-8 flex flex-wrap gap-4 p-6">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -127,36 +129,38 @@ export default function MyAds() {
           ))}
         </div>
 
-        {filteredAds && filteredAds.length > 0 && grouped ? (
-          Object.entries(grouped).map(([categoryName, subcategories]) => (
-            <Listing
-              key={categoryName}
-              title={categoryName}
-              subcategories={subcategories}
-              showEditButton={activeTab === 'live'}
-            />
-          ))
-        ) : (
-          <div className="rounded-lg border border-gray-200 bg-white p-12 text-center">
-            <div className="mb-6">
-              <img
-                src="/cactus.png"
-                alt="No ads illustration"
-                className="mx-auto h-32 w-32"
+        <div className="mb-24 md:mb-0">
+          {filteredAds && filteredAds.length > 0 && grouped ? (
+            Object.entries(grouped).map(([categoryName, subcategories]) => (
+              <Listing
+                key={categoryName}
+                title={categoryName}
+                subcategories={subcategories}
+                showEditButton={activeTab === 'live'}
               />
+            ))
+          ) : (
+            <div className="rounded-lg border border-gray-200 bg-white p-12 text-center">
+              <div className="mb-6">
+                <img
+                  src="/cactus.png"
+                  alt="No ads illustration"
+                  className="mx-auto h-32 w-32"
+                />
+              </div>
+              <h2 className="mb-8 text-xl font-semibold text-black">
+                {getNoAdsMessage()}
+              </h2>
+              {activeTab === 'all' && (
+                <a href="/post-ad">
+                  <button className="rounded-lg bg-blue-600 px-8 py-3 font-semibold text-white transition-colors hover:bg-blue-700">
+                    Post ad now
+                  </button>
+                </a>
+              )}
             </div>
-            <h2 className="mb-8 text-xl font-semibold text-black">
-              {getNoAdsMessage()}
-            </h2>
-            {activeTab === 'all' && (
-              <a href="/post-ad">
-                <button className="rounded-lg bg-blue-600 px-8 py-3 font-semibold text-white transition-colors hover:bg-blue-700">
-                  Post ad now
-                </button>
-              </a>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

@@ -88,11 +88,8 @@ function Product() {
   const pName = pname?.split('-')?.join(' ');
   const [filtereApplied, setFilterApplied] = useState(false);
 
-  const {
-    filteredProducts,
-    isLoadingFiltered,
-    hasActiveFilters,
-  } = useFilteredProducts();
+  const { filteredProducts, isLoadingFiltered, hasActiveFilters } =
+    useFilteredProducts();
 
   const { products, isLoading: isLoadingProducts } = useProducts();
 
@@ -158,7 +155,7 @@ function Product() {
       <SearchFilters use="motor" onFilterApplied={setFilterApplied} />
 
       {/* Breadcrumbs */}
-      <div className="container mx-auto py-4 text-sm">
+      <div className="container mx-auto hidden py-4 text-sm md:block">
         <div className="flex items-center space-x-2 text-sm text-blue-600">
           <Link to="/" className="hover:underline">
             Dubai
@@ -178,7 +175,7 @@ function Product() {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto">
+      <div className="container p-2 md:mx-auto md:p-0">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">
             {_filteredProducts?.[0]?.subcategory?.name} sale in dubai •{' '}
