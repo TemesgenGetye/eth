@@ -1,5 +1,5 @@
 import supabase from './supabase';
-import { camelCase, cleanString } from './utils';
+import { camelCase } from './utils';
 
 export const getPopularProducts = async () => {
   // console.log('Fetching popular products...');
@@ -31,6 +31,7 @@ export const getPopularProducts = async () => {
         )
       `
       )
+      .eq('status', 'live')
       .order('views', { ascending: false });
 
     if (error) throw new Error(error?.message);
@@ -88,7 +89,8 @@ export const getFeaturedProducts = async () => {
           )
         `
       )
-      .eq('featured', true);
+      .eq('featured', true)
+      .eq('status', 'live');
     if (error) throw new Error(error?.message);
     const camelCasedData = data?.map((product) => camelCase(product));
 
@@ -122,8 +124,8 @@ export const getProductById = async (id: number) => {
           )
         `
       )
-
       .eq('id', id)
+      .eq('status', 'live')
       .maybeSingle();
     if (error) throw new Error(error?.message);
     return camelCase(data);
@@ -161,6 +163,7 @@ export const getProdsById = async (ids: number[]) => {
             `
           )
           .eq('id', id)
+          .eq('status', 'live')
           .maybeSingle(); // fetch one product or null
 
         if (error) throw new Error(error.message);
@@ -175,6 +178,7 @@ export const getProdsById = async (ids: number[]) => {
     throw err;
   }
 };
+
 export const getProductsById = async (ids: number[]) => {
   if (!Array.isArray(ids) || ids.length === 0) return [];
 
@@ -200,7 +204,8 @@ export const getProductsById = async (ids: number[]) => {
           )
         `
       )
-      .in('id', ids); // Filter by multiple IDs
+      .in('id', ids)
+      .eq('status', 'live'); // Filter by multiple IDs
 
     if (error) throw new Error(error?.message);
     const camelCasedData = data?.map((product) => camelCase(product));
@@ -242,129 +247,140 @@ export const getAds = async (id: number) => {
 
     return camelCasedData || [];
   } catch (err) {
-    console.error(`Error fetching product with id ${id}:`, err);
+    console.error('Error fetching ads:', err);
     throw err;
   }
 };
 
-export const getSearchedProducts = async (term: string, category?: string) => {
-  if (!term || term.trim() === '') return [];
-
+export const getFilteredProducts = async ({
+  keyword,
+  city,
+  minPrice,
+  maxPrice,
+  minYear,
+  maxYear,
+  pname,
+}: {
+  keyword?: string;
+  city?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  minYear?: number;
+  maxYear?: number;
+  pname?: string;
+}) => {
   try {
     let query = supabase
       .from('products')
       .select(
         `
-        id,
-        name,
-        price,
-        stock,
-        img_urls,
-        views,
-        description,
-        category_name,
-        category:categories (
           id,
-          name
-        ),
-        subcategory:subcategories (
-          id,
-          name
-        )
-      `
+          name,
+          price,
+          stock,
+          img_urls,
+          views,
+          description,
+          category:categories (
+            id,
+            name
+          ),
+          subcategory:subcategories (
+            id,
+            name
+          )
+        `
       )
-      .ilike('name', `%${term}%`);
+      .eq('status', 'live'); // Only fetch live products
 
-    if (category && category !== 'all') {
-      query = query.ilike('category_name', `%${category}%`);
+    // Apply filters
+    if (keyword) {
+      query = query.ilike('name', `%${keyword}%`);
+    }
+
+    if (city && city !== 'All Cities') {
+      query = query.eq('city', city);
+    }
+
+    if (minPrice !== undefined) {
+      query = query.gte('price', minPrice);
+    }
+
+    if (maxPrice !== undefined) {
+      query = query.lte('price', maxPrice);
+    }
+
+    if (minYear !== undefined) {
+      query = query.gte('year', minYear);
+    }
+
+    if (maxYear !== undefined) {
+      query = query.lte('year', maxYear);
+    }
+
+    if (pname) {
+      const subcategoryName = pname.split('-').join(' ');
+      query = query.eq('subcategories.name', subcategoryName);
     }
 
     const { data, error } = await query;
 
-    if (error) throw new Error(error.message);
-    // console.log(data);
+    if (error) throw new Error(error?.message);
+    const camelCasedData = data?.map((product) => camelCase(product));
 
-    return data?.map((product) => camelCase(product)) || [];
+    return camelCasedData || [];
   } catch (err) {
-    console.error('Error searching products:', err);
+    console.error('Error fetching filtered products:', err);
     throw err;
   }
 };
 
-export const getFilteredProducts = async (filterOptions: {
-  keyword?: string | null;
-  city?: string | null;
-  minPrice?: number | null;
-  maxPrice?: number | null;
-  minYear?: number | null;
-  maxYear?: number | null;
-  pname?: string | null;
-}) => {
-  const { keyword, city, minPrice, maxPrice, minYear, maxYear, pname } =
-    filterOptions;
-
+export const getSearchedProducts = async (
+  searchTerm: string,
+  category: string = 'all'
+) => {
   try {
-    let query = supabase.from('products').select(
-      `
-        id,
-        name,
-        price,
-        year,
-        city,
-        stock,
-        img_urls,
-        views,
-        description,
-        category:categories (
+    let query = supabase
+      .from('products')
+      .select(
+        `
           id,
-          name
-        ),
-        subcategory:subcategories (
-          id,
-          name
-        )
-      `
-    );
+          name,
+          price,
+          stock,
+          img_urls,
+          views,
+          description,
+          category:categories (
+            id,
+            name
+          ),
+          subcategory:subcategories (
+            id,
+            name
+          )
+        `
+      )
+      .eq('status', 'live'); // Only fetch live products
 
-    if (keyword && keyword.trim() !== '') {
-      query = query.ilike('name', `%${keyword.trim()}%`);
+    // Apply search term filter
+    if (searchTerm.trim()) {
+      query = query.ilike('name', `%${searchTerm.trim()}%`);
     }
 
-    if (city) {
-      query = query.ilike('city', `%${city}%`);
-    }
-
-    if (minPrice !== undefined && minPrice !== null) {
-      query = query.gte('price->>discounted', minPrice);
-    }
-
-    if (maxPrice !== undefined && maxPrice !== null) {
-      query = query.lte('price->>discounted', maxPrice);
-    }
-
-    if (minYear !== undefined && minYear !== null) {
-      query = query.gte('year', minYear);
-    }
-
-    if (maxYear !== undefined && maxYear !== null) {
-      query = query.lte('year', maxYear);
+    // Apply category filter if not 'all'
+    if (category && category !== 'all') {
+      query = query.eq('categories.name', category);
     }
 
     const { data, error } = await query;
 
-    if (error) throw new Error(error.message);
+    if (error) throw new Error(error?.message);
+    const camelCasedData = data?.map((product) => camelCase(product));
 
-    // Filter by subcategory if pname is provided
-    let filteredData = data;
-    if (pname) {
-      filteredData = data?.filter(
-        (item) => cleanString(item?.subcategory?.name) === pname
-      );
-    }
-
-    return filteredData?.map((product) => camelCase(product)) || [];
+    return camelCasedData || [];
   } catch (err) {
-    console.error('Error fetching filtered products:', err);
+    console.error('Error fetching searched products:', err);
     throw err;
   }
 };
