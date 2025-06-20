@@ -4,6 +4,13 @@ import { useProductForm } from '../hooks/useProductForm';
 import useCategories from '../hooks/useCategories';
 import { Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../components/ui/Select';
 
 interface Subcategory {
   id: number;
@@ -31,6 +38,18 @@ export default function PostAdPage() {
       toast.error('Error trying to upload your product.');
     }
   );
+
+  const cities = [
+    'All Cities (UAE)',
+    'Abu Dhabi',
+    'Ajman',
+    'Al Ain',
+    'Dubai',
+    'Fujairah',
+    'Ras al Khaimah',
+    'Sharjah',
+    'Umm al Quwain',
+  ];
 
   // Images state for preview
   const images = watch('imgUrls') || [];
@@ -85,13 +104,15 @@ export default function PostAdPage() {
               <ArrowLeft className="h-5 w-5" />
             </button>
           </a>
-          <h1 className="text-2xl font-bold text-black">Post New Ad</h1>
+          <h1 className=" text-xl font-bold text-black sm:text-2xl">
+            Post New Ad
+          </h1>
         </div>
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-8">
           {/* Images Section */}
           <div className="rounded-lg border border-gray-200 bg-white p-6">
-            <h2 className="mb-4 text-xl font-semibold text-black">
+            <h2 className="mb-4 text-lg font-semibold text-black sm:text-xl">
               Product Images
             </h2>
             <div className="mb-4 grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -138,7 +159,7 @@ export default function PostAdPage() {
 
           {/* Basic Information */}
           <div className="rounded-lg border border-gray-200 bg-white p-6">
-            <h2 className="mb-4 text-xl font-semibold text-black">
+            <h2 className="mb-4 text-lg font-semibold text-black sm:text-xl">
               Basic Information
             </h2>
             <div className="space-y-4">
@@ -152,7 +173,9 @@ export default function PostAdPage() {
                   placeholder="Enter a descriptive title for your product"
                 />
                 {errors.name && (
-                  <p className="text-xs text-red-500">{errors.name.message}</p>
+                  <p className="mt-1 text-xs text-red-500">
+                    {errors.name.message}
+                  </p>
                 )}
               </div>
               <div>
@@ -180,21 +203,25 @@ export default function PostAdPage() {
                     name="category_id"
                     control={control}
                     render={({ field }) => (
-                      <select
-                        {...field}
-                        className="w-full rounded-lg border border-gray-300 px-4 py-3"
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value?.toString()}
                       >
-                        <option value="">Select Category</option>
-                        {categories.map((cat) => (
-                          <option key={cat.id} value={cat.id}>
-                            {cat.name}
-                          </option>
-                        ))}
-                      </select>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select Category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {categories.map((cat) => (
+                            <SelectItem key={cat.id} value={cat.id.toString()}>
+                              {cat.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     )}
                   />
                   {errors.category_id && (
-                    <p className="text-xs text-red-500">
+                    <p className="mt-1 text-xs text-red-500">
                       {errors.category_id.message}
                     </p>
                   )}
@@ -207,22 +234,26 @@ export default function PostAdPage() {
                     name="subcategory_id"
                     control={control}
                     render={({ field }) => (
-                      <select
-                        {...field}
-                        className="w-full rounded-lg border border-gray-300 px-4 py-3"
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value?.toString()}
                         disabled={!selectedCategory}
                       >
-                        <option value="">Select Subcategory</option>
-                        {subcategories.map((sub: Subcategory) => (
-                          <option key={sub.id} value={sub.id}>
-                            {sub.name}
-                          </option>
-                        ))}
-                      </select>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select Subcategory" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {subcategories.map((sub: Subcategory) => (
+                            <SelectItem key={sub.id} value={sub.id.toString()}>
+                              {sub.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     )}
                   />
                   {errors.subcategory_id && (
-                    <p className="text-xs text-red-500">
+                    <p className="mt-1 text-xs text-red-500">
                       {errors.subcategory_id.message}
                     </p>
                   )}
@@ -233,7 +264,7 @@ export default function PostAdPage() {
 
           {/* Pricing & stock */}
           <div className="rounded-lg border border-gray-200 bg-white p-6">
-            <h2 className="mb-4 text-xl font-semibold text-black">
+            <h2 className="mb-4 text-lg font-semibold text-black sm:text-xl">
               Pricing & Stock
             </h2>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -245,13 +276,18 @@ export default function PostAdPage() {
                   name="price.currency"
                   control={control}
                   render={({ field }) => (
-                    <select
-                      {...field}
-                      className="w-full rounded-lg border border-gray-300 px-4 py-3"
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
                     >
-                      <option value="USD">USD</option>
-                      <option value="AED">AED</option>
-                    </select>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select Currency" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="USD">USD</SelectItem>
+                        <SelectItem value="AED">AED</SelectItem>
+                      </SelectContent>
+                    </Select>
                   )}
                 />
               </div>
@@ -265,7 +301,7 @@ export default function PostAdPage() {
                   className="w-full rounded-lg border border-gray-300 px-4 py-3"
                 />
                 {errors.price?.orignal && (
-                  <p className="text-xs text-red-500">
+                  <p className="mt-1 text-xs text-red-500">
                     {errors.price.orignal.message}
                   </p>
                 )}
@@ -298,7 +334,7 @@ export default function PostAdPage() {
 
           {/* Location & Contact */}
           <div className="rounded-lg border border-gray-200 bg-white p-6">
-            <h2 className="mb-4 text-xl font-semibold text-black">
+            <h2 className="mb-4 text-lg font-semibold text-black sm:text-xl">
               Location & Contact Information
             </h2>
             <div className="space-y-4">
@@ -306,13 +342,29 @@ export default function PostAdPage() {
                 <label className="mb-2 block text-sm font-medium text-black">
                   Location *
                 </label>
-                <input
-                  {...register('location')}
-                  className="w-full rounded-lg border border-gray-300 px-4 py-3"
-                  placeholder="Enter your city, state or full address"
+                <Controller
+                  name="location"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select City" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {cities.map((city) => (
+                          <SelectItem key={city} value={city}>
+                            {city}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
                 />
                 {errors.location && (
-                  <p className="text-xs text-red-500">
+                  <p className="mt-1 text-xs text-red-500">
                     {errors.location.message}
                   </p>
                 )}
@@ -328,7 +380,7 @@ export default function PostAdPage() {
                     placeholder="Your name"
                   />
                   {errors.contact_name && (
-                    <p className="text-xs text-red-500">
+                    <p className="mt-1 text-xs text-red-500">
                       {errors.contact_name.message}
                     </p>
                   )}
@@ -343,7 +395,7 @@ export default function PostAdPage() {
                     placeholder="Your phone number"
                   />
                   {errors.phone_num && (
-                    <p className="text-xs text-red-500">
+                    <p className="mt-1 text-xs text-red-500">
                       {errors.phone_num.message}
                     </p>
                   )}
@@ -358,7 +410,7 @@ export default function PostAdPage() {
                     placeholder="Your email address"
                   />
                   {errors.email && (
-                    <p className="text-xs text-red-500">
+                    <p className="mt-1 text-xs text-red-500">
                       {errors.email.message}
                     </p>
                   )}
@@ -368,7 +420,13 @@ export default function PostAdPage() {
           </div>
 
           {/* Submit Button */}
-          <div className="flex gap-4 pt-4">
+          <div className="flex gap-4 pb-16 pt-4 md:pb-4">
+            <button
+              type="button"
+              className="flex-1 rounded-lg bg-gray-200 px-6 py-4 font-semibold text-black transition-colors hover:bg-gray-300"
+            >
+              Save as Draft
+            </button>
             <button
               type="submit"
               disabled={isSubmitting}
@@ -383,12 +441,6 @@ export default function PostAdPage() {
               ) : (
                 'Post Ad Now'
               )}
-            </button>
-            <button
-              type="button"
-              className="flex-1 rounded-lg bg-gray-200 px-6 py-4 font-semibold text-black transition-colors hover:bg-gray-300"
-            >
-              Save as Draft
             </button>
           </div>
         </form>

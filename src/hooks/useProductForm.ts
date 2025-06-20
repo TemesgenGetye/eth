@@ -8,7 +8,10 @@ const schema = yup.object().shape({
   name: yup.string().required('Product name is required'),
   description: yup.string().required('Description is required'),
   price: yup.object({
-    orignal: yup.number().required('Original price is required'),
+    orignal: yup
+      .number()
+      .positive('Original price is required.')
+      .required('Original price is required'),
     discounted: yup.number().nullable(),
     currency: yup.string().required('Currency is required'),
   }),
@@ -28,6 +31,12 @@ const schema = yup.object().shape({
 export function useProductForm(onSuccess?: () => void, onError?: () => void) {
   const onSubmit = async (data: any) => {
     console.log('data', data);
+
+    // If discounted price is not provided, set it to the original price
+    if (!data.price.discounted || data.price.discounted <= 0) {
+      data.price.discounted = data.price.orignal;
+    }
+
     //Insert images to supabase bucket
     let img_urls: string[] = [];
     if (data.imgUrls && data.imgUrls.length > 0) {
