@@ -28,31 +28,35 @@ import TermsOfUse from './pages/TermsOfUse';
 import Subscription from './pages/Subscription';
 import Pricing from './pages/pricing';
 import Chat from './pages/Chat';
-import TopNav from './components/layout/TopNav';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import MobileBottomNav from './components/layout/MobileBottomNav';
 import ScrollToTop from './components/ui/ScrollToTop';
 import { LanguageProvider } from './Context/Languge';
 import CatagoryInfo from './pages/Catagory';
+import Menu from './pages/Menu';
 
 const AppContent = () => {
   const location = useLocation();
-  const hideOnRoutes = [
+  const hideAllNavOnRoutes = [
     '/login',
     '/signup',
     '/forgot-password',
     '/reset-password',
+    '/chats',
   ];
+  const hideNavbarOnlyRoutes = ['/menu'];
   const profileRoute = '/profile';
 
-  const shouldHideNavAndFooter = hideOnRoutes.includes(location.pathname);
+  const shouldHideAllNav = hideAllNavOnRoutes.includes(location.pathname);
+  const shouldHideNavbar =
+    shouldHideAllNav || hideNavbarOnlyRoutes.includes(location.pathname);
   const isProfilePage = location.pathname.startsWith(profileRoute);
 
   return (
     <div className="flex min-h-screen flex-col">
       <ScrollToTop />
-      {!shouldHideNavAndFooter && <Navbar />}
+      {!shouldHideNavbar && <Navbar />}
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -91,15 +95,16 @@ const AppContent = () => {
           <Route path="/terms-of-use" element={<TermsOfUse />} />
           <Route path="/subscription" element={<Subscription />} />
           <Route path="/pricing" element={<Pricing />} />
-          <Route path="/chat" element={<Chat />} />
+          <Route path="/chats" element={<Chat />} />
+          <Route path="/menu" element={<Menu />} />
         </Routes>
       </main>
-      {!shouldHideNavAndFooter && !isProfilePage && (
+      {!shouldHideAllNav && !isProfilePage && (
         <LanguageProvider>
           <Footer />
         </LanguageProvider>
       )}
-      <MobileBottomNav />
+      {!shouldHideAllNav && <MobileBottomNav />}
     </div>
   );
 };

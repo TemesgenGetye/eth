@@ -5,15 +5,15 @@ import PopularSubcatagory from '../components/ui/PopularSubcatagory';
 import {
   useParams,
   useNavigate,
-  useLocation,
-  useSearchParams,
+  // useLocation,
+  // useSearchParams,
 } from 'react-router-dom';
 import SolidBento from '../components/ui/BentoGridProduct';
 import useCategories from '../hooks/useCategories';
 import { cleanString } from '../services/utils';
 import { useState, useEffect } from 'react';
 import { useSearchProducts } from '../hooks/useSearchProducts';
-import { useFilteredProducts } from '../hooks/useFilteredProducts';
+// import { useFilteredProducts } from '../hooks/useFilteredProducts';
 export default function CatagoryInfo() {
   const { cname } = useParams<{ cname: string }>();
   const { categories } = useCategories();
@@ -21,8 +21,8 @@ export default function CatagoryInfo() {
   const [searchValue, setSearchValue] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeCategory, setActiveCategory] = useState(cname || '');
-  const { refetchFiltered } = useFilteredProducts();
-  const [_, setQuery] = useSearchParams();
+  // const { refetchFiltered } = useFilteredProducts();
+  // const [_, setQuery] = useSearchParams();
   const category = categories?.find(
     (category) => cleanString(category.name) === activeCategory
   );
