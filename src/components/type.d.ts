@@ -24,12 +24,40 @@ export interface Subcategory {
 export interface ProductType {
   id: number;
   name: string;
-  price: { orignal: number; discounted?: number; currency?: string };
+  price: {
+    orignal: number;
+    discounted?: number | null;
+    currency: string;
+  };
   stock: number;
-  imgUrls: string[];
+  img_urls: string[];
   views: number;
   description: string;
-  category: CategoryType;
-  subcategory: Subcategory;
-  createdBy?: number | string; // Add this line for seller reference
+  status: string;
+  category?: {
+    id: number;
+    name: string;
+  };
+  subcategory?: {
+    id: number;
+    name: string;
+  };
+}
+
+export interface ProductData {
+  name?: string;
+  description?: string;
+  price: {
+    orignal: number;
+    discounted?: number | null;
+    currency?: string;
+  };
+  stock?: number;
+  imgUrls?: File[];
+  category_id: number;
+  subcategory_id: number;
+  location?: string;
+  contact_name?: string;
+  phone_num?: string;
+  email?: string | null;
 }

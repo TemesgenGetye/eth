@@ -177,16 +177,22 @@ function SearchFilters({
     setPriceRange('Select');
     setKey('');
     setFilterOptions({
+      keyword: '',
       city: '',
       minPrice: undefined,
       maxPrice: undefined,
       minYear: undefined,
       maxYear: undefined,
     });
-    // Clear search term from URL
+    // Clear all filter parameters from URL
     setQuery((prev) => {
       const newParams = new URLSearchParams(prev);
       newParams.delete('keyword');
+      newParams.delete('city');
+      newParams.delete('minPrice');
+      newParams.delete('maxPrice');
+      newParams.delete('minYear');
+      newParams.delete('maxYear');
       return newParams;
     });
     onFilterApplied?.(false);

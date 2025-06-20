@@ -6,7 +6,6 @@ import {
   HelpCircle,
   Heart,
   Languages,
-  LayoutGrid,
   Lock,
   LogOut,
   MapPin,
@@ -14,7 +13,6 @@ import {
   Settings,
   User,
   LucideProps,
-  Search,
   ShoppingCart,
 } from 'lucide-react';
 import React, { useState } from 'react';

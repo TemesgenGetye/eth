@@ -2,39 +2,49 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import supabase from '../services/supabase';
+import { ProductData } from '../components/type';
+import { useAuth } from '../Context/AuthContext';
+import { useGetCustomer } from './useCustomers';
+import { useQueryClient } from '@tanstack/react-query';
 
-// Define the schema for validation
+// Define the schema for validation - only essential fields required
 const schema = yup.object().shape({
-  name: yup.string().required('Product name is required'),
-  description: yup.string().required('Description is required'),
+  name: yup.string().optional().default(''),
+  description: yup.string().optional().default(''),
   price: yup.object({
-    orignal: yup
-      .number()
-      .positive('Original price is required.')
-      .required('Original price is required'),
-    discounted: yup.number().nullable(),
-    currency: yup.string().required('Currency is required'),
+    orignal: yup.number().required('Original price is required'),
+    discounted: yup.number().nullable().default(0),
+    currency: yup.string().optional().default('USD'),
   }),
-  stock: yup.number().required('Stock is required'),
-  imgUrls: yup
-    .array()
-    .min(1, 'At least one image is required')
-    .required('Product Image is required'),
+  stock: yup.number().optional().default(1),
+  imgUrls: yup.array().optional().default([]),
   category_id: yup.number().required('Category is required'),
   subcategory_id: yup.number().required('Subcategory is required'),
-  location: yup.string().required('Location is required'),
-  contact_name: yup.string().required('Contact name is required'),
-  phone_num: yup.string().required('Phone number is required'),
-  email: yup.string().email('Invalid email').nullable(),
+  location: yup.string().optional().default(''),
+  contact_name: yup.string().optional().default(''),
+  phone_num: yup.string().optional().default(''),
+  email: yup.string().email('Invalid email').nullable().optional(),
 });
 
 export function useProductForm(onSuccess?: () => void, onError?: () => void) {
-  const onSubmit = async (data: any) => {
-    // console.log('data', data);
+  const { user } = useAuth();
+  const { customer } = useGetCustomer(user?.id || '');
+  const queryClient = useQueryClient();
 
-    // If discounted price is not provided, set it to the original price
+  const submitProduct = async (
+    data: ProductData,
+    status: 'live' | 'draft' = 'live'
+  ) => {
+    // If discounted price is not provided or is 0, set it to the original price
     if (!data.price.discounted || data.price.discounted <= 0) {
       data.price.discounted = data.price.orignal;
+    }
+
+    // Check if user is logged in
+    if (!customer?.id) {
+      throw new Error(
+        'User not authenticated. Please log in to post products.'
+      );
     }
 
     //Insert images to supabase bucket
@@ -63,26 +73,50 @@ export function useProductForm(onSuccess?: () => void, onError?: () => void) {
       img_urls = img_urls.filter(Boolean);
     }
 
-    // Insert into supabase
+    // Insert into supabase with status and created_by
     const { error } = await supabase.from('products').insert([
       {
-        name: data.name,
-        description: data.description,
+        name: data.name || null,
+        description: data.description || null,
         price: data.price,
-        stock: data.stock,
+        stock: data.stock || 1,
         img_urls,
         category_id: data.category_id,
         subcategory_id: data.subcategory_id,
-        location: data.location,
-        contact_name: data.contact_name,
-        phone_num: data.phone_num,
-        email: data.email,
+        city: data.location || null,
+        contact_name: data.contact_name || null,
+        phone_num: data.phone_num || null,
+        email: data.email || null,
+        status: status,
+        created_by: customer.id, // Set the created_by field to the current user's customer ID
       },
     ]);
-    if (!error && onSuccess) onSuccess();
-    if (error) onError?.();
+
+    if (!error) {
+      // Invalidate the my-ads query to refresh the My Ads page
+      queryClient.invalidateQueries({ queryKey: ['my-ads'] });
+
+      // Also invalidate general products queries to refresh product listings
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['popular-products'] });
+      queryClient.invalidateQueries({ queryKey: ['featured-products'] });
+
+      if (onSuccess && status === 'draft') onSuccess();
+    } else {
+      onError?.();
+    }
+
     return error;
   };
+
+  const onSubmit = async (data: ProductData) => {
+    return submitProduct(data, 'live');
+  };
+
+  const saveAsDraft = async (data: ProductData) => {
+    return submitProduct(data, 'draft');
+  };
+
   const form = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -90,7 +124,7 @@ export function useProductForm(onSuccess?: () => void, onError?: () => void) {
       description: '',
       price: { orignal: 0, discounted: 0, currency: 'USD' },
       stock: 1,
-      img_urls: [],
+      imgUrls: [],
       category_id: undefined,
       subcategory_id: undefined,
       location: '',
@@ -100,5 +134,5 @@ export function useProductForm(onSuccess?: () => void, onError?: () => void) {
     },
   });
 
-  return { ...form, onSubmit };
+  return { ...form, onSubmit, saveAsDraft };
 }

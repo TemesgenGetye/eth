@@ -4,24 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import PaymentModal from './PaymentModal';
 import { getItem } from '../services/db';
-
-interface ProductData {
-  name: string;
-  description: string;
-  price: {
-    orignal: number;
-    discounted?: number;
-    currency: string;
-  };
-  stock: number;
-  imgUrls: File[];
-  category_id: number;
-  subcategory_id: number;
-  location: string;
-  contact_name: string;
-  phone_num: string;
-  email?: string;
-}
+import { ProductData } from '../components/type';
 
 export default function Subscription() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -144,13 +127,14 @@ export default function Subscription() {
                         <div className="flex items-start justify-between">
                           <div>
                             <h4 className="font-semibold text-gray-900">
-                              {productData?.name || 'Product Name'}
+                              {productData?.name || 'Untitled Product'}
                             </h4>
                             <div className="mt-1 space-y-1 text-sm text-gray-600">
                               <div>
                                 Location:{' '}
                                 <span className="font-medium">
-                                  {productData?.location || 'Not specified'}
+                                  {productData?.location ||
+                                    'Location not specified'}
                                 </span>
                               </div>
                               <div>

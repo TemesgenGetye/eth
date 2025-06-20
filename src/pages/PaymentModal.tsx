@@ -7,28 +7,16 @@ import { X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import supabase from '../services/supabase';
+import { ProductData } from '../components/type';
+import { useAuth } from '../Context/AuthContext';
+import { useGetCustomer } from '../hooks/useCustomers';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface PaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
   totalAmount: number;
-  productData?: {
-    name: string;
-    description: string;
-    price: {
-      orignal: number;
-      discounted?: number;
-      currency: string;
-    };
-    stock: number;
-    imgUrls: File[];
-    category_id: number;
-    subcategory_id: number;
-    location: string;
-    contact_name: string;
-    phone_num: string;
-    email?: string;
-  };
+  productData?: ProductData;
 }
 
 interface FormErrors {
@@ -45,6 +33,9 @@ export default function PaymentModal({
   productData,
 }: PaymentModalProps) {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { customer } = useGetCustomer(user?.id || '');
+  const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
     nameOnCard: '',
     cardNumber: '',
@@ -168,6 +159,13 @@ export default function PaymentModal({
       throw new Error('No product data provided');
     }
 
+    // Check if user is logged in
+    if (!customer?.id) {
+      throw new Error(
+        'User not authenticated. Please log in to post products.'
+      );
+    }
+
     // Upload images to Supabase bucket
     let img_urls: string[] = [];
     if (productData.imgUrls && productData.imgUrls.length > 0) {
@@ -194,27 +192,36 @@ export default function PaymentModal({
       img_urls = img_urls.filter(Boolean);
     }
 
-    // Insert product into Supabase with 'live' status
+    // Insert product into Supabase with 'live' status and created_by
     const { error } = await supabase.from('products').insert([
       {
-        name: productData.name,
-        description: productData.description,
+        name: productData.name || null,
+        description: productData.description || null,
         price: productData.price,
-        stock: productData.stock,
+        stock: productData.stock || 1,
         img_urls,
         category_id: productData.category_id,
         subcategory_id: productData.subcategory_id,
-        location: productData.location,
-        contact_name: productData.contact_name,
-        phone_num: productData.phone_num,
-        email: productData.email,
+        city: productData.location || null,
+        contact_name: productData.contact_name || null,
+        phone_num: productData.phone_num || null,
+        email: productData.email || null,
         status: 'live', // Set status to live
+        created_by: customer.id, // Set the created_by field to the current user's customer ID
       },
     ]);
 
     if (error) {
       throw error;
     }
+
+    // Invalidate the my-ads query to refresh the My Ads page
+    queryClient.invalidateQueries({ queryKey: ['my-ads'] });
+
+    // Also invalidate general products queries to refresh product listings
+    queryClient.invalidateQueries({ queryKey: ['products'] });
+    queryClient.invalidateQueries({ queryKey: ['popular-products'] });
+    queryClient.invalidateQueries({ queryKey: ['featured-products'] });
 
     return true;
   };

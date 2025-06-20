@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import {
-  Share2,
   Heart,
   Calendar,
   Gauge,
   ChevronLeft,
   ChevronRight,
   ShoppingCart,
-  User,
   Phone,
   Mail,
   MessageCircle,

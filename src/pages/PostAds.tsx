@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { ArrowLeft, Upload, X } from 'lucide-react';
 import { useProductForm } from '../hooks/useProductForm';
 import useCategories from '../hooks/useCategories';
@@ -23,6 +23,7 @@ export default function PostAdPage() {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { categories = [] } = useCategories();
+  const [isSavingDraft, setIsSavingDraft] = useState(false);
   const {
     register,
     handleSubmit,
@@ -32,6 +33,7 @@ export default function PostAdPage() {
     formState: { errors, isSubmitting },
     reset,
     trigger,
+    saveAsDraft,
   } = useProductForm(
     () => {
       toast.success('Product has been successfully uploaded.');
@@ -92,11 +94,37 @@ export default function PostAdPage() {
         navigate('/pricing'); // Use navigate to go to the next page
       } catch (error) {
         console.error('Failed to save form data to IndexedDB', error);
-        toast.error('Could not save your ad. Please try again.');
+        toast.error('Could not proceed to pricing. Please try again.');
       }
-    } else {
-      // If validation fails, show error message
-      toast.error('Please fill in all required fields correctly.');
+    }
+  };
+
+  // Handle save as draft
+  const handleSaveAsDraft = async () => {
+    // Trigger validation for all fields
+    const isValid = await trigger();
+
+    if (isValid) {
+      setIsSavingDraft(true);
+      // Get the current form data
+      const formData = watch();
+
+      try {
+        // Save as draft to Supabase
+        const error = await saveAsDraft(formData);
+        if (!error) {
+          toast.success('Ad saved as draft successfully!');
+          reset();
+          navigate('/my-ads'); // Navigate to my ads page
+        } else {
+          toast.error('Failed to save draft. Please try again.');
+        }
+      } catch (error) {
+        console.error('Failed to save draft:', error);
+        toast.error('Failed to save draft. Please try again.');
+      } finally {
+        setIsSavingDraft(false);
+      }
     }
   };
 
@@ -116,6 +144,15 @@ export default function PostAdPage() {
         </div>
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-8">
+          {/* Required Fields Note */}
+          <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
+            <p className="text-sm text-blue-800">
+              <strong>Note:</strong> Only Category, Subcategory, and Original
+              Price are required. All other fields are optional and can be
+              filled in later.
+            </p>
+          </div>
+
           {/* Images Section */}
           <div className="rounded-lg border border-gray-200 bg-white p-6">
             <h2 className="mb-4 text-lg font-semibold text-black sm:text-xl">
@@ -157,6 +194,7 @@ export default function PostAdPage() {
             />
             <p className="text-sm text-gray-500">
               Upload up to 10 images. First image will be the main photo.
+              (Optional)
             </p>
             {errors.imgUrls && (
               <p className="text-xs text-red-500">{errors?.imgUrls?.message}</p>
@@ -171,7 +209,7 @@ export default function PostAdPage() {
             <div className="space-y-4">
               <div>
                 <label className="mb-2 block text-sm font-medium text-black">
-                  Product Title *
+                  Product Title
                 </label>
                 <input
                   {...register('name')}
@@ -186,7 +224,7 @@ export default function PostAdPage() {
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-black">
-                  Description *
+                  Description
                 </label>
                 <textarea
                   {...register('description')}
@@ -324,7 +362,7 @@ export default function PostAdPage() {
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-black">
-                  Stock *
+                  Stock
                 </label>
                 <input
                   type="number"
@@ -346,7 +384,7 @@ export default function PostAdPage() {
             <div className="space-y-4">
               <div>
                 <label className="mb-2 block text-sm font-medium text-black">
-                  Location *
+                  Location
                 </label>
                 <Controller
                   name="location"
@@ -378,7 +416,7 @@ export default function PostAdPage() {
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-black">
-                    Contact Name *
+                    Contact Name
                   </label>
                   <input
                     {...register('contact_name')}
@@ -393,7 +431,7 @@ export default function PostAdPage() {
                 </div>
                 <div>
                   <label className="mb-2 block text-sm font-medium text-black">
-                    Phone Number *
+                    Phone Number
                   </label>
                   <input
                     {...register('phone_num')}
@@ -429,9 +467,19 @@ export default function PostAdPage() {
           <div className="flex gap-4 pb-16 pt-4 md:pb-4">
             <button
               type="button"
-              className="flex-1 rounded-lg bg-gray-200 px-6 py-4 font-semibold text-black transition-colors hover:bg-gray-300"
+              disabled={isSavingDraft}
+              onClick={handleSaveAsDraft}
+              className="flex flex-1 items-center justify-center rounded-lg bg-gray-200 px-6 py-4 font-semibold text-black transition-colors hover:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Save as Draft
+              {isSavingDraft ? (
+                <>
+                  <div className="flex w-full items-center justify-center">
+                    <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-gray-600"></div>
+                  </div>
+                </>
+              ) : (
+                'Save as Draft'
+              )}
             </button>
             <button
               type="submit"
