@@ -6,8 +6,10 @@ import { useGetCustomer, useUpdateCustomer } from '../hooks/useCustomers';
 import { useAuth } from '../Context/AuthContext';
 import supabase from '../services/supabase';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../Context/Languge';
 
 export default function CustomerProfile() {
+  const { t } = useLanguage();
   const { user } = useAuth();
   const navigate = useNavigate();
   const { updateCustomerMutate, isPendingCustomer } = useUpdateCustomer();
@@ -57,25 +59,26 @@ export default function CustomerProfile() {
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
+    if (file && user) {
       setIsImageUploading(true);
-
       try {
-        // You can implement actual file upload to Supabase storage here
-        // const { data, error } = await supabase.storage
-        //   .from('avatars')
-        //   .upload(`${user.id}/${file.name}`, file)
+        const filePath = `${user.id}/${Date.now()}_${file.name}`;
+        const { error: uploadError } = await supabase.storage
+          .from('customer')
+          .upload(filePath, file);
 
-        // For now, using FileReader for preview
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const result = e.target?.result as string;
-          setFormData((prev) => ({ ...prev, img_url: result }));
-          setIsImageUploading(false);
-        };
-        reader.readAsDataURL(file);
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from('customer').getPublicUrl(filePath);
+
+        setFormData((prev) => ({ ...prev, img_url: publicUrl }));
       } catch (error) {
         console.error('Error uploading image:', error);
+      } finally {
         setIsImageUploading(false);
       }
     }
@@ -83,6 +86,7 @@ export default function CustomerProfile() {
 
   const handleSave = async () => {
     setProfileData(formData);
+
     if (customer?.id) {
       updateCustomerMutate({ id: customer.id, ...formData });
     }
@@ -137,6 +141,27 @@ export default function CustomerProfile() {
       </div>
     );
   }
+
+  // "navigation": {
+  //       "profile": "الملف الشخصي",
+  //       "myAds": "إعلاناتي",
+  //       "favorites": "المفضلة",
+  //       "verifyAccount": "توثيق الحساب",
+  //       "verified": "موثق",
+  //       "chats": "المحادثات",
+  //       "chatMessagesPlaceholder": "لا توجد رسائل بعد",
+  //       "logout": "تسجيل الخروج",
+  //       "login": "تسجيل الدخول",
+  //       "placeAd": "نشر إعلان",
+  //       "notifications": "الإشعارات",
+  //       "cart": "عربة التسوق",
+  //       "viewAllFavorites": "عرض كل المفضلة",
+  //       "viewAllNotifications": "عرض كل الإشعارات",
+  //       "viewAllCart": "عرض كل العناصر في العربة",
+  //       "noNotifications": "لا توجد إشعارات بعد",
+  //       "noFavorites": "لا توجد عناصر في المفضلة",
+  //       "noCartItems": "عربة التسوق فارغة"
+  //     }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-4">
@@ -268,7 +293,7 @@ export default function CustomerProfile() {
             {/* User Info Header */}
             <div className="mb-8 text-center">
               <h1 className="mb-2 text-3xl font-bold text-gray-900">
-                {formData.name || 'Your Profile'}
+                {formData.name || t('common.yourProfile')}
               </h1>
               <p className="flex items-center justify-center gap-2 text-gray-600">
                 <svg
@@ -310,7 +335,7 @@ export default function CustomerProfile() {
                         d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                       />
                     </svg>
-                    Full Name
+                    {t('common.fullName')}
                   </label>
                   <input
                     id="name"
@@ -320,7 +345,7 @@ export default function CustomerProfile() {
                       setFormData((prev) => ({ ...prev, name: e.target.value }))
                     }
                     className="h-12 w-full rounded-lg border border-gray-200 px-4 text-base transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                    placeholder="Enter your full name"
+                    placeholder={t('common.enterYourFullName')}
                   />
                 </div>
 
@@ -342,7 +367,7 @@ export default function CustomerProfile() {
                         d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                       />
                     </svg>
-                    Email Address
+                    {t('common.emailAddress')}
                   </label>
                   <input
                     id="email"
@@ -350,7 +375,7 @@ export default function CustomerProfile() {
                     value={formData.email}
                     disabled
                     className="h-12 w-full cursor-not-allowed rounded-lg border border-gray-200 bg-gray-50 px-4 text-base text-gray-500"
-                    placeholder="Enter your email address"
+                    placeholder={t('common.enterYourEmailAddress')}
                   />
                 </div>
               </div>
@@ -380,7 +405,7 @@ export default function CustomerProfile() {
                       d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                     />
                   </svg>
-                  Location
+                  {t('common.location')}
                 </label>
                 <input
                   id="location"
@@ -393,7 +418,7 @@ export default function CustomerProfile() {
                     }))
                   }
                   className="h-12 w-full rounded-lg border border-gray-200 px-4 text-base transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                  placeholder="Enter your location"
+                  placeholder={t('common.enterYourLocation')}
                 />
               </div>
 
@@ -425,7 +450,7 @@ export default function CustomerProfile() {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                       </svg>
-                      Saving Changes...
+                      {t('common.savingChanges')}
                     </>
                   ) : (
                     <>
@@ -442,7 +467,7 @@ export default function CustomerProfile() {
                           d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"
                         />
                       </svg>
-                      Save Changes
+                      {t('common.saveChanges')}
                     </>
                   )}
                 </button>
@@ -465,7 +490,7 @@ export default function CustomerProfile() {
                       d="M6 18L18 6M6 6l12 12"
                     />
                   </svg>
-                  Cancel
+                  {t('common.cancel')}
                 </button>
               </div>
 
@@ -488,7 +513,7 @@ export default function CustomerProfile() {
                       d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                     />
                   </svg>
-                  Sign Out
+                  {t('common.signOut')}
                 </button>
               </div>
             </div>

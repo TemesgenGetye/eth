@@ -15,13 +15,6 @@ import PostAds from './pages/PostAds';
 import OrderConformation from './pages/Order-configration';
 import Favourites from './pages/Favourites';
 import SearchResult from './pages/SearchResult';
-import Motor from './pages/Motor';
-import Property from './pages/Property';
-import Furniture from './pages/Furniture';
-import Classified from './pages/Classified';
-import Job from './pages/Job';
-import Community from './pages/Community';
-import Phone from './pages/Phone';
 import Catagory from './pages/Catagory';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfUse from './pages/TermsOfUse';
@@ -32,7 +25,6 @@ import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import MobileBottomNav from './components/layout/MobileBottomNav';
 import ScrollToTop from './components/ui/ScrollToTop';
-import { LanguageProvider } from './Context/Languge';
 import CatagoryInfo from './pages/Catagory';
 import Menu from './pages/Menu';
 
@@ -85,13 +77,6 @@ const AppContent = () => {
           <Route path="/order-confirmation" element={<OrderConformation />} />
           <Route path="/favourites" element={<Favourites />} />
           <Route path="/search" element={<SearchResult />} />
-          <Route path="/motors" element={<Motor />} />
-          <Route path="/property" element={<Property />} />
-          <Route path="/furniture" element={<Furniture />} />
-          <Route path="/classified" element={<Classified />} />
-          <Route path="/job" element={<Job />} />
-          <Route path="/community" element={<Community />} />
-          <Route path="/mobile-phones" element={<Phone />} />
           <Route path="/category" element={<Catagory />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-use" element={<TermsOfUse />} />
@@ -101,11 +86,7 @@ const AppContent = () => {
           <Route path="/menu" element={<Menu />} />
         </Routes>
       </main>
-      {!shouldHideAllNav && !isProfilePage && (
-        <LanguageProvider>
-          <Footer />
-        </LanguageProvider>
-      )}
+      {!shouldHideAllNav && !isProfilePage && <Footer />}
       {!shouldHideAllNav && <MobileBottomNav />}
     </div>
   );

@@ -11,8 +11,10 @@ import { useNavigate } from 'react-router-dom';
 import { useFavourite } from '../Context/Favourite';
 import { cleanString } from '../services/utils';
 import { useFavouriteItems } from '../hooks/store';
+import { useLanguage } from '../Context/Languge';
 
 export default function Favourites() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const [imageIndexes, setImageIndexes] = useState<{ [key: string]: number }>(
@@ -20,7 +22,6 @@ export default function Favourites() {
   );
 
   const { favourite, setFavourite } = useFavourite();
-  // console.log('favorite', favourite);
   const { favoriteProducts } = useFavouriteItems();
 
   const handleImageChange = (
@@ -55,21 +56,21 @@ export default function Favourites() {
   return (
     <div className="mx-auto mb-5 grid max-w-7xl grid-cols-1 gap-4">
       <div className="p-10">
-        <p className="text-lg font-semibold ">My Favourites</p>
+        <p className="text-lg font-semibold">{t('common.myFavourites')}</p>
         <p className="text-sm text-gray-500">
-          Your favourite items will appear here.
+          {t('common.favouriteItemsMessage')}
         </p>
       </div>
       <div className="mx-auto flex w-full max-w-md flex-row items-center justify-end gap-2 p-4">
         <input
           type="text"
-          placeholder="Search..."
+          placeholder={t('common.searchPlaceholder')}
           className="w-full flex-1 rounded-lg border border-gray-300 p-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          aria-label="Search"
+          aria-label={t('common.search')}
         />
         <button
           className="rounded-lg bg-gray-100 p-2 text-gray-600 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          aria-label="Filter"
+          aria-label={t('common.filter')}
         >
           <Filter className="h-5 w-5" />
         </button>
@@ -136,37 +137,36 @@ export default function Favourites() {
                     <div className="flex items-center space-x-2">
                       <span className="text-2xl font-bold">
                         {product.price.discounted === product.price.orignal ? (
-                          <span>{product.price.orignal} AED</span>
+                          <span>
+                            {product.price.orignal} {t('common.aed')}
+                          </span>
                         ) : (
                           <>
-                            <span>{product.price.discounted} AED </span>
+                            <span>
+                              {product.price.discounted} {t('common.aed')}{' '}
+                            </span>
                             <span>•</span>
                             <span className="text-gray-500 line-through">
                               {product.price.orignal}
                             </span>
-                            <span>AED</span>
+                            <span> {t('common.aed')}</span>
                             <div className="text-red-500">
                               {Number(
                                 product.price.orignal - product.price.discounted
                               ).toFixed(2)}{' '}
-                              AED Downpayment
+                              {t('common.aedDownpayment')}
                             </div>
                           </>
                         )}
                       </span>
                       {product.stock > 0 && (
                         <span className="rounded bg-[#40b740] px-2 py-0.5 text-xs font-medium text-white">
-                          IN STOCK ( {product.stock})
+                          {t('common.inStock')} ({product.stock})
                         </span>
                       )}
                     </div>
-                    <div className="flex flex-col items-start ">
-                      <span>• {product.slug || 'N/A'}</span>
-                      {/* <p className="cursor-pointer text-sm text-blue-500 hover:underline">
-                        {item.variants.length > 0
-                          ? item.variants.length + ' variants'
-                          : ''}
-                      </p> */}
+                    <div className="flex flex-col items-start">
+                      <span>• {product.slug || t('common.notAvailable')}</span>
                     </div>
                   </div>
                   <div className="flex space-x-2">
@@ -176,6 +176,7 @@ export default function Favourites() {
                         e.stopPropagation();
                         // Handle share logic
                       }}
+                      aria-label={t('common.share')}
                     >
                       <Share2 className="h-4 w-4" />
                     </button>
@@ -186,7 +187,7 @@ export default function Favourites() {
                       }}
                     >
                       {favourite.some((fav) => fav === product.id) ? (
-                        <Heart className="h-5 w-5  " fill="red" />
+                        <Heart className="h-5 w-5" fill="red" />
                       ) : (
                         <Heart className="h-5 w-5" />
                       )}
@@ -196,7 +197,9 @@ export default function Favourites() {
                 <p className="line-clamp-2 pr-10 text-sm text-gray-600">
                   {product.description}
                 </p>
-                <div className="space-y-2 text-sm text-gray-500">{'dubai'}</div>
+                <div className="space-y-2 text-sm text-gray-500">
+                  {t('common.dubai')}
+                </div>
               </div>
             </div>
           </div>

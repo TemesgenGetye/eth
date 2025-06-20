@@ -2,10 +2,12 @@ import useCategories from '../../hooks/useCategories';
 import Category from '../Category';
 import { CategoryType } from '../type';
 import useMediaQuery from '../../hooks/useMediaQuery';
+import { useLanguage } from '../../Context/Languge';
 
 function ListForHome() {
   const { categories, isLoading } = useCategories();
   const isMdUp = useMediaQuery('(min-width: 768px)');
+  const { t } = useLanguage();
 
   if (isLoading) {
     return (
@@ -32,8 +34,8 @@ function ListForHome() {
     <div className="bg-white py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-5 lg:px-6">
         <div className="flex gap-2">
-          <h2 className="mb-8 hidden text-2xl font-semibold text-gray-800 md:block">
-            All Categories
+          <h2 className="mb-8 text-2xl font-semibold text-gray-800">
+            {t('common.viewAllCategories')}
           </h2>
           <div className="hidden md:block">
             <img

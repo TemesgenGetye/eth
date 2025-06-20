@@ -206,7 +206,6 @@ export default function PaymentModal({
         contact_name: productData.contact_name || null,
         phone_num: productData.phone_num || null,
         email: productData.email || null,
-        status: 'live', // Set status to live
         created_by: customer.id, // Set the created_by field to the current user's customer ID
       },
     ]);

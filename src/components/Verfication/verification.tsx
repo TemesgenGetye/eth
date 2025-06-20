@@ -10,11 +10,11 @@ import {
   Video,
   ThumbsUp,
   ShieldCheck,
-  Lock,
 } from 'lucide-react';
 import supabase from '../../services/supabase';
 import { useGetCustomer, useUpdateCustomer } from '../../hooks/useCustomers';
 import { useAuth } from '../../Context/AuthContext';
+import { useLanguage } from '../../Context/Languge';
 
 import { useVerficationModal } from '../../Context/VerficationModal';
 
@@ -39,6 +39,7 @@ interface CapturedMedia {
 }
 
 const VerificationBar = () => {
+  const { t } = useLanguage();
   const { open, setOpen } = useVerficationModal();
   const [step, setStep] = useState<VerificationStep>('initial');
   const [selectedIdType, setSelectedIdType] = useState<'emirates' | 'passport'>(
@@ -487,14 +488,14 @@ const VerificationBar = () => {
               />
             </div>
             <h2 className="mb-4 text-center text-2xl font-bold text-gray-900">
-              Get verified on 888Market!
+              {t('common.getVerifiedOn888Market')}
             </h2>
             <div className="mb-2 flex flex-row items-center justify-center gap-2 text-center text-base font-medium text-gray-700">
-              <span className="text-sm">Build Trust</span>
+              <span className="text-sm">{t('common.buildTrust')}</span>
               <span className="mx-1 text-lg font-bold">•</span>
-              <span className="text-sm">Gain Visibility</span>
+              <span className="text-sm">{t('common.gainVisibility')}</span>
               <span className="mx-1 text-lg font-bold">•</span>
-              <span className="text-sm">Unlock Rewards</span>
+              <span className="text-sm">{t('common.unlockRewards')}</span>
             </div>
             <hr className="my-6 w-full border-white" />
             <div className="mb-6 flex w-full flex-col gap-6">
@@ -504,10 +505,10 @@ const VerificationBar = () => {
                 </div>
                 <div>
                   <div className="text-lg font-semibold text-gray-900">
-                    Quick & Simple
+                    {t('common.quickAndSimple')}
                   </div>
                   <div className="text-sm text-gray-600">
-                    It only takes a few minutes
+                    {t('common.itOnlyTakesFewMinutes')}
                   </div>
                 </div>
               </div>
@@ -517,10 +518,10 @@ const VerificationBar = () => {
                 </div>
                 <div>
                   <div className="text-lg font-semibold text-gray-900">
-                    Secure
+                    {t('common.secure')}
                   </div>
                   <div className="text-sm text-gray-600">
-                    Your ID information stays private
+                    {t('common.yourIdInfoStaysPrivate')}
                   </div>
                 </div>
               </div>
@@ -531,13 +532,13 @@ const VerificationBar = () => {
                 className="rounded-lg border border-gray-300 bg-white px-8 py-2 font-medium text-gray-700 hover:bg-gray-100"
                 onClick={handleClose}
               >
-                Later
+                {t('common.later')}
               </button>
               <button
                 className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-8 py-2 font-semibold text-white hover:bg-blue-700"
                 onClick={handleGetVerified}
               >
-                <span>Get Verified</span>
+                <span>{t('common.getVerified')}</span>
                 <svg
                   width="18"
                   height="18"
@@ -565,7 +566,7 @@ const VerificationBar = () => {
               <X className="h-6 w-6" />
             </button>
             <h2 className="mb-6 text-center text-xl font-bold">
-              Select an ID type to add
+              {t('common.selectIdTypeToAdd')}
             </h2>
             {/* Progress bar */}
             <div className="mb-6 flex w-full items-center">
@@ -577,9 +578,7 @@ const VerificationBar = () => {
               <div className="ml-1 h-1 flex-1 rounded bg-gray-200"></div>
             </div>
             <p className="mb-6 text-center text-base text-gray-600">
-              {
-                "We'll take 2 pictures of your ID. What ID would you like to use?"
-              }
+              {t('common.weWillTake2Pictures')}
             </p>
             <div className="mb-6 space-y-4">
               <div
@@ -595,9 +594,11 @@ const VerificationBar = () => {
                     <span className="text-xs text-white">ID</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold">Emirates ID</span>
+                    <span className="font-semibold">
+                      {t('common.emiratesId')}
+                    </span>
                     <span className="rounded bg-blue-100 px-2 py-1 text-xs text-blue-600">
-                      Recommended
+                      {t('common.recommended')}
                     </span>
                   </div>
                 </div>
@@ -626,7 +627,7 @@ const VerificationBar = () => {
                     <span className="text-xs text-white">PP</span>
                   </div>
                   <span className="font-semibold">
-                    Passport & Residence Visa
+                    {t('common.passportAndResidenceVisa')}
                   </span>
                 </div>
                 <div
@@ -644,15 +645,12 @@ const VerificationBar = () => {
             </div>
             <div className="mb-2 text-sm text-gray-600">
               <span className="text-[#888]">
-                888 Verified is an exclusive service for UAE residents. Your
-                data will be processed securely and will not be disclosed to any
-                third party.
+                {t('common.verifiedExclusiveService')}
               </span>
             </div>
             <div className="mb-6 text-sm text-gray-600">
               <span className="text-[#888]">
-                This helps us prevent anyone from creating fake accounts using
-                your details.
+                {t('common.preventsFakeAccounts')}
               </span>
             </div>
 
@@ -661,7 +659,7 @@ const VerificationBar = () => {
                 className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-8 py-3 text-sm font-semibold text-white hover:bg-blue-700"
                 onClick={handleContinueFromIdSelection}
               >
-                <span>Continue</span>
+                <span>{t('common.continue')}</span>
                 <svg
                   width="18"
                   height="18"
@@ -689,7 +687,7 @@ const VerificationBar = () => {
               <X className="h-6 w-6" />
             </button>
             <h2 className="mb-6 text-center text-xl font-bold">
-              Take the first photo - front of the ID
+              {t('common.takeFirstPhotoFront')}
             </h2>
 
             <div className="mb-6 flex w-full items-center">
@@ -705,13 +703,17 @@ const VerificationBar = () => {
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-black text-sm font-bold text-white">
                   1
                 </div>
-                <span className="text-sm font-semibold">Front of ID</span>
+                <span className="text-sm font-semibold">
+                  {t('common.frontOfId')}
+                </span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-300 text-sm font-bold text-gray-600">
                   2
                 </div>
-                <span className="text-sm text-gray-500">Back of ID</span>
+                <span className="text-sm text-gray-500">
+                  {t('common.backOfId')}
+                </span>
               </div>
             </div>
 
@@ -723,15 +725,15 @@ const VerificationBar = () => {
               />
             </div>
 
-            <div className="mb-6 flex items-center gap-2 text-base text-gray-600">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100">
-                <Lock className="h-4 w-4 text-blue-600" />
-              </span>
-              <span>Ensure the details are clear, and ID is not expired</span>
+            <div className="mb-6 flex items-start gap-2 text-sm text-gray-600">
+              <div className="mt-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-blue-500">
+                <span className="text-xs text-white">!</span>
+              </div>
+              <span>{t('common.ensureDetailsClear')}</span>
             </div>
             {/* Try the app */}
             <div className="mb-6 flex cursor-pointer items-center gap-2 text-base text-gray-800">
-              <span>Try the app</span>
+              <span>{t('common.tryApp')}</span>
               <ChevronDown className="h-4 w-4 text-gray-600" />
             </div>
             {/* Take Photo Button */}
@@ -740,7 +742,7 @@ const VerificationBar = () => {
                 className="flex items-center gap-1 rounded-lg bg-blue-600 px-4 py-3  text-sm font-semibold text-white hover:bg-blue-700"
                 onClick={() => handleTakePhoto('front')}
               >
-                Take Photo
+                {t('common.takePhoto')}
                 <svg
                   width="18"
                   height="18"
@@ -769,8 +771,8 @@ const VerificationBar = () => {
             </button>
             <h2 className="mb-4 text-center text-xl font-bold">
               {currentPhotoType === 'front'
-                ? 'Take the first photo - front of the ID'
-                : 'Second photo - flip the ID'}
+                ? t('common.takeFirstPhotoFront')
+                : t('secondPhotoFlipId')}
             </h2>
 
             <div className="mb-4">
@@ -799,7 +801,9 @@ const VerificationBar = () => {
                     <Check className="h-4 w-4" />
                   )}
                 </div>
-                <span className="text-sm font-semibold">Front of ID</span>
+                <span className="text-sm font-semibold">
+                  {t('common.frontOfId')}
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <div
@@ -811,7 +815,9 @@ const VerificationBar = () => {
                 >
                   2
                 </div>
-                <span className="text-sm text-gray-500">Back of ID</span>
+                <span className="text-sm text-gray-500">
+                  {t('common.backOfId')}
+                </span>
               </div>
             </div>
 
@@ -822,7 +828,7 @@ const VerificationBar = () => {
                   className="mt-2 text-sm text-blue-600 underline"
                   onClick={initializeCamera}
                 >
-                  Try Again
+                  {t('common.tryAgain')}
                 </button>
               </div>
             ) : (
@@ -840,7 +846,7 @@ const VerificationBar = () => {
                   onClick={capturePhoto}
                 >
                   <Camera className="h-4 w-4" />
-                  Capture
+                  {t('common.capture')}
                 </button>
               </div>
             )}
@@ -849,9 +855,7 @@ const VerificationBar = () => {
               <div className="mt-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-blue-500">
                 <span className="text-xs text-white">!</span>
               </div>
-              <span>
-                Position your ID clearly in the frame and ensure good lighting
-              </span>
+              <span>{t('common.positionIdClearly')}</span>
             </div>
           </div>
         );
@@ -860,8 +864,8 @@ const VerificationBar = () => {
           <div className="relative w-full max-w-2xl rounded-xl bg-white p-4 text-gray-800 shadow-lg">
             <h2 className="mb-4 text-center text-xl font-bold">
               {currentPhotoType === 'front'
-                ? 'Take the first photo - front of the ID'
-                : 'Second photo - flip the ID'}
+                ? t('common.takeFirstPhotoFront')
+                : t('secondPhotoFlipId')}
             </h2>
 
             <div className="mb-4">
@@ -890,7 +894,9 @@ const VerificationBar = () => {
                     <Check className="h-4 w-4" />
                   )}
                 </div>
-                <span className="text-sm font-semibold">Front of ID</span>
+                <span className="text-sm font-semibold">
+                  {t('common.frontOfId')}
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <div
@@ -902,7 +908,9 @@ const VerificationBar = () => {
                 >
                   2
                 </div>
-                <span className="text-sm text-gray-500">Back of ID</span>
+                <span className="text-sm text-gray-500">
+                  {t('common.backOfId')}
+                </span>
               </div>
             </div>
 
@@ -913,7 +921,7 @@ const VerificationBar = () => {
                   className="mt-2 text-sm text-red-600 underline"
                   onClick={initializeCamera}
                 >
-                  Try Again
+                  {t('common.tryAgain')}
                 </button>
               </div>
             ) : (
@@ -931,7 +939,7 @@ const VerificationBar = () => {
                   onClick={capturePhoto}
                 >
                   <Camera className="h-4 w-4" />
-                  Capture
+                  {t('common.capture')}
                 </button>
               </div>
             )}
@@ -940,9 +948,7 @@ const VerificationBar = () => {
               <div className="mt-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-blue-500">
                 <span className="text-xs text-white">!</span>
               </div>
-              <span>
-                Position your ID clearly in the frame and ensure good lighting
-              </span>
+              <span>{t('common.positionIdClearly')}</span>
             </div>
           </div>
         );
@@ -958,8 +964,8 @@ const VerificationBar = () => {
             </button>
             <h2 className="mb-4 text-center text-xl font-bold">
               {currentPhotoType === 'front'
-                ? 'Front photo captured'
-                : 'Back photo captured'}
+                ? t('common.frontPhotoCaptured')
+                : t('common.backPhotoCaptured')}
             </h2>
 
             <div className="mb-4">
@@ -976,14 +982,17 @@ const VerificationBar = () => {
             <div className="mb-4 rounded-lg border border-green-200 bg-green-50 p-4">
               <div className="mb-2 flex items-center gap-2">
                 <Check className="h-5 w-5 text-green-600" />
-                <span className="font-semibold text-green-800">Captured</span>
+                <span className="font-semibold text-green-800">
+                  {t('common.captured')}
+                </span>
               </div>
               <div className="text-sm text-green-700">
                 <p>
-                  Is the {currentPhotoType} of the ID clear with details
-                  visible?
+                  {currentPhotoType === 'front'
+                    ? t('common.isFrontClear')
+                    : t('common.isBackClear')}
                 </p>
-                <p>Is the ID valid?</p>
+                <p>{t('common.isIdValid')}</p>
               </div>
             </div>
 
@@ -998,7 +1007,7 @@ const VerificationBar = () => {
                   className="absolute bottom-2 left-2 rounded bg-black bg-opacity-50 px-3 py-1 text-sm text-white hover:bg-opacity-70"
                   onClick={handleTryAgain}
                 >
-                  Retake
+                  {t('common.retake')}
                 </button>
               </div>
             )}
@@ -1007,7 +1016,7 @@ const VerificationBar = () => {
               <div className="mt-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-blue-500">
                 <span className="text-xs text-white">!</span>
               </div>
-              <span>Ensure the details are clear, and ID is not expired</span>
+              <span>{t('common.ensureDetailsClear')}</span>
             </div>
 
             <div className="flex gap-4">
@@ -1015,13 +1024,13 @@ const VerificationBar = () => {
                 className="flex-1 rounded-lg border border-gray-300 py-2 font-semibold hover:bg-gray-50"
                 onClick={handleTryAgain}
               >
-                Try Again
+                {t('common.tryAgain')}
               </button>
               <button
                 className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-blue-600 py-2 font-semibold text-white hover:bg-blue-700"
                 onClick={handleConfirmPhoto}
               >
-                Confirm
+                {t('common.confirm')}
                 <span>→</span>
               </button>
             </div>
@@ -1039,7 +1048,7 @@ const VerificationBar = () => {
             </button>
 
             <h2 className="mb-6 text-center text-xl font-bold">
-              Second photo - flip the ID
+              {t('common.secondPhotoFlipId')}
             </h2>
 
             <div className="mb-6">
@@ -1053,23 +1062,27 @@ const VerificationBar = () => {
 
             <div className="mb-8 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-500 text-sm text-white">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-500 text-sm font-bold text-white">
                   <Check className="h-4 w-4" />
                 </div>
-                <span className="text-sm text-gray-500">Front of ID</span>
+                <span className="text-sm text-gray-500">
+                  {t('common.frontOfId')}
+                </span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-black text-sm font-bold text-white">
                   2
                 </div>
-                <span className="text-sm font-semibold">Back of ID</span>
+                <span className="text-sm font-semibold">
+                  {t('common.backOfId')}
+                </span>
               </div>
             </div>
 
             <div className="mx-auto mb-8 flex h-[60%] w-[60%] justify-center rounded-2xl">
               <img
                 src="/id_back.png"
-                alt="Back of Emirates ID illustration"
+                alt="Emirates ID back illustration"
                 className="rounded-lg shadow-md"
               />
             </div>
@@ -1078,17 +1091,19 @@ const VerificationBar = () => {
               <div className="mt-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-blue-500">
                 <span className="text-xs text-white">!</span>
               </div>
-              <span>Ensure the details are clear, and ID is not expired</span>
+              <span>{t('common.ensureDetailsClear')}</span>
             </div>
 
-            <button
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700"
-              onClick={() => handleTakePhoto('back')}
-            >
-              <Camera className="h-5 w-5" />
-              Take Photo
-              <span>→</span>
-            </button>
+            <div className="flex w-full justify-end">
+              <button
+                className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-8 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+                onClick={() => handleTakePhoto('back')}
+              >
+                <Camera className="h-5 w-5" />
+                {t('common.takePhoto')}
+                <span>→</span>
+              </button>
+            </div>
           </div>
         );
 
@@ -1103,7 +1118,7 @@ const VerificationBar = () => {
             </button>
 
             <h2 className="mb-6 text-center text-xl font-bold">
-              {"You're almost there!"}
+              {t('common.almostThere')}
             </h2>
 
             <div className="mb-6">
@@ -1116,16 +1131,15 @@ const VerificationBar = () => {
             </div>
 
             <h3 className="mb-4 text-lg font-semibold">
-              Record a video to complete verification
+              {t('common.recordVideoToCompleteVerification')}
             </h3>
 
             <p className="mb-6 text-gray-600">
-              Position your face in the center of the video, it will just take 5
-              seconds.
+              {t('common.positionFaceInCenterVideo')}
             </p>
 
             <div className="mb-6">
-              <h4 className="mb-2 font-semibold">{"Here's an example:"}</h4>
+              <h4 className="mb-2 font-semibold">{t('common.videoExample')}</h4>
               <div className="flex justify-center rounded-lg p-4">
                 <img
                   src="/person.png"
@@ -1136,9 +1150,9 @@ const VerificationBar = () => {
             </div>
 
             <div className="mb-6">
-              <h4 className="mb-2 font-semibold">Tip</h4>
+              <h4 className="mb-2 font-semibold">{t('common.tip')}</h4>
               <p className="text-sm text-gray-600">
-                Make sure you are in a well lit room with a plain background
+                {t('common.makeSureWellLitRoomPlainBackground')}
               </p>
             </div>
 
@@ -1147,7 +1161,7 @@ const VerificationBar = () => {
               onClick={handleOpenCamera}
             >
               <Video className="h-5 w-5" />
-              Open Camera
+              {t('common.openCamera')}
               <span>→</span>
             </button>
           </div>
@@ -1163,40 +1177,40 @@ const VerificationBar = () => {
               <X className="h-6 w-6" />
             </button>
 
-            <h2 className="mb-4 text-center text-xl font-bold">Selfie Video</h2>
+            <h2 className="mb-4 text-center text-xl font-bold">
+              {t('common.selfieVideo')}
+            </h2>
 
             <div className="mb-4">
               <div className="h-2 w-full rounded-full bg-gray-200">
                 <div
                   className="h-2 rounded-full bg-blue-600"
-                  style={{ width: '90%' }}
+                  style={{ width: '95%' }}
                 ></div>
               </div>
             </div>
 
             <p className="mb-4 text-center text-gray-600">
-              Ensure your face is in the centre of the video
+              {t('common.ensureFaceInCentreVideo')}
             </p>
 
             {isRecording && (
-              <div className="mb-4 text-center">
-                <div className="inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1 text-blue-600">
-                  <div className="h-2 w-2 animate-pulse rounded-full bg-blue-600"></div>
-                  <span className="text-sm font-semibold">
-                    Recording: {recordingTime}s / 5s
-                  </span>
-                </div>
+              <div className="mb-4 flex items-center justify-center gap-2 rounded-lg bg-red-50 p-3">
+                <div className="h-2 w-2 animate-pulse rounded-full bg-blue-600"></div>
+                <span className="text-sm font-semibold">
+                  {t('common.recording')} {recordingTime}s / 5s
+                </span>
               </div>
             )}
 
             {cameraError ? (
-              <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
-                <p className="text-sm text-blue-600">{cameraError}</p>
+              <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
+                <p className="text-sm text-red-600">{cameraError}</p>
                 <button
-                  className="mt-2 text-sm text-blue-600 underline"
+                  className="mt-2 text-sm text-red-600 underline"
                   onClick={initializeCamera}
                 >
-                  Try Again
+                  {t('common.tryAgain')}
                 </button>
               </div>
             ) : (
@@ -1217,7 +1231,9 @@ const VerificationBar = () => {
                   onClick={handleRecord}
                 >
                   <Video className="h-4 w-4" />
-                  {isRecording ? 'Stop Recording' : 'Start Recording'}
+                  {isRecording
+                    ? t('common.stopRecording')
+                    : t('common.startRecording')}
                 </button>
               </div>
             )}
@@ -1225,7 +1241,9 @@ const VerificationBar = () => {
             {capturedMedia.videoFrames &&
               capturedMedia.videoFrames.length > 0 && (
                 <div className="mb-4">
-                  <p className="mb-2 text-sm text-gray-600">Video preview:</p>
+                  <p className="mb-2 text-sm text-gray-600">
+                    {t('common.videoPreview')}:
+                  </p>
                   <img
                     src={capturedMedia.videoFrames[0] || '/placeholder.svg'}
                     alt="Video frame"
@@ -1243,7 +1261,7 @@ const VerificationBar = () => {
               onClick={() => handleSubmitVideo()}
               disabled={!capturedMedia.videoBlob}
             >
-              Submit Video
+              {t('common.submitVideo')}
               <span>→</span>
             </button>
           </div>
@@ -1268,18 +1286,22 @@ const VerificationBar = () => {
                 </div>
               </div>
               <h2 className="mb-4 text-2xl font-bold">
-                Uploading {uploadProgress}%
+                {t('common.uploading')} {uploadProgress}%
               </h2>
 
               {(capturedMedia.frontPhoto ||
                 capturedMedia.backPhoto ||
                 capturedMedia.videoFrames) && (
                 <div className="mb-6 rounded-lg bg-gray-50 p-4">
-                  <p className="mb-2 text-sm text-gray-600">Submitted media:</p>
+                  <p className="mb-2 text-sm text-gray-600">
+                    {t('common.submittedMedia')}:
+                  </p>
                   <div className="grid grid-cols-3 gap-2">
                     {capturedMedia.frontPhoto && (
                       <div>
-                        <p className="text-xs text-gray-500">Front ID</p>
+                        <p className="text-xs text-gray-500">
+                          {t('common.frontId')}
+                        </p>
                         <img
                           src={capturedMedia.frontPhoto || './no-picture.png'}
                           alt="Front ID"
@@ -1290,7 +1312,9 @@ const VerificationBar = () => {
                     )}
                     {capturedMedia.backPhoto && (
                       <div>
-                        <p className="text-xs text-gray-500">Back ID</p>
+                        <p className="text-xs text-gray-500">
+                          {t('common.backId')}
+                        </p>
                         <img
                           src={capturedMedia.backPhoto || './no-picture.png'}
                           alt="Back ID"
@@ -1302,7 +1326,9 @@ const VerificationBar = () => {
                     {capturedMedia.videoFrames &&
                       capturedMedia.videoFrames[0] && (
                         <div>
-                          <p className="text-xs text-gray-500">Video</p>
+                          <p className="text-xs text-gray-500">
+                            {t('common.video')}
+                          </p>
                           <img
                             src={
                               capturedMedia.videoFrames[0] || './no-picture.png'
@@ -1331,22 +1357,22 @@ const VerificationBar = () => {
               </div>
 
               <h2 className="mb-6 text-2xl font-bold">
-                Verification request submitted successfully
+                {t('common.verificationRequestSubmitted')}
               </h2>
 
               <div className="mb-6 text-left">
                 <p className="mb-4 text-gray-600">
-                  Your verification request is currently being reviewed.
+                  {t('common.requestBeingReviewed')}
                 </p>
                 <p className="mb-4 text-gray-600">
-                  You can always review your status from your{' '}
+                  {t('common.reviewStatusFromProfile')}
                   <span className="cursor-pointer text-blue-500 underline">
-                    profile section.
+                    {t('common.profileSection')}
                   </span>
                 </p>
-                <p className="mb-4 text-gray-600">Got questions?</p>
+                <p className="mb-4 text-gray-600">{t('common.gotQuestions')}</p>
                 <p className="cursor-pointer text-blue-500 underline">
-                  Contact customer support
+                  {t('common.contactCustomerSupport')}
                 </p>
               </div>
 
@@ -1354,11 +1380,15 @@ const VerificationBar = () => {
                 capturedMedia.backPhoto ||
                 capturedMedia.videoFrames) && (
                 <div className="mb-6 rounded-lg bg-gray-50 p-4">
-                  <p className="mb-2 text-sm text-gray-600">Submitted media:</p>
+                  <p className="mb-2 text-sm text-gray-600">
+                    {t('common.submittedMedia')}:
+                  </p>
                   <div className="grid grid-cols-3 gap-2">
                     {capturedMedia.frontPhoto && (
                       <div>
-                        <p className="text-xs text-gray-500">Front ID</p>
+                        <p className="text-xs text-gray-500">
+                          {t('common.frontId')}
+                        </p>
                         <img
                           src={capturedMedia.frontPhoto || './no-picture.png'}
                           alt="Front ID"
@@ -1369,7 +1399,9 @@ const VerificationBar = () => {
                     )}
                     {capturedMedia.backPhoto && (
                       <div>
-                        <p className="text-xs text-gray-500">Back ID</p>
+                        <p className="text-xs text-gray-500">
+                          {t('common.backId')}
+                        </p>
                         <img
                           src={capturedMedia.backPhoto || './no-picture.png'}
                           alt="Back ID"
@@ -1381,7 +1413,9 @@ const VerificationBar = () => {
                     {capturedMedia.videoFrames &&
                       capturedMedia.videoFrames[0] && (
                         <div>
-                          <p className="text-xs text-gray-500">Video</p>
+                          <p className="text-xs text-gray-500">
+                            {t('common.video')}
+                          </p>
                           <img
                             src={
                               capturedMedia.videoFrames[0] || './no-picture.png'
@@ -1400,7 +1434,7 @@ const VerificationBar = () => {
                 className="w-full rounded-lg bg-gray-800 py-3 font-semibold text-white hover:bg-gray-900"
                 onClick={handleFinalOk}
               >
-                OK
+                {t('common.ok')}
               </button>
             </div>
           </div>
@@ -1433,15 +1467,14 @@ const VerificationBar = () => {
             <CircleCheckBig />
           </span>
           <span className="text-sm md:text-sm">
-            Join us in building a safer community. Get verified to boost your
-            credibility and assist us in creating trust amongst our users!
+            {t('common.joinUsBuildingSafer')}
           </span>
         </div>
         <button
           className="ml-4 rounded-xl px-5 py-1 text-sm text-white ring-1 ring-white transition-colors hover:bg-blue-100 hover:text-blue-600"
           onClick={() => setOpen(true)}
         >
-          Verify now
+          {t('common.verifyNow')}
         </button>
       </div>
 

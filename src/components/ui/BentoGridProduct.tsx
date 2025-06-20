@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../../Context/Languge';
 
 interface Blog {
   id: number;
@@ -9,55 +10,56 @@ interface Blog {
   link: string;
 }
 
-const blogs: Blog[] = [
-  {
-    id: 1,
-    title: 'Downtown Dubai',
-    description: "Home to the world's tallest tower and biggest mall",
-    image:
-      'https://images.unsplash.com/photo-1589371315231-096e33e8c55e?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    link: '/',
-  },
-  {
-    id: 2,
-    title: 'The Palm Jumeirah',
-    description: 'Live on the 8th wonder of the world. Enough said!',
-    image:
-      'https://images.unsplash.com/photo-1528702748617-c64d49f918af?q=80&w=2927&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    link: '/',
-  },
-  {
-    id: 3,
-    title: 'Business Bay',
-    description: 'A centrally-located district adorning the Dubai creek',
-    image:
-      'https://images.unsplash.com/photo-1554203576-3b7d50b086ee?q=80&w=3276&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    link: '/',
-  },
-  {
-    id: 4,
-    title: 'Dubai Silicon Oasis',
-    description: 'A family-friendly suburb bursting with amenities',
-    image:
-      'https://plus.unsplash.com/premium_photo-1689596510917-d337f077d559?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    link: '/',
-  },
-  {
-    id: 5,
-    title: 'JLT Jumeirah Lake Towers',
-    description: 'Walk freely among high rises overlooking lakes',
-    image:
-      'https://images.unsplash.com/photo-1667716757139-aa1d88d0b795?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    link: '/',
-  },
-];
-
 export default function SolidBento() {
+  const { t } = useLanguage();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const blogs: Blog[] = [
+    {
+      id: 1,
+      title: t('common.downtownDubai'),
+      description: t('common.downtownDubaiDesc'),
+      image:
+        'https://images.unsplash.com/photo-1589371315231-096e33e8c55e?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      link: '/',
+    },
+    {
+      id: 2,
+      title: t('common.palmJumeirah'),
+      description: t('common.palmJumeirahDesc'),
+      image:
+        'https://images.unsplash.com/photo-1528702748617-c64d49f918af?q=80&w=2927&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      link: '/',
+    },
+    {
+      id: 3,
+      title: t('common.businessBay'),
+      description: t('common.businessBayDesc'),
+      image:
+        'https://images.unsplash.com/photo-1554203576-3b7d50b086ee?q=80&w=3276&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      link: '/',
+    },
+    {
+      id: 4,
+      title: t('common.dubaiSiliconOasis'),
+      description: t('common.dubaiSiliconOasisDesc'),
+      image:
+        'https://plus.unsplash.com/premium_photo-1689596510917-d337f077d559?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      link: '/',
+    },
+    {
+      id: 5,
+      title: t('common.jltJumeirahLakeTowers'),
+      description: t('common.jltJumeirahLakeTowersDesc'),
+      image:
+        'https://images.unsplash.com/photo-1667716757139-aa1d88d0b795?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      link: '/',
+    },
+  ];
 
   if (!mounted) return null;
 

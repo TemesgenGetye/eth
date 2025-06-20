@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronDown } from 'lucide-react';
+
 import TopNav from './TopNav';
 import useCategories from '../../hooks/useCategories';
 import type { CategoryType } from '../type';
+import { useLanguage } from '../../Context/Languge';
 import { cleanString } from '../../services/utils';
 import MobileBottomNav from './MobileBottomNav';
 
@@ -11,22 +13,23 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isMyAds = location.pathname.includes('my-ads');
+  const { t } = useLanguage();
   return (
     <nav>
       {/* Top Bar */}
       <div className=" bg-white md:border-b md:border-gray-200">
         <div className="m-auto max-w-6xl">
-          <div className="relative mx-auto flex h-[5rem]  max-w-6xl items-center justify-center px-4 sm:px-6 mmd:h-12 mmd:justify-between lg:px-8">
+          <div className="mmd:h-12 mmd:justify-between relative mx-auto  flex h-[5rem] max-w-6xl items-center justify-center px-4 sm:px-6 lg:px-8">
             <div className=" flex items-center space-x-2">
               <Link to="/" className="flex items-center">
                 <img
                   src="/logo.png"
                   alt="888market"
-                  className="h-16 w-auto mmd:h-10"
+                  className="mmd:h-10 h-16 w-auto"
                 />
                 <div className="flex items-center">
-                  <button className="flex items-center text-xl font-semibold text-gray-600 hover:text-gray-900 mmd:text-sm">
-                    888Market
+                  <button className="mmd:text-sm flex items-center text-xl font-semibold text-gray-600 hover:text-gray-900">
+                    {t('common.brandName')}
                   </button>
                 </div>
               </Link>
@@ -58,12 +61,18 @@ export default Navbar;
 const HoverMenu = () => {
   const navigate = useNavigate();
   const { categories, isLoading } = useCategories();
+  const { t, language } = useLanguage();
 
   const [hoveredParent, setHoveredParent] = useState<string | null>(null);
   const [activeChild, setActiveChild] = useState<string | null>(null);
   // const [showAllChildren, setShowAllChildren] = useState<boolean>(false);
   const [closeTimeout, setCloseTimeout] = useState<NodeJS.Timeout | null>(null);
   // const [numberOfCategories, setNumberOfCategories] = useState<number>(6);
+
+  const direction = useMemo(
+    () => (language === 'ar' ? 'rtl' : 'ltr'),
+    [language]
+  );
 
   // Early return if loading or no categories
   if (isLoading || !categories) {
@@ -84,7 +93,7 @@ const HoverMenu = () => {
   // Create Home category with all categories as subcategories
   const homeCategory = {
     id: 0,
-    name: 'Home',
+    name: t('common.home'),
     subcategories: categories.map((cat) => ({
       id: cat.id,
       name: cat.name,
@@ -112,7 +121,7 @@ const HoverMenu = () => {
     setHoveredParent(category);
 
     let firstChild = hoveredParent;
-    if (category === 'Home') {
+    if (category === t('common.home')) {
       firstChild = homeCategory.subcategories?.[0]?.name || hoveredParent;
     } else {
       const parentCategory = categories.find((cat) => cat.name === category);
@@ -155,7 +164,10 @@ const HoverMenu = () => {
       className={`flex items-center justify-around bg-white md:border-b md:border-gray-200 `}
     >
       <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-6">
-        <div className="hidden h-24 items-center space-x-10 mmd:flex mmd:h-12 llg:space-x-20 ">
+        <div
+          className="mmd:flex mmd:h-12 llg:space-x-20 hidden h-24 items-center space-x-10 "
+          dir={direction}
+        >
           {/* Render the top-level categories */}
           {topLevelCategories.map((category) => (
             <div
@@ -168,7 +180,7 @@ const HoverMenu = () => {
               <button
                 className="flex h-full items-center justify-around text-nowrap border-b-2 border-transparent  text-sm font-semibold text-gray-600 hover:text-gray-900"
                 onClick={() => {
-                  if (category.name === 'Home') {
+                  if (category.name === t('common.home')) {
                     navigate('/');
                   } else {
                     navigate('/' + cleanString(category.name));
@@ -187,13 +199,14 @@ const HoverMenu = () => {
                 category.subcategories &&
                 category.subcategories.length > 0 && (
                   <div
-                    className={`dropdown-pointer-menu absolute left-0 top-full z-[10000] mt-2 flex ${category?.name === 'Home' ? 'w-[550px]' : 'w-[280px]'} rounded-lg bg-white p-4 text-sm shadow-lg`}
+                    className={`dropdown-pointer-menu absolute top-full z-[10000] mt-2 flex ${category?.name === t('common.home') ? 'w-[550px]' : 'w-[280px]'} rounded-lg bg-white p-4 text-sm shadow-lg`}
+                    style={{ [direction === 'rtl' ? 'right' : 'left']: 0 }}
                     onMouseEnter={() => handleMouseEnterParent(category.name)}
                     onMouseLeave={handleMouseLeave}
                   >
                     {/* Child Categories (Left Side) */}
                     <div
-                      className={`max-h-96 ${category?.name === 'Home' ? 'w-2/5 border-r border-gray-200' : 'w-full'} overflow-y-auto pr-4`}
+                      className={`max-h-96 ${category?.name === t('common.home') ? 'w-2/5 border-x border-gray-200' : 'w-full'} overflow-y-auto pr-4`}
                       style={{
                         scrollbarWidth: 'none',
                         msOverflowStyle: 'none',
@@ -216,7 +229,7 @@ const HoverMenu = () => {
                           }`}
                           onMouseEnter={() => handleMouseEnterChild(child.name)}
                           onClick={() => {
-                            if (category.name === 'Home') {
+                            if (category.name === t('common.home')) {
                               navigate('/' + cleanString(child.name));
                             } else {
                               navigate(
@@ -230,14 +243,14 @@ const HoverMenu = () => {
                       ))}
                     </div>
 
-                    {category?.name === 'Home' && (
+                    {category?.name === t('common.home') && (
                       <div className="w-2/3 ">
                         <p className="border-b border-b-gray-200 p-2 text-sm font-semibold text-gray-800">
                           {activeChild}
                         </p>
                         <div className="mt-2 grid h-96 auto-rows-min grid-cols-1 gap-1 overflow-y-auto md:grid-cols-2">
                           {/* Show subcategories for Home's children */}
-                          {category.name === 'Home' ? (
+                          {category.name === t('common.home') ? (
                             (() => {
                               const active = category.subcategories.find(
                                 (c) => c.name === activeChild
@@ -288,7 +301,7 @@ const HoverMenu = () => {
             className="flex items-center rounded-full bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800"
             onClick={() => hanldleShowAllCategories()}
           >
-            All categories
+            {t('common.viewAllCategories')}
           </button>
         </div>
       </div>

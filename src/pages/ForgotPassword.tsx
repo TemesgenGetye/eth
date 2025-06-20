@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import supabase from '../services/supabase';
 import toast from 'react-hot-toast';
+import { useLanguage } from '../Context/Languge';
 
 export default function ForgotPasswordPage() {
+  const { t } = useLanguage();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -21,10 +23,10 @@ export default function ForgotPasswordPage() {
         setError(error.message);
       } else {
         setSuccess(true);
-        toast.success('Password reset email sent! Check your inbox.');
+        toast.success(t('common.passwordResetEmailSent'));
       }
-    } catch (err: any) {
-      setError(err.message || 'Something went wrong');
+    } catch (err: unknown) {
+      setError((err as Error).message || t('common.somethingWentWrong'));
     } finally {
       setLoading(false);
     }
@@ -35,10 +37,10 @@ export default function ForgotPasswordPage() {
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-            Forgot Password?
+            {t('common.forgotPassword')}
           </h1>
           <p className="mt-2 text-sm text-gray-600">
-            Enter your email to receive a password reset link.
+            {t('common.enterEmailResetLink')}
           </p>
         </div>
         <div className="rounded-lg border border-gray-200 bg-white px-6 py-6 shadow-lg">
@@ -49,7 +51,7 @@ export default function ForgotPasswordPage() {
           )}
           {success && (
             <div className="mb-4 rounded border border-green-200 bg-green-50 p-2 text-green-700">
-              Check your email for a reset link.
+              {t('common.checkEmailResetLink')}
             </div>
           )}
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -58,7 +60,7 @@ export default function ForgotPasswordPage() {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Email
+                {t('common.email')}
               </label>
               <input
                 id="email"
@@ -68,7 +70,7 @@ export default function ForgotPasswordPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
-                placeholder="Enter your email"
+                placeholder={t('common.enterYourEmail')}
                 disabled={loading}
               />
             </div>
@@ -77,7 +79,7 @@ export default function ForgotPasswordPage() {
               disabled={loading}
               className="flex w-full items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {loading ? 'Sending...' : 'Send Reset Link'}
+              {loading ? t('common.sending') : t('common.sendResetLink')}
             </button>
           </form>
         </div>
@@ -86,7 +88,7 @@ export default function ForgotPasswordPage() {
             href="/login"
             className="text-blue-600 hover:text-blue-500 hover:underline"
           >
-            Back to Login
+            {t('common.backToLogin')}
           </a>
         </div>
       </div>

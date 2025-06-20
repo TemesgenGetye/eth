@@ -1,4 +1,8 @@
+import { useLanguage } from '../../Context/Languge';
+
 function DownloadApp() {
+  const { t } = useLanguage();
+
   return (
     <div className=" mb-20 bg-white py-4 md:mb-0 ">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -17,10 +21,10 @@ function DownloadApp() {
             </div>
             <div>
               <h2 className="text-xl font-bold text-gray-800">
-                Find amazing deals on the go
+                {t('common.findAmazingDeals')}
               </h2>
               <p className="text-sm font-medium text-blue-600">
-                Download the app now
+                {t('common.downloadAppNow')}
               </p>
             </div>
           </div>
@@ -29,15 +33,19 @@ function DownloadApp() {
           <div className="flex flex-col items-center gap-3 md:flex-row">
             <img
               src="./app/app-store.svg"
-              alt="Get it on App Store"
+              alt={t('common.getItOnAppStore')}
               className=" object-contain"
             />
-
-            <img
-              src="./app/play-store.svg"
-              alt="Get it on Google Play"
-              className=" object-contain"
-            />
+            <a
+              href="#"
+              className="group flex items-center gap-2 rounded-lg px-4 py-2 transition-all hover:border-blue-100 hover:bg-blue-50"
+            >
+              <img
+                src="./app/play-store.svg"
+                alt={t('common.getItOnGooglePlay')}
+                className=" object-contain"
+              />
+            </a>
           </div>
         </div>
       </div>

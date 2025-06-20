@@ -4,8 +4,10 @@ import { useLogin } from '../services/auth';
 import { useNavigate } from 'react-router-dom';
 import supabase from '../services/supabase';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { useLanguage } from '../Context/Languge';
 
 export default function LoginPage() {
+  const { t } = useLanguage();
   const [error, setError] = useState<string>('');
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
@@ -17,7 +19,7 @@ export default function LoginPage() {
     setError('');
 
     if (!recaptchaToken) {
-      setError('Please complete the reCAPTCHA.');
+      setError(t('common.pleaseCompleteRecaptcha'));
       return;
     }
 
@@ -31,19 +33,17 @@ export default function LoginPage() {
         password,
       });
       if (error) {
-        setError(error.message || 'An error occurred during login');
+        setError(error.message || t('common.anErrorOccurred'));
         return;
       }
       if (!data?.user?.email_confirmed_at) {
-        setError(
-          'Please verify your email before logging in. Check your inbox for the confirmation link.'
-        );
+        setError(t('common.verifyEmailBeforeLogin'));
         await supabase.auth.signOut();
         return;
       }
       navigate('/');
-    } catch (err) {
-      setError((err as Error).message || 'An error occurred during login');
+    } catch (error: unknown) {
+      setError((error as Error).message || t('common.anErrorOccurred'));
     }
   };
 
@@ -63,8 +63,8 @@ export default function LoginPage() {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Handle successful Google login
-    } catch (error: any) {
-      setError(error.message || 'Google login failed');
+    } catch (error: unknown) {
+      setError((error as Error).message || t('common.googleLoginFailed'));
     } finally {
       setIsGoogleLoading(false);
     }
@@ -76,10 +76,10 @@ export default function LoginPage() {
         {/* Header */}
         <div className="text-center">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-            Welcome back
+            {t('common.welcomeBack')}
           </h1>
           <p className="mt-2 text-sm text-gray-600">
-            Sign in to your account to continue
+            {t('common.signInToContinue')}
           </p>
         </div>
 
@@ -92,10 +92,10 @@ export default function LoginPage() {
             <img src={'./logo.png'} alt="logo" className="mx-auto w-[20%]" />
 
             <h2 className="text-center text-2xl font-semibold text-gray-900">
-              Sign in
+              {t('common.signIn')}
             </h2>
             <p className="mt-1 text-center text-sm text-gray-600">
-              Enter your email and password to access your account
+              {t('common.enterEmailPassword')}
             </p>
           </div>
 
@@ -173,7 +173,7 @@ export default function LoginPage() {
                   />
                 </svg>
               )}
-              Continue with Google
+              {t('common.continueWithGoogle')}
             </button>
 
             {/* Divider */}
@@ -183,7 +183,7 @@ export default function LoginPage() {
               </div>
               <div className="relative flex justify-center text-sm">
                 <span className="bg-white px-2 uppercase tracking-wide text-gray-500">
-                  Or continue with
+                  {t('common.orContinueWith')}
                 </span>
               </div>
             </div>
@@ -195,13 +195,13 @@ export default function LoginPage() {
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Email
+                  {t('common.email')}
                 </label>
                 <input
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder={t('common.enterYourEmail')}
                   required
                   disabled={login.isPending || isGoogleLoading}
                   className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
@@ -214,20 +214,20 @@ export default function LoginPage() {
                     htmlFor="password"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Password
+                    {t('common.password')}
                   </label>
                   <a
                     href="/forgot-password"
                     className="text-sm text-blue-600 hover:text-blue-500 hover:underline"
                   >
-                    Forgot password?
+                    {t('common.forgotPassword')}
                   </a>
                 </div>
                 <input
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder={t('common.enterYourPassword')}
                   required
                   disabled={login.isPending || isGoogleLoading}
                   className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
@@ -268,7 +268,7 @@ export default function LoginPage() {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       ></path>
                     </svg>
-                    Signing in...
+                    {t('common.signingIn')}
                   </>
                 ) : (
                   <>
@@ -285,7 +285,7 @@ export default function LoginPage() {
                         d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                       />
                     </svg>
-                    Sign in with Email
+                    {t('common.signInWithEmail')}
                   </>
                 )}
               </button>
@@ -295,12 +295,12 @@ export default function LoginPage() {
           {/* Card Footer */}
           <div className="rounded-b-lg border-t border-gray-200 bg-gray-50 px-6 py-4">
             <p className="text-center text-sm text-gray-600">
-              {"Don't have an account? "}
+              {t('common.dontHaveAccount')}{' '}
               <a
                 href="/signup"
                 className="font-medium text-blue-600 hover:text-blue-500 hover:underline"
               >
-                Sign up
+                {t('common.signUp')}
               </a>
             </p>
           </div>
@@ -308,19 +308,19 @@ export default function LoginPage() {
 
         {/* Terms and Privacy */}
         <div className="text-center text-xs text-gray-500">
-          By signing in, you agree to our{' '}
+          {t('common.bySigningInAgree')}{' '}
           <a
             href="/terms"
             className="text-blue-600 hover:text-blue-500 hover:underline"
           >
-            Terms of Service
+            {t('common.termsOfService')}
           </a>{' '}
-          and{' '}
+          {t('common.and')}{' '}
           <a
             href="/privacy"
             className="text-blue-600 hover:text-blue-500 hover:underline"
           >
-            Privacy Policy
+            {t('common.privacyPolicy')}
           </a>
         </div>
       </div>

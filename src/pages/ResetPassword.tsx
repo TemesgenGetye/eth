@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import supabase from '../services/supabase';
 import toast from 'react-hot-toast';
+import { useLanguage } from '../Context/Languge';
 
 export default function ResetPasswordPage() {
+  const { t } = useLanguage();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -16,11 +18,11 @@ export default function ResetPasswordPage() {
     setError('');
     setSuccess(false);
     if (password.length < 6) {
-      setError('Password must be at least 6 characters.');
+      setError(t('common.passwordMinLength'));
       return;
     }
     if (password !== confirmPassword) {
-      setError('Passwords do not match.');
+      setError(t('common.passwordsDoNotMatch'));
       return;
     }
     setLoading(true);
@@ -30,11 +32,11 @@ export default function ResetPasswordPage() {
         setError(error.message);
       } else {
         setSuccess(true);
-        toast.success('Password updated! You can now log in.');
+        toast.success(t('common.passwordUpdated'));
         setTimeout(() => navigate('/login'), 2000);
       }
-    } catch (err: any) {
-      setError(err.message || 'Something went wrong');
+    } catch (err: unknown) {
+      setError((err as Error).message || t('common.somethingWentWrong'));
     } finally {
       setLoading(false);
     }
@@ -45,10 +47,10 @@ export default function ResetPasswordPage() {
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-            Reset Password
+            {t('common.resetPassword')}
           </h1>
           <p className="mt-2 text-sm text-gray-600">
-            Enter your new password below.
+            {t('common.enterNewPassword')}
           </p>
         </div>
         <div className="rounded-lg border border-gray-200 bg-white px-6 py-6 shadow-lg">
@@ -59,7 +61,7 @@ export default function ResetPasswordPage() {
           )}
           {success && (
             <div className="mb-4 rounded border border-green-200 bg-green-50 p-2 text-green-700">
-              Password updated! Redirecting...
+              {t('common.passwordUpdatedRedirecting')}
             </div>
           )}
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -68,7 +70,7 @@ export default function ResetPasswordPage() {
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
               >
-                New Password
+                {t('common.newPassword')}
               </label>
               <input
                 id="password"
@@ -79,7 +81,7 @@ export default function ResetPasswordPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
-                placeholder="Enter new password"
+                placeholder={t('common.enterNewPasswordPlaceholder')}
                 disabled={loading}
               />
             </div>
@@ -88,7 +90,7 @@ export default function ResetPasswordPage() {
                 htmlFor="confirmPassword"
                 className="block text-sm font-medium text-gray-700"
               >
-                Confirm Password
+                {t('common.confirmPassword')}
               </label>
               <input
                 id="confirmPassword"
@@ -99,7 +101,7 @@ export default function ResetPasswordPage() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
-                placeholder="Confirm new password"
+                placeholder={t('common.confirmNewPassword')}
                 disabled={loading}
               />
             </div>
@@ -108,7 +110,7 @@ export default function ResetPasswordPage() {
               disabled={loading}
               className="flex w-full items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {loading ? 'Updating...' : 'Update Password'}
+              {loading ? t('common.updating') : t('common.updatePassword')}
             </button>
           </form>
         </div>
@@ -117,7 +119,7 @@ export default function ResetPasswordPage() {
             href="/login"
             className="text-blue-600 hover:text-blue-500 hover:underline"
           >
-            Back to Login
+            {t('common.backToLogin')}
           </a>
         </div>
       </div>

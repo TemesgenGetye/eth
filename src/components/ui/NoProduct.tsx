@@ -1,12 +1,14 @@
 import { Loader, ShoppingCart } from 'lucide-react';
 import { lazy, Suspense } from 'react';
 import { motion, useTransform, useMotionValue } from 'framer-motion';
+import { useLanguage } from '../../Context/Languge';
 
 const NoProductModel = lazy(() =>
   import('../model/Scene').then((mod) => ({ default: mod.CartModel }))
 );
 
 function NoProduct() {
+  const { t } = useLanguage();
   const x = useMotionValue(0);
 
   const xNumeric = useTransform(x, (latest) => latest);
@@ -26,7 +28,7 @@ function NoProduct() {
           transition={{ duration: 0.5 }}
           className="mb-2 text-3xl font-bold text-blue-600"
         >
-          Oops! Our shelves are empty!
+          {t('common.noProductTitle')}
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -34,7 +36,7 @@ function NoProduct() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="mb-4 text-xl text-blue-400"
         >
-          Looks like our cart is on a shopping spree...
+          {t('common.noProductSubtitle')}
         </motion.p>
       </div>
 
@@ -70,7 +72,7 @@ function NoProduct() {
         <div>
           <ShoppingCart className="h-12 w-12 text-blue-500" />
           <p className="text-center text-sm font-semibold text-blue-500">
-            Out Of Stock
+            {t('common.outOfStock')}
           </p>
         </div>
       </motion.div>
@@ -82,7 +84,7 @@ function NoProduct() {
         className="absolute bottom-8 left-0 right-0 z-10 text-center"
       >
         <p className="text-lg font-semibold text-blue-500">
-          Don't worry, we're restocking faster than you can say "Add to cart"!
+          {t('common.noProductMessage')}
         </p>
       </motion.div>
     </div>

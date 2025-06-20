@@ -4,8 +4,10 @@ import useMyAds from '../hooks/useMyAds';
 import useCustomers from '../hooks/useCustomers';
 import { ProductType } from '../components/type';
 import MyAdsSkeleton from '../components/MyAdsSkeleton';
+import { useLanguage } from '../Context/Languge';
 
 export default function MyAds() {
+  const { t } = useLanguage();
   const uId = localStorage.getItem('user-id');
   // console.log('id', uId);
   const { customers, isLoading } = useCustomers();
@@ -55,33 +57,32 @@ export default function MyAds() {
     },
     {} as Record<string, Record<string, ProductType[]>>
   );
-  // console.log(grouped);
 
   const tabs = [
-    { id: 'all', label: 'All Ads', count: myAdds?.length || 0 },
+    { id: 'all', label: t('common.adss.allAds'), count: myAdds?.length || 0 },
     {
       id: 'live',
-      label: 'Live',
+      label: t('common.adss.live'),
       count: myAdds?.filter((ad) => ad.status === 'live').length || 0,
     },
     {
       id: 'drafts',
-      label: 'Drafts',
+      label: t('common.adss.drafts'),
       count: myAdds?.filter((ad) => ad.status === 'draft').length || 0,
     },
     {
       id: 'review',
-      label: 'Under Review',
+      label: t('common.adss.underReview'),
       count: myAdds?.filter((ad) => ad.status === 'pending').length || 0,
     },
     {
       id: 'rejected',
-      label: 'Rejected',
+      label: t('common.adss.rejected'),
       count: myAdds?.filter((ad) => ad.status === 'rejected').length || 0,
     },
     {
       id: 'expired',
-      label: 'Expired',
+      label: t('common.adss.expired'),
       count: myAdds?.filter((ad) => ad.status === 'expired').length || 0,
     },
   ];
@@ -89,19 +90,19 @@ export default function MyAds() {
   const getNoAdsMessage = () => {
     switch (activeTab) {
       case 'all':
-        return "You haven't placed any ads yet";
+        return t('common.adss.noAdsYet');
       case 'live':
-        return "You don't have any live ads";
+        return t('common.adss.noLiveAds');
       case 'drafts':
-        return "You don't have any draft ads";
+        return t('common.adss.noDraftAds');
       case 'review':
-        return "You don't have any ads under review";
+        return t('common.adss.noReviewAds');
       case 'rejected':
-        return "You don't have any rejected ads";
+        return t('common.adss.noRejectedAds');
       case 'expired':
-        return "You don't have any expired ads";
+        return t('common.adss.noExpiredAds');
       default:
-        return "You haven't placed any ads yet";
+        return t('common.adss.noAdsYet');
     }
   };
 
@@ -113,8 +114,8 @@ export default function MyAds() {
     <div className="flex min-h-screen justify-center bg-gray-50">
       <div className="mx-auto w-[65rem]">
         {/* Header */}
-        <h1 className="mb-8 hidden p-6 text-2xl font-bold text-black md:block">
-          My Ads
+        <h1 className="mb-8 text-2xl font-bold text-black">
+          {t('common.adss.title')}
         </h1>
 
         {/* Filter Tabs */}
@@ -159,7 +160,7 @@ export default function MyAds() {
               {activeTab === 'all' && (
                 <a href="/post-ad">
                   <button className="rounded-lg bg-blue-600 px-8 py-3 font-semibold text-white transition-colors hover:bg-blue-700">
-                    Post ad now
+                    {t('common.ads.postAdNow')}
                   </button>
                 </a>
               )}

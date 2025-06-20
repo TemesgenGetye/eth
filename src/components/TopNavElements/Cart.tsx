@@ -3,6 +3,7 @@ import { useCart } from '../../Context/Cart';
 import { useNavigate } from 'react-router-dom';
 import NoProductSmall from '../ui/NoProductSmall';
 import { useCartItems } from '../../hooks/store';
+import { useLanguage } from '../../Context/Languge';
 
 function Cart({
   activeModal,
@@ -15,6 +16,7 @@ function Cart({
 }) {
   const { cart } = useCart();
   const { cartItems } = useCartItems();
+  const { t } = useLanguage();
 
   const navigate = useNavigate();
   return (
@@ -24,13 +26,13 @@ function Cart({
         onClick={() => handleLinkClick('cart')}
       >
         <ShoppingCart className="mr-1 h-4 w-4" />
-        <p className="text-s text-gray-500">Cart</p>
+        <p className="text-s text-gray-500">{t('common.navigation.cart')}</p>
       </div>
       {activeModal === 'cart' && (
         <div className="dropdown-pointer shadow-3xl absolute right-0 top-11 z-[10000] max-h-[600px] w-[400px] rounded-lg bg-white p-0 shadow-lg">
           <div className="flex items-center justify-between border-b p-4">
             <h3 className="text-sm font-semibold text-gray-900">
-              Cart ({cart.length})
+              {t('common.cartt')} ({cart.length})
             </h3>
             <X
               className="h-5 w-5 cursor-pointer text-gray-500 hover:text-gray-700"
@@ -87,7 +89,7 @@ function Cart({
                 closeModal();
               }}
             >
-              VIEW ALL CART
+              {t('common.viewAllCart')}
             </button>
           </div>
         </div>

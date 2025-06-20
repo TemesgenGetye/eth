@@ -3,6 +3,7 @@ import { useFavourite } from '../../Context/Favourite';
 import { useNavigate } from 'react-router-dom';
 import { useFavouriteItems } from '../../hooks/store';
 import { cleanString } from '../../services/utils';
+import { useLanguage } from '../../Context/Languge';
 
 export default function Favourite({
   activeModal,
@@ -15,6 +16,7 @@ export default function Favourite({
 }) {
   const { favourite } = useFavourite();
   const { favoriteProducts } = useFavouriteItems();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   return (
@@ -25,13 +27,15 @@ export default function Favourite({
           onClick={() => handleLinkClick('favorites')}
         >
           <Heart className="mr-1 h-4 w-4" />
-          <p className="text-s text-gray-500">Favorites</p>
+          <p className="text-s text-gray-500">
+            {t('common.navigation.favorites')}
+          </p>
         </div>
         {activeModal === 'favorites' && (
           <div className="dropdown-pointer shadow-3xl absolute right-0 top-11 z-[1000] max-h-[600px] w-[400px] rounded-lg bg-white p-0 shadow-lg">
             <div className="flex items-center justify-between border-b p-4">
               <h3 className="text-sm font-semibold text-gray-900">
-                Favorites ({favourite.length})
+                {t('common.favorites')} ({favourite.length})
               </h3>
               <X
                 className="h-5 w-5 cursor-pointer text-gray-500 hover:text-gray-700"
@@ -99,7 +103,7 @@ export default function Favourite({
                   closeModal();
                 }}
               >
-                VIEW ALL FAVORITES
+                {t('common.viewAllFavorites')}
               </button>
             </div>
           </div>

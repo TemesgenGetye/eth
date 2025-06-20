@@ -14,6 +14,7 @@ import useMediaQuery from '../hooks/useMediaQuery';
 import AnimatedCategoryIcon from '../components/ui/AnimatedCategoryIcon';
 import { CategoryType } from '../components/type';
 import { useSearchModal } from '../Context/SearchModalContext';
+import { useLanguage } from '../Context/Languge';
 
 const Home = () => {
   const { blurBackground } = useBackground();
@@ -23,12 +24,15 @@ const Home = () => {
   const { categories } = useCategories();
   const isMdUp = useMediaQuery('(max-width: 768px)');
   const { openSearchModal, isSearchModalOpen } = useSearchModal();
+  const { t } = useLanguage();
 
   const { data: searchResults, isLoading } = useSearchProducts(
     searchValue,
     active
   );
   const navigate = useNavigate();
+
+  console.log(t('common.findAnythingInDubai'));
 
   const highlightText = (text: string, highlight: string) => {
     if (!highlight.trim()) return text;
@@ -98,18 +102,17 @@ const Home = () => {
           <div
             className="relative m-auto mx-5 mt-3 items-center rounded-xl bg-cover bg-center py-8 xl:mx-0"
             style={{
-              backgroundImage:
-                "url('https://images.unsplash.com/photo-1624314138470-5a2f24623f10?q=80&w=3474&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
+              backgroundImage: "url('/dubai1.jpg')",
             }}
           >
             <div className="absolute inset-0 z-10 rounded-xl bg-black bg-opacity-50"></div>
             <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <div className="text-center">
                 <h1 className="text-2xl font-bold text-white sm:text-4xl">
-                  Find Anything in Dubai
+                  {t('common.findAnythingInDubai')}
                 </h1>
                 <p className="mt-5 text-sm font-semibold text-gray-300">
-                  The largest market place in the country
+                  {t('common.largestMarketplace')}
                 </p>
               </div>
             </div>
@@ -120,7 +123,7 @@ const Home = () => {
                     className={` flex cursor-pointer items-center justify-center  px-5  text-sm ${active === 'all' ? 'bg-blue-700 text-white hover:bg-blue-800' : 'text-white hover:bg-blue-700 hover:text-white'} rounded-full`}
                     onClick={() => setActive('all')}
                   >
-                    All
+                    {t('common.all')}
                   </li>
                   {categories?.map((category) => (
                     <li
@@ -144,7 +147,11 @@ const Home = () => {
                       value={searchValue}
                       onChange={(e) => setSearchValue(e.target.value)}
                       type="text"
-                      placeholder={`Search for ${active === 'all' ? 'anything' : active}`}
+                      placeholder={
+                        active === 'all'
+                          ? t('common.searchForAnything')
+                          : `${t('common.searchFor')} ${active}`
+                      }
                       className="flex-1 border-0 bg-transparent px-4 py-2 text-lg text-gray-700 focus:outline-none focus:ring-0"
                     />
                     <button className="ml-3 flex items-center justify-center p-3 text-blue-600 transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
@@ -155,7 +162,7 @@ const Home = () => {
                     <div className="absolute left-0 top-[calc(100%+5px)] z-50 w-full rounded-md border border-gray-200 bg-white text-black shadow-lg">
                       {isLoading ? (
                         <div className="p-4 text-sm text-gray-500">
-                          Loading...
+                          {t('common.loading')}
                         </div>
                       ) : (
                         <>
@@ -201,7 +208,7 @@ const Home = () => {
                                   >
                                     <div>
                                       <div className="text-sm">
-                                        <span>Search in</span>
+                                        <span>{t('common.searchIn')}</span>
                                         <span className="pl-1 font-semibold">
                                           {highlightText(
                                             category?.name,

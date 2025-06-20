@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ProductType } from '../type';
+import { useLanguage } from '../../Context/Languge';
 
 interface RangeFilterProps {
   onApplyFilters: (range: string, min: number, max: number) => void;
@@ -20,6 +21,7 @@ export default function RangeFilter({
   result,
   isLoading,
 }: RangeFilterProps) {
+  const { t } = useLanguage();
   const [from, setFrom] = useState(defaultFrom);
   const [upto, setUpto] = useState(defaultUpto);
 
@@ -57,14 +59,18 @@ export default function RangeFilter({
             htmlFor={`from-${type}`}
             className="mb-1 block text-sm font-medium text-gray-400"
           >
-            From
+            {t('filters.from')}
           </label>
           <input
             id={`from-${type}`}
             type="number"
             value={from}
             onChange={handleFromChange}
-            placeholder={type === 'year' ? '2000' : '0'}
+            placeholder={
+              type === 'year'
+                ? t('filters.yearPlaceholderMin')
+                : t('filters.pricePlaceholderMin')
+            }
             className="w-full rounded-lg border border-gray-300 bg-white px-3 py-1 font-medium text-gray-900 transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
           />
         </div>
@@ -73,14 +79,18 @@ export default function RangeFilter({
             htmlFor={`upto-${type}`}
             className="mb-1 block text-sm font-medium text-gray-400"
           >
-            Upto
+            {t('filters.upto')}
           </label>
           <input
             id={`upto-${type}`}
             type="number"
             value={upto}
             onChange={handleUptoChange}
-            placeholder={type === 'year' ? '2026' : '1000000'}
+            placeholder={
+              type === 'year'
+                ? t('filters.yearPlaceholderMax')
+                : t('filters.pricePlaceholderMax')
+            }
             className="w-full rounded-lg border border-gray-300 bg-white px-3 py-1 font-medium text-gray-900 transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
           />
         </div>
@@ -91,7 +101,7 @@ export default function RangeFilter({
           disabled={isLoading}
           className="rounded-lg border border-gray-300 bg-white px-1 py-0 font-medium text-gray-700 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50 focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
         >
-          Clear
+          {t('filters.clear')}
         </button>
         <button
           onClick={handleApplyFilters}
@@ -99,10 +109,10 @@ export default function RangeFilter({
           className="w-full rounded-lg bg-blue-700 px-6 py-4 font-semibold text-white transition-colors duration-200 hover:bg-blue-800 disabled:bg-blue-400"
         >
           {isLoading
-            ? 'Loading...'
+            ? t('common.loading')
             : result?.length
-              ? `Show ${result.length} Results`
-              : 'Apply Filters'}
+              ? `${t('filters.show')} ${result.length} ${t('filters.results')}`
+              : t('filters.applyFilters')}
         </button>
       </div>
     </div>

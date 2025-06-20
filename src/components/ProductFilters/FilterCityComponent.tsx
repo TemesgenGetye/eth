@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ProductType } from '../type';
+import { useLanguage } from '../../Context/Languge';
 
 const cities = [
   'All Cities',
@@ -24,6 +25,7 @@ export default function FilterCityComponent({
   isLoading: boolean;
   result: ProductType[] | undefined;
 }) {
+  const { t } = useLanguage();
   const [selectedCity, setSelectedCity] = useState(city);
 
   // Reorder cities to put the selected city first
@@ -37,6 +39,32 @@ export default function FilterCityComponent({
 
   const handleApplyFilters = () => {
     onSetCity(selectedCity);
+  };
+
+  // Function to get translated city name
+  const getTranslatedCityName = (cityName: string) => {
+    switch (cityName) {
+      case 'All Cities':
+        return t('filters.allCities');
+      case 'Dubai':
+        return t('common.dubai');
+      case 'Abu Dhabi':
+        return t('common.abuDhabi');
+      case 'Ras Al Khaimah':
+        return t('common.rasAlKhaimah');
+      case 'Sharjah':
+        return t('common.sharjah');
+      case 'Fujairah':
+        return t('common.fujairah');
+      case 'Ajman':
+        return t('common.ajman');
+      case 'Umm Al Quwain':
+        return t('common.ummAlQuwain');
+      case 'Al Ain':
+        return t('common.alAin');
+      default:
+        return cityName;
+    }
   };
 
   return (
@@ -55,7 +83,7 @@ export default function FilterCityComponent({
               }
             `}
           >
-            {city}
+            {getTranslatedCityName(city)}
           </button>
         ))}
       </div>
@@ -65,10 +93,10 @@ export default function FilterCityComponent({
         className="w-full rounded-lg bg-blue-700 px-6 py-4 font-semibold text-white transition-colors duration-200 hover:bg-blue-800 disabled:bg-blue-400"
       >
         {isLoading
-          ? 'Loading...'
+          ? t('common.loading')
           : result?.length
-            ? `Show ${result.length} Results`
-            : 'Apply Filters'}
+            ? `${t('filters.show')} ${result.length} ${t('filters.results')}`
+            : t('filters.applyFilters')}
       </button>
     </div>
   );

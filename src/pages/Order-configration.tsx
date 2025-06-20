@@ -8,10 +8,12 @@ import {
   ShoppingBag,
   Truck,
 } from 'lucide-react';
+import { useLanguage } from '../Context/Languge';
 
 export default function OrderConfirmationPage() {
   const navigate = useNavigate();
   const { cart, setCart } = useCart();
+  const { t } = useLanguage();
   const [orderNumber, setOrderNumber] = useState('');
 
   useEffect(() => {
@@ -41,10 +43,10 @@ export default function OrderConfirmationPage() {
           <CheckCircle className="h-16 w-16 text-green-500" />
         </div>
         <h1 className="text-2xl font-bold text-gray-900">
-          Thank You for Your Order!
+          {t('common.orderConfirmation.thankYou')}
         </h1>
         <p className="mt-2 text-gray-600">
-          Your order has been received and is now being processed.
+          {t('common.orderConfirmation.orderReceived')}
         </p>
       </div>
 
@@ -52,11 +54,15 @@ export default function OrderConfirmationPage() {
         <div className="mb-6 border-b pb-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-sm text-gray-500">Order Number</p>
+              <p className="text-sm text-gray-500">
+                {t('common.orderConfirmation.orderNumber')}
+              </p>
               <p className="text-lg font-medium text-gray-900">{orderNumber}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">Date</p>
+              <p className="text-sm text-gray-500">
+                {t('common.orderConfirmation.date')}
+              </p>
               <p className="text-lg font-medium text-gray-900">
                 {new Date().toLocaleDateString('en-US', {
                   year: 'numeric',
@@ -66,9 +72,11 @@ export default function OrderConfirmationPage() {
               </p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">Total Amount</p>
+              <p className="text-sm text-gray-500">
+                {t('common.orderConfirmation.totalAmount')}
+              </p>
               <p className="text-lg font-medium text-gray-900">
-                {calculateTotal()} AED
+                {calculateTotal()} {t('common.aed')}
               </p>
             </div>
           </div>
@@ -76,7 +84,7 @@ export default function OrderConfirmationPage() {
 
         <div className="mb-6">
           <h2 className="mb-4 text-lg font-semibold text-gray-900">
-            Order Status
+            {t('common.orderConfirmation.orderStatus')}
           </h2>
           <div className="relative">
             <div className="absolute left-4 top-0 h-full w-0.5 bg-gray-200"></div>
@@ -86,9 +94,11 @@ export default function OrderConfirmationPage() {
                   <CheckCircle className="h-3 w-3" />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900">Order Confirmed</p>
+                  <p className="font-medium text-gray-900">
+                    {t('common.orderConfirmation.orderConfirmed')}
+                  </p>
                   <p className="text-sm text-gray-500">
-                    Your order has been confirmed
+                    {t('common.orderConfirmation.orderConfirmedDesc')}
                   </p>
                 </div>
               </div>
@@ -97,9 +107,11 @@ export default function OrderConfirmationPage() {
                   <Package className="h-3 w-3" />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-500">Processing</p>
+                  <p className="font-medium text-gray-500">
+                    {t('common.orderConfirmation.processing')}
+                  </p>
                   <p className="text-sm text-gray-500">
-                    Your order is being processed
+                    {t('common.orderConfirmation.processingDesc')}
                   </p>
                 </div>
               </div>
@@ -108,9 +120,11 @@ export default function OrderConfirmationPage() {
                   <Truck className="h-3 w-3" />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-500">Shipped</p>
+                  <p className="font-medium text-gray-500">
+                    {t('common.orderConfirmation.shipped')}
+                  </p>
                   <p className="text-sm text-gray-500">
-                    Your order is on the way
+                    {t('common.orderConfirmation.shippedDesc')}
                   </p>
                 </div>
               </div>
@@ -119,9 +133,11 @@ export default function OrderConfirmationPage() {
                   <ShoppingBag className="h-3 w-3" />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-500">Delivered</p>
+                  <p className="font-medium text-gray-500">
+                    {t('common.orderConfirmation.delivered')}
+                  </p>
                   <p className="text-sm text-gray-500">
-                    Your order has been delivered
+                    {t('common.orderConfirmation.deliveredDesc')}
                   </p>
                 </div>
               </div>
@@ -131,7 +147,7 @@ export default function OrderConfirmationPage() {
 
         <div className="mb-6">
           <h2 className="mb-4 text-lg font-semibold text-gray-900">
-            Shipping Information
+            {t('common.orderConfirmation.shippingInfo')}
           </h2>
           <div className="rounded-lg bg-gray-50 p-4">
             <p className="font-medium">John Doe</p>
@@ -144,12 +160,15 @@ export default function OrderConfirmationPage() {
 
         <div className="mb-6">
           <h2 className="mb-4 text-lg font-semibold text-gray-900">
-            Payment Information
+            {t('common.orderConfirmation.paymentInfo')}
           </h2>
           <div className="rounded-lg bg-gray-50 p-4">
-            <p>Payment Method: Credit Card</p>
-            <p>Card ending in: ****4567</p>
-            <p>Billing Address: Same as shipping address</p>
+            <p>{t('common.orderConfirmation.paymentMethod')}: Credit Card</p>
+            <p>{t('common.orderConfirmation.cardEnding')}: ****4567</p>
+            <p>
+              {t('common.orderConfirmation.billingAddress')}:{' '}
+              {t('common.orderConfirmation.sameAsShipping')}
+            </p>
           </div>
         </div>
 
@@ -158,13 +177,13 @@ export default function OrderConfirmationPage() {
             onClick={() => navigate('/')}
             className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-gray-50"
           >
-            Continue Shopping
+            {t('common.orderConfirmation.continueShopping')}
           </button>
           <button
             onClick={() => navigate('/orders')}
             className="flex items-center rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
           >
-            View All Orders
+            {t('common.orderConfirmation.viewAllOrders')}
             <ChevronRight className="ml-1 h-4 w-4" />
           </button>
         </div>

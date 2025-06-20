@@ -17,6 +17,7 @@ import { useCart } from '../../Context/Cart';
 import { ProductType } from '../type';
 import toast from 'react-hot-toast';
 import { useGetCustomerById } from '../../hooks/useCustomers';
+import { useLanguage } from '../../Context/Languge';
 
 interface ProductProps {
   products: ProductType[] | undefined;
@@ -25,6 +26,7 @@ interface ProductProps {
 
 export default function ProductList({ products }: ProductProps) {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const [imageIndexes, setImageIndexes] = useState<{ [key: string]: number }>(
     {}
@@ -75,7 +77,7 @@ export default function ProductList({ products }: ProductProps) {
     if (!cart.some((item) => item === id)) {
       setCart([...cart, id]);
       localStorage.setItem('cart', JSON.stringify([...cart, id]));
-      toast.success('Item added to cart successfully.');
+      toast.success(t('common.itemAddedToCart'));
     }
   }
 
@@ -131,7 +133,7 @@ export default function ProductList({ products }: ProductProps) {
                   </>
                 )}
                 <img
-                  src={product.imgUrls[currentImageIndex] || '/logo.png'}
+                  src={product?.imgUrls[currentImageIndex] || '/logo.png'}
                   alt={product?.name}
                   className="h-full w-full object-cover transition-transform duration-500 ease-in-out"
                 />
@@ -140,7 +142,7 @@ export default function ProductList({ products }: ProductProps) {
                     <span>
                       <Image size={14} className="w-full md:h-4 md:w-4" />
                     </span>
-                    <span>{`${currentImageIndex + 1} / ${product.imgUrls.length}`}</span>
+                    <span>{`${currentImageIndex + 1} / ${product?.imgUrls?.length}`}</span>
                   </div>
                 )}
               </div>
@@ -164,7 +166,7 @@ export default function ProductList({ products }: ProductProps) {
                             <span>AED</span>
                             <div className="text-lg text-red-500">
                               {Number(product.price.discounted).toFixed(2)} AED
-                              Downpayment
+                              {t('common.downpayment')}
                             </div>
                           </>
                         )}
@@ -174,7 +176,7 @@ export default function ProductList({ products }: ProductProps) {
                       {/* <span>• {product.slug}</span> */}
                       <p className="cursor-pointer text-sm text-blue-500 hover:underline">
                         {products.length > 0
-                          ? products.length + ' variants'
+                          ? products.length + ' ' + t('common.variants')
                           : ''}
                       </p>
                     </div>
@@ -189,7 +191,7 @@ export default function ProductList({ products }: ProductProps) {
                         }}
                       >
                         <div className="flex w-full items-center gap-2 text-sm font-medium text-white">
-                          <p>Add to Cart</p>
+                          <p>{t('common.addToCart')}</p>
                           <ShoppingCart className="h-4 w-4" />
                         </div>
                       </button>
@@ -212,7 +214,7 @@ export default function ProductList({ products }: ProductProps) {
                 </div>
                 {product.stock > 0 && (
                   <span className="rounded bg-[#40b740] px-2 py-0.5 text-xs font-medium text-white">
-                    IN STOCK ( {product.stock})
+                    {t('common.inStock')} ( {product.stock})
                   </span>
                 )}
                 <p className="line-clamp-2 pr-10 text-sm text-gray-600">
@@ -222,8 +224,8 @@ export default function ProductList({ products }: ProductProps) {
                 {!product?.createdBy && (
                   <div className="flex items-center gap-1">
                     <VerifiedIcon className="h-5 w-5 text-[#40b740]" />
-                    <span className="text-sm font-bold  text-[#3ebb3e]">
-                      verified
+                    <span className="text-sm  text-[#40b740]">
+                      {t('common.verified')}
                     </span>{' '}
                     {/* YW color scheme change */}
                   </div>
@@ -244,13 +246,14 @@ export default function ProductList({ products }: ProductProps) {
 
 function SellerContact({ createdBy }: { createdBy: number | string }) {
   const { customer, isLoadingCustomer } = useGetCustomerById(String(createdBy));
+  const { t } = useLanguage();
 
   if (isLoadingCustomer) {
     return (
       <div className="flex items-center gap-2 rounded-xl border border-gray-100 bg-gray-50 p-4">
         <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600"></div>
         <span className="text-sm font-medium text-gray-500">
-          Loading seller information...
+          {t('common.loadingSellerInfo')}
         </span>
       </div>
     );
@@ -261,7 +264,7 @@ function SellerContact({ createdBy }: { createdBy: number | string }) {
       <div className="flex items-center gap-2 rounded-xl border border-gray-100 bg-gray-50 p-4">
         <User className="h-4 w-4 text-gray-400" />
         <span className="text-sm font-medium text-gray-500">
-          Seller information unavailable
+          {t('common.sellerInfoUnavailable')}
         </span>
       </div>
     );
@@ -276,13 +279,17 @@ function SellerContact({ createdBy }: { createdBy: number | string }) {
       {customer?.verification_status === 'verified' && (
         <div className="flex items-center gap-1">
           <VerifiedIcon className="h-5 w-5 text-green-600" />
-          <span className="text-sm font-bold  text-green-700">verified</span>
+          <span className="text-sm  text-green-700">
+            {t('common.verified')}
+          </span>
         </div>
       )}
 
       <div className="mb-3 flex items-center gap-1">
         <User className="h-4 w-4 text-blue-600" />
-        <span className="text-sm  text-blue-700">Contact Seller</span>
+        <span className="text-sm  text-blue-700">
+          {t('common.contactSeller')}
+        </span>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -292,7 +299,7 @@ function SellerContact({ createdBy }: { createdBy: number | string }) {
           onClick={(e) => e.stopPropagation()}
         >
           <Mail className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
-          <span>Email</span>
+          <span>{t('common.email')}</span>
         </a>
 
         <a
@@ -301,7 +308,7 @@ function SellerContact({ createdBy }: { createdBy: number | string }) {
           onClick={(e) => e.stopPropagation()}
         >
           <Phone className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
-          <span>Call</span>
+          <span>{t('common.call')}</span>
         </a>
 
         <a
@@ -312,7 +319,7 @@ function SellerContact({ createdBy }: { createdBy: number | string }) {
           onClick={(e) => e.stopPropagation()}
         >
           <MessageCircle className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
-          <span>WhatsApp</span>
+          <span>{t('common.whatsapp')}</span>
         </a>
       </div>
     </div>

@@ -2,19 +2,27 @@ import { Home, Search, PlusCircle, MessageCircle, Menu } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import { useSearchModal } from '../../Context/SearchModalContext';
-
-const navItems = [
-  { label: 'Home', icon: Home, to: '/' },
-  { label: 'Search', icon: Search, to: '#' },
-  { label: 'Post an ad', icon: PlusCircle, to: '/post-ad', center: true },
-  { label: 'Chats', icon: MessageCircle, to: '/chats' },
-  { label: 'Menu', icon: Menu, to: '/menu' },
-];
+import { useLanguage } from '../../Context/Languge';
 
 const MobileBottomNav = () => {
   const isMobile = useMediaQuery('(max-width: 767px)');
   const location = useLocation();
   const { openSearchModal } = useSearchModal();
+  const { t } = useLanguage();
+
+  const navItems = [
+    { label: t('common.mobileNav.home'), icon: Home, to: '/' },
+    { label: t('common.mobileNav.search'), icon: Search, to: '#' },
+    {
+      label: t('common.mobileNav.postAnAd'),
+      icon: PlusCircle,
+      to: '/post-ad',
+      center: true,
+    },
+    { label: t('common.mobileNav.chats'), icon: MessageCircle, to: '/chats' },
+    { label: t('common.mobileNav.menu'), icon: Menu, to: '/menu' },
+  ];
+
   if (!isMobile) return null;
 
   return (
@@ -23,7 +31,7 @@ const MobileBottomNav = () => {
         const Icon = item.icon;
         const isActive = location.pathname === item.to;
 
-        if (item.label === 'Search') {
+        if (item.label === t('common.mobileNav.search')) {
           return (
             <button
               key={item.label}

@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../Context/Languge';
 
 export default function Pricing() {
   const navigate = useNavigate();
@@ -10,6 +11,8 @@ export default function Pricing() {
   const handleSelectPlan = async (planName: string, basePrice: number) => {
     navigate(`/subscription?plan=${planName}&basePrice=${basePrice}`);
   };
+
+  const { t } = useLanguage();
 
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-12">
@@ -21,7 +24,7 @@ export default function Pricing() {
             <img src="/logo.png" alt="logo" className="h-40 w-40" />
           </div>
           <h2 className="text-xl font-bold text-gray-700">
-            Select a package that works for you
+            {t('common.pricing.selectPackage')}
           </h2>
         </div>
 
@@ -31,186 +34,194 @@ export default function Pricing() {
           <Card className="relative flex flex-col justify-between rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
             <div>
               <CardHeader className="border-b border-gray-200 pb-4">
-                <h3 className="text-xl font-semibold text-gray-900">Lite</h3>
+                <h3 className="text-xl font-semibold text-gray-900">
+                  {t('common.pricing.lite')}
+                </h3>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-sm text-gray-600">AED</span>
+                  <span className="text-sm text-gray-600">
+                    {t('common.aed')}
+                  </span>
                   <span className="text-4xl font-bold text-gray-900">229</span>
                   <span className="text-sm text-gray-600">*</span>
                 </div>
               </CardHeader>
-              <CardContent className="mt-6 space-y-6">
+              <CardContent className="mt-2 space-y-6">
                 <div>
-                  <h4 className="mb-3 font-bold text-gray-900">
-                    {"What's included"}
+                  <h4 className="mb-3 font-medium text-gray-900">
+                    {t('common.pricing.whatsIncluded')}
                   </h4>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Check className="h-4 w-4 text-gray-400" />
                       <span className="text-sm text-gray-600">
-                        Ad is live for 30 days
+                        {t('common.pricing.adLiveDays30')}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Check className="h-4 w-4 text-gray-400" />
                       <span className="text-sm text-gray-600">
-                        1x Refresh that takes your ad to the top
+                        {t('common.pricing.refresh1')}
                       </span>
                     </div>
                   </div>
                 </div>
               </CardContent>
             </div>
-            <Button
-              className="w-full bg-blue-600 text-white hover:bg-blue-700"
-              onClick={() => handleSelectPlan('Lite', 229)}
-            >
-              Select Lite
-            </Button>
+            <div className="px-4">
+              <Button
+                className="w-full bg-blue-600 text-white hover:bg-blue-700"
+                onClick={() =>
+                  handleSelectPlan(t('common.pricing.selectLite'), 229)
+                }
+              >
+                {t('common.pricing.selectLite')}
+              </Button>
+            </div>
           </Card>
 
           {/* Basic Plan - Recommended */}
-          <Card className="relative flex flex-col justify-between rounded-lg border-2 border-blue-400 bg-white bg-[linear-gradient(2.46deg,rgba(173,216,230,0.225)39.06%,rgba(135,206,250,0.07)90%)] p-6 shadow-lg">
-            <div>
-              <div className="flex justify-between border-b border-gray-200">
-                <CardHeader className=" pb-4">
-                  <h3 className="text-xl font-semibold text-gray-900">Basic</h3>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-sm text-gray-600">AED</span>
-                    <span className="text-4xl font-bold text-gray-900">
-                      289
-                    </span>
-                    <span className="text-sm text-gray-600">*</span>
-                  </div>
-                </CardHeader>
-                <Badge className="h-[40px] bg-blue-600 px-4 py-1 text-white">
-                  RECOMMENDED
-                </Badge>
+          <Card className="relative border-2 border-blue-200 bg-blue-50 shadow-lg">
+            <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 transform border-b border-gray-200 bg-blue-900 px-4 py-1 text-white">
+              {t('common.pricing.recommended')}
+            </Badge>
+            <CardHeader className="pb-4 pt-6">
+              <h3 className="text-xl font-semibold text-gray-900">
+                {t('common.pricing.basic')}
+              </h3>
+              <div className="flex items-baseline gap-1">
+                <span className="text-sm text-gray-600">{t('common.aed')}</span>
+                <span className="text-4xl font-bold text-gray-900">289</span>
+                <span className="text-sm text-gray-600">*</span>
               </div>
-              <CardContent className="mt-6 space-y-6">
-                <div>
-                  <h4 className="mb-3 font-bold text-gray-900">
-                    {"What's included"}
-                  </h4>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-blue-500" />
-                      <span className="text-sm text-gray-600">
-                        Ad is live for 30 days
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-blue-500" />
-                      <span className="text-sm text-gray-600">
-                        Featured for 7 days
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-blue-500" />
-                      <span className="text-sm text-gray-600">
-                        2x Refresh that takes your ad to the top
-                      </span>
-                    </div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div>
+                <h4 className="mb-3 font-medium text-gray-900">
+                  {t('common.pricing.whatsIncluded')}
+                </h4>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-blue-500" />
+                    <span className="text-sm text-gray-600">
+                      {t('common.pricing.adLiveDays30')}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-blue-500" />
+                    <span className="text-sm text-gray-600">
+                      {t('common.pricing.featuredDays7')}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-blue-500" />
+                    <span className="text-sm text-gray-600">
+                      {t('common.pricing.refresh2')}
+                    </span>
                   </div>
                 </div>
-                <div>
-                  <h4 className="mb-3 font-bold text-gray-900">Why Basic?</h4>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-blue-500" />
-                      <span className="text-sm text-gray-600">
-                        60% more views vs Lite
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-blue-500" />
-                      <span className="text-sm text-gray-600">
-                        20% more leads vs Lite
-                      </span>
-                    </div>
+              </div>
+              <div>
+                <h4 className="mb-3 font-medium text-gray-900">
+                  {t('common.pricing.whyBasic')}
+                </h4>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-blue-500" />
+                    <span className="text-sm text-gray-600">
+                      {t('common.pricing.moreViewsLite')}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-blue-500" />
+                    <span className="text-sm text-gray-600">
+                      {t('common.pricing.moreLeadsLite')}
+                    </span>
                   </div>
                 </div>
-              </CardContent>
-            </div>
-            <Button
-              className="w-full bg-blue-600 text-white hover:bg-blue-700"
-              onClick={() => handleSelectPlan('Basic', 289)}
-            >
-              Select Basic
-            </Button>
+              </div>
+              <Button
+                className="w-full bg-blue-900 text-white hover:bg-blue-800"
+                onClick={() =>
+                  handleSelectPlan(t('common.pricing.selectBasic'), 209)
+                }
+              >
+                {t('common.pricing.selectBasic')}
+              </Button>
+            </CardContent>
           </Card>
 
           {/* Extended Plan */}
-          <Card className="relative flex flex-col justify-between rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <div>
-              <CardHeader className="border-b border-gray-200 pb-4">
-                <h3 className="text-xl font-semibold text-gray-900">
-                  Extended
-                </h3>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-sm text-gray-600">AED</span>
-                  <span className="text-4xl font-bold text-gray-900">409</span>
-                  <span className="text-sm text-gray-600">*</span>
-                </div>
-              </CardHeader>
-              <CardContent className="mt-6 space-y-6">
-                <div>
-                  <h4 className="mb-3 font-bold text-gray-900">
-                    {"What's included"}
-                  </h4>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm text-gray-600">
-                        Ad is live for 60 days
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm text-gray-600">
-                        Featured for 14 days
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm text-gray-600">
-                        4x Refresh that takes your ad to the top
-                      </span>
-                    </div>
+          <Card className="relative border border-gray-200 bg-white shadow-sm">
+            <CardHeader className="pb-4">
+              <h3 className="text-xl font-semibold text-gray-900">
+                {t('common.pricing.extended')}
+              </h3>
+              <div className="flex items-baseline gap-1">
+                <span className="text-sm text-gray-600">{t('common.aed')}</span>
+                <span className="text-4xl font-bold text-gray-900">409</span>
+                <span className="text-sm text-gray-600">*</span>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div>
+                <h4 className="mb-3 font-medium text-gray-900">
+                  {t('common.pricing.whatsIncluded')}
+                </h4>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-gray-400" />
+                    <span className="text-sm text-gray-600">
+                      {t('common.pricing.adLiveDays60')}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-gray-400" />
+                    <span className="text-sm text-gray-600">
+                      {t('common.pricing.featuredDays14')}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-gray-400" />
+                    <span className="text-sm text-gray-600">
+                      {t('common.pricing.refresh4')}
+                    </span>
                   </div>
                 </div>
-                <div>
-                  <h4 className="mb-3 font-bold text-gray-900">
-                    Why Extended?
-                  </h4>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm text-gray-600">
-                        53% more views vs Basic
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm text-gray-600">
-                        33% more leads vs Basic
-                      </span>
-                    </div>
+              </div>
+              <div>
+                <h4 className="mb-3 font-medium text-gray-900">
+                  {t('common.pricing.whyExtended')}
+                </h4>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-gray-400" />
+                    <span className="text-sm text-gray-600">
+                      {t('common.pricing.moreViewsBasic')}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-gray-400" />
+                    <span className="text-sm text-gray-600">
+                      {t('common.pricing.moreLeadsBasic')}
+                    </span>
                   </div>
                 </div>
-              </CardContent>
-            </div>
-            <Button
-              className="w-full bg-blue-600 text-white hover:bg-blue-700"
-              onClick={() => handleSelectPlan('Extended', 409)}
-            >
-              Select Extended
-            </Button>
+              </div>
+              <Button
+                className="w-full bg-blue-600 text-white hover:bg-blue-700"
+                onClick={() =>
+                  handleSelectPlan(t('common.pricing.selectExtended'), 409)
+                }
+              >
+                {t('common.pricing.selectExtended')}
+              </Button>
+            </CardContent>
           </Card>
         </div>
 
         {/* Footer Note */}
         <p className="mt-8 text-center text-sm text-gray-500">
-          *5% VAT will be charged in addition to the prices mentioned
+          {t('common.pricing.vatNote')}
         </p>
       </div>
     </div>

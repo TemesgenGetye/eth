@@ -2,6 +2,95 @@
 @tailwind components;
 @tailwind utilities;
 
+/* RTL Support for Arabic */
+[dir='rtl'] {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir='rtl'] .text-left {
+  text-align: right;
+}
+
+[dir='rtl'] .text-right {
+  text-align: left;
+}
+
+[dir='rtl'] .ml-1 {
+  margin-left: 0;
+  margin-right: 0.25rem;
+}
+
+[dir='rtl'] .ml-2 {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+[dir='rtl'] .ml-3 {
+  margin-left: 0;
+  margin-right: 0.75rem;
+}
+
+[dir='rtl'] .mr-1 {
+  margin-right: 0;
+  margin-left: 0.25rem;
+}
+
+[dir='rtl'] .mr-2 {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+[dir='rtl'] .mr-3 {
+  margin-right: 0;
+  margin-left: 0.75rem;
+}
+
+[dir='rtl'] .pl-1 {
+  padding-left: 0;
+  padding-right: 0.25rem;
+}
+
+[dir='rtl'] .pl-2 {
+  padding-left: 0;
+  padding-right: 0.5rem;
+}
+
+[dir='rtl'] .pl-3 {
+  padding-left: 0;
+  padding-right: 0.75rem;
+}
+
+[dir='rtl'] .pr-1 {
+  padding-right: 0;
+  padding-left: 0.25rem;
+}
+
+[dir='rtl'] .pr-2 {
+  padding-right: 0;
+  padding-left: 0.5rem;
+}
+
+[dir='rtl'] .pr-3 {
+  padding-right: 0;
+  padding-left: 0.75rem;
+}
+
+[dir='rtl'] .dropdown-pointer-menu::before {
+  left: unset;
+  right: 10px;
+}
+
+/* Arabic font support */
+.arabic-font {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Smooth transitions for language switching */
+* {
+  transition: all 0.2s ease-in-out;
+}
+
 body {
   font-family: proxima-nova, sans-serif;
   font-style: halcom-medium;
