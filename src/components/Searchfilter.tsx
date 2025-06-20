@@ -6,6 +6,7 @@ import { useFilteredProducts } from '../hooks/useFilteredProducts';
 // import debounce from 'lodash/debounce'; // Install lodash for debouncing
 import { ProductType } from './type';
 import useMediaQuery from '../hooks/useMediaQuery';
+import { cn } from '../services/utils';
 
 function SearchFilters({
   use,
@@ -393,6 +394,7 @@ function SearchFilters({
                   defaultUpto={maxPrice || '1000000'}
                   isLoading={isLoadingFiltered}
                   result={filteredProducts}
+                  className="left-0"
                 />
               </div>
             </div>
@@ -419,6 +421,7 @@ function SearchFilters({
                   defaultUpto={maxYear || '2026'}
                   isLoading={isLoadingFiltered}
                   result={filteredProducts}
+                  className="right-0"
                 />
               </div>
             </div>
@@ -560,6 +563,7 @@ function SearchFilters({
                 defaultUpto={maxPrice || '1000000'}
                 isLoading={isLoadingFiltered}
                 result={filteredProducts}
+                className="left-0"
               />
             )}
           </div>
@@ -602,6 +606,7 @@ function SearchFilters({
                 defaultUpto={maxYear || '2026'}
                 isLoading={isLoadingFiltered}
                 result={filteredProducts}
+                className="right-0"
               />
             )}
           </div>
@@ -728,6 +733,7 @@ interface RangeFilterProps {
   defaultUpto: string;
   result: ProductType[] | undefined;
   isLoading: boolean;
+  className?: string;
 }
 
 function RangeFilter({
@@ -738,6 +744,7 @@ function RangeFilter({
   defaultUpto,
   result,
   isLoading,
+  className,
 }: RangeFilterProps) {
   const [from, setFrom] = useState(defaultFrom);
   const [upto, setUpto] = useState(defaultUpto);
@@ -774,7 +781,10 @@ function RangeFilter({
       className={
         isMobile
           ? ''
-          : 'fixed left-0 top-[calc(100%+15px)] z-[100000] rounded-lg border border-gray-200 bg-white p-6 shadow-sm'
+          : cn(
+              'absolute top-[calc(100%+5px)] z-[100000] min-w-[320px] rounded-lg border border-gray-200 bg-white p-6 shadow-sm',
+              className
+            )
       }
     >
       <div className="mb-6 grid grid-cols-2 gap-6">

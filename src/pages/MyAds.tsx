@@ -3,17 +3,18 @@ import Listing from '../components/Listing';
 import useMyAds from '../hooks/useMyAds';
 import useCustomers from '../hooks/useCustomers';
 import { ProductType } from '../components/type';
+import MyAdsSkeleton from '../components/MyAdsSkeleton';
 
 export default function MyAds() {
   const uId = localStorage.getItem('user-id');
   console.log('id', uId);
-  const { customers } = useCustomers();
+  const { customers, isLoading } = useCustomers();
   console.log('customers', customers);
 
   const loggedUser = customers?.find((customer) => customer.uuid === uId);
   console.log('loggedUser', loggedUser);
   const [activeTab, setActiveTab] = useState('all');
-  const { myAdds } = useMyAds(loggedUser?.id);
+  const { myAdds, isLoadingAds } = useMyAds(loggedUser?.id);
 
   // Filter products based on active tab
   const filteredAds = myAdds?.filter((ad) => {
@@ -103,6 +104,10 @@ export default function MyAds() {
         return "You haven't placed any ads yet";
     }
   };
+
+  if (isLoading || isLoadingAds) {
+    return <MyAdsSkeleton />;
+  }
 
   return (
     <div className="flex min-h-screen justify-center bg-gray-50">

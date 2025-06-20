@@ -34,7 +34,7 @@ export default function Category({
               <li key={subcategory?.id}>
                 <Link
                   to={`/${cleanString(category?.name)}/${cleanString(subcategory?.name)}`}
-                  className="text-base text-gray-800 hover:text-red-600"
+                  className="text-base text-gray-800 hover:text-blue-700"
                 >
                   {subcategory?.name}
                 </Link>
