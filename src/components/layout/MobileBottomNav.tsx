@@ -5,7 +5,7 @@ import { useSearchModal } from '../../Context/SearchModalContext';
 import { useLanguage } from '../../Context/Languge';
 
 const MobileBottomNav = () => {
-  const isMobile = useMediaQuery('(max-width: 767px)');
+  const isMobile = useMediaQuery('(max-width: 930px)');
   const location = useLocation();
   const { openSearchModal } = useSearchModal();
   const { t } = useLanguage();
