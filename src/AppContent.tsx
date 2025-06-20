@@ -44,6 +44,8 @@ const AppContent = () => {
     '/forgot-password',
     '/reset-password',
     '/chats',
+    '/subscription',
+    '/pricing',
   ];
   const hideNavbarOnlyRoutes = ['/menu'];
   const profileRoute = '/profile';

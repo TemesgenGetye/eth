@@ -11,6 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../components/ui/Select';
+import { useNavigate } from 'react-router-dom';
+import { setItem } from '../services/db';
 
 interface Subcategory {
   id: number;
@@ -18,6 +20,7 @@ interface Subcategory {
 }
 
 export default function PostAdPage() {
+  const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { categories = [] } = useCategories();
   const {
@@ -83,11 +86,14 @@ export default function PostAdPage() {
       // Get the current form data
       const formData = watch();
 
-      // Store form data in localStorage for the subscription page
-      localStorage.setItem('productFormData', JSON.stringify(formData));
-
-      // If validation passes, redirect to pricing page
-      window.location.href = '/pricing'; // TODO: Change to react router
+      try {
+        // Store form data in IndexedDB for the subscription page
+        await setItem('productFormData', formData);
+        navigate('/pricing'); // Use navigate to go to the next page
+      } catch (error) {
+        console.error('Failed to save form data to IndexedDB', error);
+        toast.error('Could not save your ad. Please try again.');
+      }
     } else {
       // If validation fails, show error message
       toast.error('Please fill in all required fields correctly.');
