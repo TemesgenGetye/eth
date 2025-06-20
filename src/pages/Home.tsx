@@ -13,6 +13,7 @@ import useCategories from '../hooks/useCategories';
 import useMediaQuery from '../hooks/useMediaQuery';
 import AnimatedCategoryIcon from '../components/ui/AnimatedCategoryIcon';
 import { CategoryType } from '../components/type';
+import { useSearchModal } from '../Context/SearchModalContext';
 
 const Home = () => {
   const { blurBackground } = useBackground();
@@ -21,6 +22,7 @@ const Home = () => {
   const [active, setActive] = useState('all');
   const { categories } = useCategories();
   const isMdUp = useMediaQuery('(max-width: 768px)');
+  const { openSearchModal, isSearchModalOpen } = useSearchModal();
 
   const { data: searchResults, isLoading } = useSearchProducts(
     searchValue,
@@ -46,8 +48,20 @@ const Home = () => {
   };
 
   useEffect(() => {
-    setShowSuggestions(searchValue.length >= 2);
-  }, [searchValue]);
+    if (isMdUp) {
+      if (searchValue.length >= 1 && !isSearchModalOpen) {
+        openSearchModal(searchValue);
+      }
+    } else {
+      setShowSuggestions(searchValue.length >= 2);
+    }
+  }, [searchValue, isMdUp, openSearchModal, isSearchModalOpen]);
+
+  useEffect(() => {
+    if (!isSearchModalOpen) {
+      setSearchValue('');
+    }
+  }, [isSearchModalOpen]);
 
   return (
     <div className="m-auto min-h-screen max-w-7xl rounded-lg">

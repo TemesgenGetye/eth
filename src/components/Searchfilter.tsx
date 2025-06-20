@@ -261,7 +261,7 @@ function SearchFilters({
     };
   }, []);
 
-  const isMobile = useMediaQuery('(max-width: 600px)');
+  const isMobile = useMediaQuery('(max-width: 780px)');
 
   if (isMobile) {
     return (

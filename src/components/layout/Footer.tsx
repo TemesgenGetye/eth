@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { useLanguage } from '../../Context/Languge';
+// import { useLanguage } from '../../Context/Languge';
 import InfoModal from '../ui/InfoModal';
 import ContactIcons from '../ui/ContactIcons';
 import toast from 'react-hot-toast';
 
 const Footer = () => {
-  const { setLanguage } = useLanguage();
+  // const { setLanguage } = useLanguage();
   const [aboutOpen, setAboutOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const [countryModal, setCountryModal] = useState<{
@@ -13,10 +13,10 @@ const Footer = () => {
     country: string | null;
   }>({ open: false, country: null });
 
-  const handleLanguageChange = (lang: string) => {
-    setLanguage(lang);
-    // Add logic to change the language of the website
-  };
+  // const handleLanguageChange = (lang: string) => {
+  //   // setLanguage(lang);
+  //   // Add logic to change the language of the website
+  // };
 
   return (
     <footer className="hidden bg-gray-100 px-4 py-8 md:block">
@@ -359,7 +359,7 @@ const Footer = () => {
               </li>
             </ul>
             <button
-              onClick={() => handleLanguageChange('am')}
+              // onClick={() => handleLanguageChange('am')}
               className="mt-2 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
             >
               Switch to Arabic
