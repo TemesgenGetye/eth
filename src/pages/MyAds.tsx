@@ -59,30 +59,30 @@ export default function MyAds() {
   );
 
   const tabs = [
-    { id: 'all', label: t('common.ads.allAds'), count: myAdds?.length || 0 },
+    { id: 'all', label: t('common.adss.allAds'), count: myAdds?.length || 0 },
     {
       id: 'live',
-      label: t('common.ads.live'),
+      label: t('common.adss.live'),
       count: myAdds?.filter((ad) => ad.status === 'live').length || 0,
     },
     {
       id: 'drafts',
-      label: t('common.ads.drafts'),
+      label: t('common.adss.drafts'),
       count: myAdds?.filter((ad) => ad.status === 'draft').length || 0,
     },
     {
       id: 'review',
-      label: t('common.ads.underReview'),
+      label: t('common.adss.underReview'),
       count: myAdds?.filter((ad) => ad.status === 'pending').length || 0,
     },
     {
       id: 'rejected',
-      label: t('common.ads.rejected'),
+      label: t('common.adss.rejected'),
       count: myAdds?.filter((ad) => ad.status === 'rejected').length || 0,
     },
     {
       id: 'expired',
-      label: t('common.ads.expired'),
+      label: t('common.adss.expired'),
       count: myAdds?.filter((ad) => ad.status === 'expired').length || 0,
     },
   ];
@@ -90,19 +90,19 @@ export default function MyAds() {
   const getNoAdsMessage = () => {
     switch (activeTab) {
       case 'all':
-        return t('common.ads.noAdsYet');
+        return t('common.adss.noAdsYet');
       case 'live':
-        return t('common.ads.noLiveAds');
+        return t('common.adss.noLiveAds');
       case 'drafts':
-        return t('common.ads.noDraftAds');
+        return t('common.adss.noDraftAds');
       case 'review':
-        return t('common.ads.noReviewAds');
+        return t('common.adss.noReviewAds');
       case 'rejected':
-        return t('common.ads.noRejectedAds');
+        return t('common.adss.noRejectedAds');
       case 'expired':
-        return t('common.ads.noExpiredAds');
+        return t('common.adss.noExpiredAds');
       default:
-        return t('common.ads.noAdsYet');
+        return t('common.adss.noAdsYet');
     }
   };
 
@@ -115,7 +115,7 @@ export default function MyAds() {
       <div className="mx-auto w-[65rem]">
         {/* Header */}
         <h1 className="mb-8 text-2xl font-bold text-black">
-          {t('common.ads.title')}
+          {t('common.adss.title')}
         </h1>
 
         {/* Filter Tabs */}
