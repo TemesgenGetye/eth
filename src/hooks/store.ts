@@ -1,20 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
 import { getProdsById, getProductsById } from '../services/products';
 import { useCart } from '../Context/Cart';
-import { useEffect } from 'react';
+import { useFavourite } from '../Context/Favourite';
 
 export const useFavouriteItems = () => {
-  const favStr = localStorage.getItem('favourite');
-  const favourite = JSON.parse(favStr?.length ? favStr : '[]');
-  // console.log('favvv', favourite);
+  const { favourite } = useFavourite();
+
   const {
     isLoading: isLoadingFavorites,
     data: favoriteProducts,
     isError: isErrorFavorites,
     refetch: refetchFavorites,
   } = useQuery({
-    queryKey: ['favorite-items'],
+    queryKey: ['favorite-items', favourite],
     queryFn: () => getProductsById(favourite),
+    enabled: favourite.length > 0,
   });
 
   return {
@@ -27,25 +27,21 @@ export const useFavouriteItems = () => {
 
 export const useCartItems = () => {
   const { cart } = useCart();
-  // console.log('cart', cart);
-  // const numedCart =
+
   const {
     isLoading: isLoadingCart,
     data: cartItems,
     isError: isErrorCart,
     refetch: refetchCart,
   } = useQuery({
-    queryKey: ['cart-items'],
+    queryKey: ['cart-items', cart],
     queryFn: () => getProdsById(cart),
+    enabled: cart.length > 0,
   });
-
-  useEffect(() => {
-    refetchCart();
-  }, [refetchCart]);
 
   return {
     isLoadingCart,
-    cartItems,
+    cartItems: cartItems || [],
     isErrorCart,
     refetchCart,
   };

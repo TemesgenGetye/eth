@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import emailjs from '@emailjs/browser';
 
 const SERVICE_ID = 'service_yisa8q9';
@@ -66,7 +66,7 @@ export default function OrderConfirmationEmail({
       };
 
       emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY).then(
-        (result) => {
+        () => {
           // console.log('Email sent!', result.status, result.text);
           setSent(true);
         },
@@ -75,7 +75,16 @@ export default function OrderConfirmationEmail({
         }
       );
     }
-  }, [orderId, customerEmail, sent, orderTotal, orders.length]);
+  }, [
+    orderId,
+    customerEmail,
+    sent,
+    orderTotal,
+    orders.length,
+    cost.shipping,
+    cost.tax,
+    orders,
+  ]);
 
   return null; // No need to render anything
 }

@@ -17,7 +17,6 @@ import SimilarProducts from '../components/SimilarProducts';
 import { cleanString } from '../services/utils';
 import { useFavourite } from '../Context/Favourite';
 import { useCart } from '../Context/Cart';
-import { useCartItems, useFavouriteItems } from '../hooks/store';
 import toast from 'react-hot-toast';
 import { useGetCustomerById } from '../hooks/useCustomers';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
@@ -37,8 +36,6 @@ export default function Detail() {
   const { products, isLoading } = useProducts();
   const { favourite, setFavourite } = useFavourite();
   const { cart, setCart } = useCart();
-  const { refetchCart } = useCartItems();
-  const { refetchFavorites } = useFavouriteItems();
 
   // Always call hooks at the top level
   const location = useLocation();
@@ -148,7 +145,6 @@ export default function Detail() {
       );
     }
     // console.log('fav before', localStorage.getItem('favourite'));
-    refetchFavorites();
   }
 
   async function handleCart(
@@ -159,8 +155,7 @@ export default function Detail() {
     if (!cart.some((item) => item === id)) {
       setCart([...cart, id]);
       localStorage.setItem('cart', JSON.stringify([...cart, id]));
-      await refetchCart();
-      toast.success('Item added to cart succesfully.');
+      toast.success('Item added to cart successfully.');
     }
   }
 

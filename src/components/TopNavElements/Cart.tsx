@@ -27,7 +27,7 @@ function Cart({
         <p className="text-s text-gray-500">Cart</p>
       </div>
       {activeModal === 'cart' && (
-        <div className="dropdown-pointer shadow-3xl absolute right-0 top-11 z-[10000] w-[400px] rounded-lg bg-white p-0 shadow-lg">
+        <div className="dropdown-pointer shadow-3xl absolute right-0 top-11 z-[10000] max-h-[600px] w-[400px] rounded-lg bg-white p-0 shadow-lg">
           <div className="flex items-center justify-between border-b p-4">
             <h3 className="text-sm font-semibold text-gray-900">
               Cart ({cart.length})
@@ -38,44 +38,48 @@ function Cart({
             />
           </div>
 
-          {cart.length === 0 && <NoProductSmall />}
-
-          <div className="max-h-[500px] overflow-y-auto">
-            {cartItems?.map((item) => (
-              <div
-                onClick={() => {
-                  navigate('/cart');
-                  closeModal();
-                }}
-                className="cursor-pointer"
-                key={item?.id}
-              >
-                <div className="border-b p-4 hover:bg-gray-100">
-                  <div className="flex gap-3">
-                    <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
-                      <img
-                        src={item?.imgUrls[0] || '/logo.png'}
-                        alt={item?.name}
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                    <div className="flex flex-col justify-between">
-                      <p className="text-sm font-medium text-gray-900">
-                        {item?.name}
-                      </p>
-                      <div>
-                        <p className="text-xs font-medium text-gray-900">
-                          {item?.price?.discounted}
-                          <span className="font-semibold">{'AED'}</span>
-                        </p>
+          <div className="max-h-[400px] overflow-y-auto">
+            {cart.length === 0 ? (
+              <NoProductSmall />
+            ) : (
+              <div>
+                {cartItems?.map((item) => (
+                  <div
+                    onClick={() => {
+                      navigate('/cart');
+                      closeModal();
+                    }}
+                    className="cursor-pointer"
+                    key={item?.id}
+                  >
+                    <div className="border-b p-4 hover:bg-gray-100">
+                      <div className="flex gap-3">
+                        <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
+                          <img
+                            src={item?.imgUrls[0] || '/logo.png'}
+                            alt={item?.name}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                        <div className="flex flex-col justify-between">
+                          <p className="text-sm font-medium text-gray-900">
+                            {item?.name}
+                          </p>
+                          <div>
+                            <p className="text-xs font-medium text-gray-900">
+                              {item?.price?.discounted}
+                              <span className="font-semibold">{'AED'}</span>
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
-          <div className="p-2 text-center">
+          <div className="border-t p-2 text-center">
             <button
               className="w-full p-4 text-xs font-medium text-blue-500 hover:bg-gray-100/70 hover:text-blue-700"
               onClick={() => {

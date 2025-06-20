@@ -16,7 +16,6 @@ import { useFavourite } from '../../Context/Favourite';
 import { useCart } from '../../Context/Cart';
 import { ProductType } from '../type';
 import toast from 'react-hot-toast';
-import { useCartItems, useFavouriteItems } from '../../hooks/store';
 import { useGetCustomerById } from '../../hooks/useCustomers';
 
 interface ProductProps {
@@ -33,8 +32,6 @@ export default function ProductList({ products }: ProductProps) {
 
   const { favourite, setFavourite } = useFavourite();
   const { cart, setCart } = useCart();
-  const { refetchCart } = useCartItems();
-  const { refetchFavorites } = useFavouriteItems();
 
   const handleImageChange = (
     id: number,
@@ -68,8 +65,6 @@ export default function ProductList({ products }: ProductProps) {
         JSON.stringify(favourite.filter((fav) => fav !== id))
       );
     }
-
-    refetchFavorites();
   }
 
   async function handleCart(
@@ -80,8 +75,7 @@ export default function ProductList({ products }: ProductProps) {
     if (!cart.some((item) => item === id)) {
       setCart([...cart, id]);
       localStorage.setItem('cart', JSON.stringify([...cart, id]));
-      await refetchCart();
-      toast.success('Item added to cart succesfully.');
+      toast.success('Item added to cart successfully.');
     }
   }
 

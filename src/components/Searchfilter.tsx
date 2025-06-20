@@ -318,7 +318,7 @@ function SearchFilters({
         <div className="hide-scrollbar flex w-full gap-3 overflow-x-auto px-1 pb-2">
           <button
             onClick={() => setIsCitySelectOpen((state) => !state)}
-            className={`flex-shrink-0 rounded-full border px-6 py-3 text-base font-semibold transition-all duration-200 ${
+            className={`flex-shrink-0 rounded-full border px-6 py-3 text-sm font-semibold transition-all duration-200 ${
               isCitySelectOpen || city
                 ? 'border-blue-400 bg-blue-50 text-blue-700'
                 : 'border-gray-300 bg-white text-gray-700 hover:border-blue-400 hover:bg-blue-50'
@@ -329,7 +329,7 @@ function SearchFilters({
           </button>
           <button
             onClick={() => setIsPriceOpen((state) => !state)}
-            className={`flex-shrink-0 rounded-full border px-6 py-3 text-base font-semibold transition-all duration-200 ${
+            className={`flex-shrink-0 rounded-full border px-6 py-3 text-sm font-semibold transition-all duration-200 ${
               isPriceOpen || priceRange !== 'Select'
                 ? 'border-blue-400 bg-blue-50 text-blue-700'
                 : 'border-gray-300 bg-white text-gray-700 hover:border-blue-400 hover:bg-blue-50'
@@ -339,13 +339,13 @@ function SearchFilters({
           </button>
           <button
             onClick={() => setIsYearOpen((state) => !state)}
-            className={`flex-shrink-0 rounded-full border px-6 py-3 text-base font-semibold transition-all duration-200 ${
+            className={`flex-shrink-0 rounded-full border px-6 py-3 text-sm font-semibold transition-all duration-200 ${
               isYearOpen || yearRange !== 'Select'
                 ? 'border-blue-400 bg-blue-50 text-blue-700'
                 : 'border-gray-300 bg-white text-gray-700 hover:border-blue-400 hover:bg-blue-50'
             }`}
           >
-            Year <ChevronDown className="ml-2 inline-block h-4 w-4" />
+            Years <ChevronDown className="ml-2 inline-block h-4 w-4" />
           </button>
         </div>
         {/* Dropdowns for city, price, year (reuse existing logic) */}

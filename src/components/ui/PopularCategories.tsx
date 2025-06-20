@@ -96,9 +96,9 @@ export default function PopularCategories() {
             {isMobile ? (
               <div className="hide-scrollbar flex items-stretch gap-4 overflow-x-auto px-2 pb-2">
                 {categoryProducts.map((product: ProductType, index: number) => {
-                  const cName = cleanString(product?.category?.name);
-                  const scName = cleanString(product?.subcategory?.name);
-                  const pName = cleanString(product?.name);
+                  const cName = cleanString(product?.category?.name || '');
+                  const scName = cleanString(product?.subcategory?.name || '');
+                  const pName = cleanString(product?.name || '');
                   const pid = product?.id;
                   return (
                     <button
@@ -147,9 +147,9 @@ export default function PopularCategories() {
             ) : (
               <div className="grid grid-cols-1 gap-4 px-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                 {categoryProducts.map((product: ProductType, index: number) => {
-                  const cName = cleanString(product?.category?.name);
-                  const scName = cleanString(product?.subcategory?.name);
-                  const pName = cleanString(product?.name);
+                  const cName = cleanString(product?.category?.name || '');
+                  const scName = cleanString(product?.subcategory?.name || '');
+                  const pName = cleanString(product?.name || '');
                   const pid = product?.id;
                   return (
                     <button

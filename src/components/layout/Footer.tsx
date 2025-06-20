@@ -370,7 +370,7 @@ const Footer = () => {
         {/* Bottom Section */}
         <div className="mt-12 flex flex-col items-center justify-between md:flex-row">
           <div className="mb-4 md:mb-0">
-            <img src="./logo.png" alt="Dubizzle Group" className="h-28" />
+            <img src="/logo.png" alt="Dubizzle Group" className="h-28" />
             <p className="mt-2 text-sm text-gray-500">
               © 888Market 2025, All Rights Reserved.
             </p>

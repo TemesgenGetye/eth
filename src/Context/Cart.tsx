@@ -19,7 +19,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   });
 
   useEffect(() => {
-    // Save to localStorage when favourite changes
+    // Save to localStorage when cart changes
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 

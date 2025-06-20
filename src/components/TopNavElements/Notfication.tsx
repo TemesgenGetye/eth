@@ -59,7 +59,7 @@ function Notfication({
           <p className="text-s text-gray-500">Notfication</p>
         </div>
         {activeModal === 'notifications' && (
-          <div className="dropdown-pointer shadow-3xl absolute right-0 top-11 z-[10000] w-[400px] rounded-lg bg-white p-0 shadow-lg">
+          <div className="dropdown-pointer shadow-3xl absolute right-0 top-11 z-[10000] max-h-[600px] w-[400px] rounded-lg bg-white p-0 shadow-lg">
             <div className="flex items-center justify-between border-b p-4">
               <h3 className="text-sm font-semibold text-gray-900">
                 Notfication ({notfication.length})
@@ -69,8 +69,8 @@ function Notfication({
                 onClick={closeModal}
               />
             </div>
-            <div className="max-h-[500px] overflow-y-auto">
-              {notfication.length !== 0 && (
+            <div className="max-h-[400px] overflow-y-auto">
+              {notfication.length === 0 ? (
                 <div className="flex flex-col items-center justify-center p-10 text-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -155,6 +155,35 @@ function Notfication({
                   <p className="mt-4 text-lg font-medium text-gray-900">
                     You have no new notifications.
                   </p>
+                </div>
+              ) : (
+                <div>
+                  {notfication.map((item) => (
+                    <div key={item._id} className="border-b p-4">
+                      <div className="flex gap-3">
+                        <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
+                          <img
+                            src={item.image || './logo.png'}
+                            alt={item.title}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                        <div className="flex flex-col justify-between">
+                          <p className="text-sm font-medium text-gray-900">
+                            {item.title}
+                          </p>
+                          <div>
+                            <p className="text-xs font-medium text-gray-900">
+                              {item?.price} {'AED'}
+                            </p>
+                            <p className="text-xs font-medium text-gray-900">
+                              {item.date}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
 

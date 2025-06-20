@@ -30,7 +30,7 @@ export interface ProductType {
     currency: string;
   };
   stock: number;
-  img_urls: string[];
+  imgUrls: string[];
   views: number;
   description: string;
   status: string;
@@ -42,6 +42,7 @@ export interface ProductType {
     id: number;
     name: string;
   };
+  createdBy?: number;
 }
 
 export interface ProductData {

@@ -20,7 +20,7 @@ import { cleanString } from '../services/utils';
 import OrderConfirmationEmail from '../components/ui/OrderConformationEmail';
 
 export default function CartPage() {
-  const { cartItems, isLoadingCart, refetchCart } = useCartItems();
+  const { cartItems, isLoadingCart } = useCartItems();
   const navigate = useNavigate();
   const { cart, setCart } = useCart();
   const { user } = useAuth();
@@ -74,12 +74,11 @@ export default function CartPage() {
     id: number
   ) {
     e.stopPropagation();
-    // console.log('item to be removed', id);
     if (cart?.length) {
-      // console.log(cart);
-      setCart(cart?.filter((item) => +item !== id));
-      refetchCart();
-      toast.success('Item removed sucessfully.');
+      const updatedCart = cart.filter((item) => +item !== id);
+      setCart(updatedCart);
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
+      toast.success('Item removed successfully.');
     }
   }
 

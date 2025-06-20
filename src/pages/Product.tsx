@@ -41,7 +41,7 @@ const ProductSkeleton = () => {
         </div>
 
         {/* Product List Skeleton */}
-        <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-1">
+        <div className="mb-[50px] mt-6 grid grid-cols-1 gap-6 md:mb-0 lg:grid-cols-1">
           {Array.from({ length: 5 }).map((_, index) => (
             <div
               key={index}
@@ -184,7 +184,7 @@ function Product() {
           <div className="flex items-center space-x-4"></div>
         </div>
 
-        <div className="mt-6 grid grid-cols-1 gap-6">
+        <div className="mb-[80px] mt-6 grid grid-cols-1 gap-6 md:mb-0">
           <ProductList products={paginatedProducts} />
         </div>
         {totalPages > 1 && (
