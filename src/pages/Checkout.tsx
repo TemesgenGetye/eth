@@ -10,8 +10,10 @@ import {
   ShoppingBag,
   Truck,
 } from 'lucide-react';
+import { useLanguage } from '../Context/Languge';
 
 export default function CheckoutPage() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const { cart } = useCart();
   const [formData, setFormData] = useState({
@@ -85,12 +87,14 @@ export default function CheckoutPage() {
           className="mb-6 flex items-center text-sm text-gray-600 hover:text-gray-900"
         >
           <ChevronLeft className="mr-1 h-4 w-4" />
-          Back to Cart
+          {t('common.backToCart')}
         </button>
 
-        <h1 className="text-2xl font-bold text-gray-900">Checkout</h1>
+        <h1 className="text-2xl font-bold text-gray-900">
+          {t('common.checkout')}
+        </h1>
         <p className="mt-2 text-sm text-gray-500">
-          Complete your purchase by providing your shipping and payment details.
+          {t('common.completePurchaseMessage')}
         </p>
       </div>
 
@@ -106,7 +110,9 @@ export default function CheckoutPage() {
               >
                 1
               </div>
-              <span className="mt-2 text-sm font-medium">Shipping</span>
+              <span className="mt-2 text-sm font-medium">
+                {t('common.shipping')}
+              </span>
             </div>
             <div
               className={`flex flex-1 flex-col items-center ${step === 'payment' ? 'text-blue-600' : 'text-gray-500'}`}
@@ -116,7 +122,9 @@ export default function CheckoutPage() {
               >
                 2
               </div>
-              <span className="mt-2 text-sm font-medium">Payment</span>
+              <span className="mt-2 text-sm font-medium">
+                {t('common.payment')}
+              </span>
             </div>
             <div
               className={`flex flex-1 flex-col items-center ${step === 'review' ? 'text-blue-600' : 'text-gray-500'}`}
@@ -126,7 +134,9 @@ export default function CheckoutPage() {
               >
                 3
               </div>
-              <span className="mt-2 text-sm font-medium">Review</span>
+              <span className="mt-2 text-sm font-medium">
+                {t('common.review')}
+              </span>
             </div>
           </div>
 
@@ -137,7 +147,7 @@ export default function CheckoutPage() {
                 <div className="mb-4 flex items-center">
                   <MapPin className="mr-2 h-5 w-5 text-blue-600" />
                   <h2 className="text-lg font-semibold text-gray-900">
-                    Shipping Information
+                    {t('common.shippingInformation')}
                   </h2>
                 </div>
 
@@ -147,7 +157,7 @@ export default function CheckoutPage() {
                       htmlFor="firstName"
                       className="mb-1 block text-sm font-medium text-gray-700"
                     >
-                      First Name *
+                      {t('common.firstName')} *
                     </label>
                     <input
                       type="text"
@@ -164,7 +174,7 @@ export default function CheckoutPage() {
                       htmlFor="lastName"
                       className="mb-1 block text-sm font-medium text-gray-700"
                     >
-                      Last Name *
+                      {t('common.lastName')} *
                     </label>
                     <input
                       type="text"
@@ -181,7 +191,7 @@ export default function CheckoutPage() {
                       htmlFor="email"
                       className="mb-1 block text-sm font-medium text-gray-700"
                     >
-                      Email Address *
+                      {t('common.emailAddress')} *
                     </label>
                     <input
                       type="email"
@@ -198,7 +208,7 @@ export default function CheckoutPage() {
                       htmlFor="phone"
                       className="mb-1 block text-sm font-medium text-gray-700"
                     >
-                      Phone Number *
+                      {t('common.phoneNumber')} *
                     </label>
                     <input
                       type="tel"
@@ -215,7 +225,7 @@ export default function CheckoutPage() {
                       htmlFor="address"
                       className="mb-1 block text-sm font-medium text-gray-700"
                     >
-                      Address *
+                      {t('common.address')} *
                     </label>
                     <input
                       type="text"
@@ -232,7 +242,7 @@ export default function CheckoutPage() {
                       htmlFor="city"
                       className="mb-1 block text-sm font-medium text-gray-700"
                     >
-                      City *
+                      {t('common.city')} *
                     </label>
                     <input
                       type="text"
@@ -249,7 +259,7 @@ export default function CheckoutPage() {
                       htmlFor="state"
                       className="mb-1 block text-sm font-medium text-gray-700"
                     >
-                      State/Emirate *
+                      {t('common.stateEmirate')} *
                     </label>
                     <input
                       type="text"
@@ -266,7 +276,7 @@ export default function CheckoutPage() {
                       htmlFor="zipCode"
                       className="mb-1 block text-sm font-medium text-gray-700"
                     >
-                      Zip/Postal Code *
+                      {t('common.zipPostalCode')} *
                     </label>
                     <input
                       type="text"
@@ -283,7 +293,7 @@ export default function CheckoutPage() {
                       htmlFor="country"
                       className="mb-1 block text-sm font-medium text-gray-700"
                     >
-                      Country *
+                      {t('common.country')} *
                     </label>
                     <select
                       id="country"
@@ -316,7 +326,7 @@ export default function CheckoutPage() {
                     htmlFor="saveInfo"
                     className="ml-2 text-sm text-gray-700"
                   >
-                    Save this information for next time
+                    {t('common.saveInfoForNextTime')}
                   </label>
                 </div>
 
@@ -326,7 +336,7 @@ export default function CheckoutPage() {
                     onClick={goToNextStep}
                     className="w-full rounded-lg bg-blue-600 py-3 text-white hover:bg-blue-700"
                   >
-                    Continue to Payment
+                    {t('common.continueToPayment')}
                   </button>
                 </div>
               </div>
@@ -338,7 +348,7 @@ export default function CheckoutPage() {
                 <div className="mb-4 flex items-center">
                   <CreditCard className="mr-2 h-5 w-5 text-blue-600" />
                   <h2 className="text-lg font-semibold text-gray-900">
-                    Payment Method
+                    {t('common.paymentMethod')}
                   </h2>
                 </div>
 
@@ -358,7 +368,7 @@ export default function CheckoutPage() {
                       className="ml-3 flex flex-1 items-center"
                     >
                       <span className="text-sm font-medium text-gray-900">
-                        Credit/Debit Card
+                        {t('common.creditDebitCard')}
                       </span>
                       <div className="ml-auto flex space-x-2">
                         <div className="h-8 w-12 rounded bg-gray-200"></div>
@@ -447,7 +457,7 @@ export default function CheckoutPage() {
                       className="ml-3 flex flex-1 items-center"
                     >
                       <span className="text-sm font-medium text-gray-900">
-                        PayPal
+                        {t('common.paypal')}
                       </span>
                       <div className="ml-auto h-8 w-16 rounded bg-gray-200"></div>
                     </label>
@@ -467,7 +477,7 @@ export default function CheckoutPage() {
                       htmlFor="cod"
                       className="ml-3 block text-sm font-medium text-gray-900"
                     >
-                      Cash on Delivery
+                      {t('common.cashOnDelivery')}
                     </label>
                   </div>
                 </div>
@@ -485,7 +495,7 @@ export default function CheckoutPage() {
                     onClick={goToNextStep}
                     className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                   >
-                    Continue to Review
+                    {t('common.continueToReview')}
                   </button>
                 </div>
               </div>
@@ -497,14 +507,14 @@ export default function CheckoutPage() {
                 <div className="mb-4 flex items-center">
                   <ShoppingBag className="mr-2 h-5 w-5 text-blue-600" />
                   <h2 className="text-lg font-semibold text-gray-900">
-                    Review Your Order
+                    {t('common.reviewYourOrder')}
                   </h2>
                 </div>
 
                 <div className="space-y-6">
                   <div>
                     <h3 className="mb-2 text-sm font-medium text-gray-700">
-                      Shipping Information
+                      {t('common.shippingInformation')}
                     </h3>
                     <div className="rounded-lg bg-gray-50 p-4 text-sm">
                       <p className="font-medium">
@@ -522,22 +532,24 @@ export default function CheckoutPage() {
 
                   <div>
                     <h3 className="mb-2 text-sm font-medium text-gray-700">
-                      Payment Method
+                      {t('common.paymentMethod')}
                     </h3>
                     <div className="rounded-lg bg-gray-50 p-4 text-sm">
                       {formData.paymentMethod === 'card' && (
-                        <p>Credit/Debit Card</p>
+                        <p>{t('common.creditDebitCard')}</p>
                       )}
-                      {formData.paymentMethod === 'paypal' && <p>PayPal</p>}
+                      {formData.paymentMethod === 'paypal' && (
+                        <p>{t('common.paypal')}</p>
+                      )}
                       {formData.paymentMethod === 'cod' && (
-                        <p>Cash on Delivery</p>
+                        <p>{t('common.cashOnDelivery')}</p>
                       )}
                     </div>
                   </div>
 
                   <div>
                     <h3 className="mb-2 text-sm font-medium text-gray-700">
-                      Order Items
+                      {t('common.orderItems')}
                     </h3>
                     <div className="divide-y rounded-lg border">
                       {cart.map((item) => (
@@ -554,11 +566,11 @@ export default function CheckoutPage() {
                               {item.title.en}
                             </h4>
                             <p className="mt-1 text-sm text-gray-500">
-                              Qty: {item.quantity || 1}
+                              {t('common.quantity')}: {item.quantity || 1}
                             </p>
                           </div>
                           <p className="text-sm font-medium text-gray-900">
-                            {item.prices.price} AED
+                            {item.prices.price} {t('common.aed')}
                           </p>
                         </div>
                       ))}
@@ -572,13 +584,13 @@ export default function CheckoutPage() {
                     onClick={goToPreviousStep}
                     className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-gray-50"
                   >
-                    Back
+                    {t('common.back')}
                   </button>
                   <button
                     type="submit"
                     className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                   >
-                    Place Order
+                    {t('common.placeOrder')}
                   </button>
                 </div>
               </div>
@@ -590,34 +602,36 @@ export default function CheckoutPage() {
         <div className="md:col-span-1">
           <div className="rounded-lg border bg-white p-6 shadow-sm">
             <h2 className="mb-4 text-lg font-semibold text-gray-900">
-              Order Summary
+              {t('common.orderSummary')}
             </h2>
 
             <div className="space-y-4">
               <div className="flex justify-between border-b pb-4">
                 <span className="text-sm text-gray-600">
-                  Items ({cart.length})
+                  {t('common.itemsCount')} ({cart.length})
                 </span>
                 <span className="text-sm font-medium">
-                  {calculateSubtotal().toFixed(2)} AED
+                  {calculateSubtotal().toFixed(2)} {t('common.aed')}
                 </span>
               </div>
 
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Shipping</span>
+                <span className="text-sm text-gray-600">
+                  {t('common.shipping')}
+                </span>
                 <span className="text-sm font-medium">
                   {calculateShipping() === 0
-                    ? 'Free'
-                    : `${calculateShipping().toFixed(2)} AED`}
+                    ? t('common.free')
+                    : `${calculateShipping().toFixed(2)} ${t('common.aed')}`}
                 </span>
               </div>
 
               <div className="flex justify-between border-t pt-4">
                 <span className="text-base font-medium text-gray-900">
-                  Total
+                  {t('common.total')}
                 </span>
                 <span className="text-base font-bold text-gray-900">
-                  {calculateTotal()} AED
+                  {calculateTotal()} {t('common.aed')}
                 </span>
               </div>
             </div>
@@ -625,31 +639,31 @@ export default function CheckoutPage() {
             <div className="mt-6 space-y-4 rounded-lg bg-gray-50 p-4">
               <div className="flex items-center text-sm text-gray-600">
                 <Truck className="mr-2 h-4 w-4" />
-                <span>Free shipping on orders over 500 AED</span>
+                <span>{t('common.freeShipping')}</span>
               </div>
               <div className="flex items-center text-sm text-gray-600">
                 <Package className="mr-2 h-4 w-4" />
-                <span>Estimated delivery: 3-5 business days</span>
+                <span>{t('common.estimatedDelivery')}</span>
               </div>
               <div className="flex items-center text-sm text-gray-600">
                 <ShieldCheck className="mr-2 h-4 w-4" />
-                <span>Secure payment processing</span>
+                <span>{t('common.securePayment')}</span>
               </div>
             </div>
 
             <div className="mt-6">
               <div className="rounded-lg border border-gray-200 p-4">
                 <h3 className="mb-2 text-sm font-medium text-gray-700">
-                  Have a promo code?
+                  {t('common.havePromoCode')}
                 </h3>
                 <div className="flex">
                   <input
                     type="text"
-                    placeholder="Enter code"
+                    placeholder={t('common.enterPromoCode')}
                     className="w-full rounded-l-lg border border-gray-300 p-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                   <button className="rounded-r-lg bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300">
-                    Apply
+                    {t('common.applyCode')}
                   </button>
                 </div>
               </div>

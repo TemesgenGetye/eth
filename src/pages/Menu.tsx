@@ -21,6 +21,8 @@ import { useGetCustomer } from '../hooks/useCustomers';
 import { Badge } from '../components/ui/Badge';
 import { Link, useNavigate } from 'react-router-dom';
 import supabase from '../services/supabase';
+import { useLanguage } from '../Context/Languge';
+import toast from 'react-hot-toast';
 
 const Menu = () => {
   const { user } = useAuth();
@@ -29,6 +31,8 @@ const Menu = () => {
   const navigate = useNavigate();
   const [isCityExpanded, setIsCityExpanded] = useState(false);
   const [selectedCity, setSelectedCity] = useState('Dubai');
+  const { language, setLanguage, t } = useLanguage();
+
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
     if (!error) {
@@ -38,10 +42,18 @@ const Menu = () => {
     }
   };
 
+  const handleLanguageToggle = () => {
+    const newLanguage = language === 'en' ? 'ar' : 'en';
+    setLanguage(newLanguage);
+    toast.success(
+      newLanguage === 'ar' ? 'تم التبديل إلى العربية' : 'Switched to English'
+    );
+  };
+
   if (isLoadingCustomer) {
     return (
       <div className="flex h-screen items-center justify-center">
-        Loading...
+        {t('common.loading')}
       </div>
     );
   }
@@ -62,15 +74,15 @@ const Menu = () => {
     : '';
 
   const cities = [
-    'All Cities (UAE)',
-    'Abu Dhabi',
-    'Ajman',
-    'Al Ain',
-    'Dubai',
-    'Fujairah',
-    'Ras al Khaimah',
-    'Sharjah',
-    'Umm al Quwain',
+    { key: 'allCitiesUAE', value: t('common.menu.allCitiesUAE') },
+    { key: 'abuDhabi', value: t('common.menu.abuDhabi') },
+    { key: 'ajman', value: t('common.menu.ajman') },
+    { key: 'alAin', value: t('common.menu.alAin') },
+    { key: 'dubai', value: t('common.menu.dubai') },
+    { key: 'fujairah', value: t('common.menu.fujairah') },
+    { key: 'rasAlKhaimah', value: t('common.menu.rasAlKhaimah') },
+    { key: 'sharjah', value: t('common.menu.sharjah') },
+    { key: 'ummAlQuwain', value: t('common.menu.ummAlQuwain') },
   ];
 
   return (
@@ -87,7 +99,9 @@ const Menu = () => {
           </div>
           <div className="ml-4">
             <h1 className="text-lg font-bold">{customer?.name}</h1>
-            <p className="text-sm text-gray-500">Joined on {formattedDate}</p>
+            <p className="text-sm text-gray-500">
+              {t('common.menu.joinedOn')} {formattedDate}
+            </p>
           </div>
         </div>
       </div>
@@ -106,12 +120,16 @@ const Menu = () => {
             </div>
             <div>
               <h2 className="font-semibold text-gray-800">
-                Got a verified badge yet?
+                {t('common.menu.gotVerifiedBadgeYet')}
               </h2>
-              <p className="text-sm text-gray-600">Get more visibility</p>
-              <p className="text-sm text-gray-600">Enhance your credibility</p>
+              <p className="text-sm text-gray-600">
+                {t('common.menu.getMoreVisibility')}
+              </p>
+              <p className="text-sm text-gray-600">
+                {t('common.menu.enhanceYourCredibility')}
+              </p>
               <a href="#" className="text-sm font-semibold text-blue-600">
-                Learn More
+                {t('common.menu.learnMore')}
               </a>
             </div>
           </div>
@@ -119,29 +137,38 @@ const Menu = () => {
         </div>
       )}
       <div className="grid grid-cols-2 gap-4 p-4">
-        <QuickAction icon={Heart} label="Favorites" href="/favourites" />
-        <QuickAction label="My Ads" href="/my-ads" />
-        <QuickAction icon={ShoppingCart} label="My Cart" href="/cart" />
-        <QuickAction icon={Bell} label="Notifications" href="/chats" />
+        <QuickAction
+          icon={Heart}
+          label={t('common.favorites')}
+          href="/favourites"
+        />
+        <QuickAction label={t('common.menu.myAds')} href="/my-ads" />
+        <QuickAction
+          icon={ShoppingCart}
+          label={t('common.menu.myCart')}
+          href="/cart"
+        />
+        <QuickAction
+          icon={Bell}
+          label={t('common.notifications')}
+          href="/chats"
+        />
       </div>
 
       <div className="bg-white">
-        <MenuItem icon={User} label="Profile" collapsible />
-        <MenuItem icon={Settings} label="Account" collapsible />
-        <MenuItem icon={Lock} label="Security" />
+        <MenuItem icon={User} label={t('common.profile')} collapsible />
+        <MenuItem
+          icon={Settings}
+          label={t('common.menu.account')}
+          collapsible
+        />
+        <MenuItem icon={Lock} label={t('common.menu.security')} />
       </div>
 
-      {/* <div className="mt-4 bg-white">
-        <MenuItem icon={Briefcase} label="Jobs Dashboard" />
-        <MenuItem icon={Users} label="Candidate Search" />
-        <MenuItem icon={Calendar} label="Car Appointments" newBadge />
-        <MenuItem icon={Calendar} label="Car Inspections" newBadge />
-        <MenuItem icon={Bookmark} label="My Bookmarks" />
-      </div> */}
       <div className="mt-4 bg-white">
         <MenuItem
           icon={MapPin}
-          label="City"
+          label={t('common.menu.city')}
           value={selectedCity}
           collapsible
           isExpanded={isCityExpanded}
@@ -151,23 +178,25 @@ const Menu = () => {
           <div className="bg-white pl-8 pr-4">
             {cities.map((city) => (
               <div
-                key={city}
+                key={city.key}
                 className="cursor-pointer border-t border-gray-100 p-4 hover:bg-gray-50"
                 onClick={() => {
-                  setSelectedCity(city);
+                  setSelectedCity(city.value);
                   setIsCityExpanded(false);
                 }}
               >
-                {city}
+                {city.value}
               </div>
             ))}
           </div>
         )}
-        <MenuItem icon={Languages} label="Language" value="العربية" />
-        {/* <MenuItem icon={Globe} label="Full Site" /> */}
-        <MenuItem icon={HelpCircle} label="Help" />
-        {/* <MenuItem icon={Phone} label="Call Us" /> */}
-        {/* <MenuItem icon={FileText} label="Legal Hub" /> */}
+        <MenuItem
+          icon={Languages}
+          label={t('common.menu.language')}
+          value={language === 'en' ? 'English' : 'العربية'}
+          onClick={handleLanguageToggle}
+        />
+        <MenuItem icon={HelpCircle} label={t('common.help')} />
       </div>
 
       <div className="mt-4 bg-white">
@@ -176,7 +205,7 @@ const Menu = () => {
           className="flex w-full items-center p-4 text-red-500"
         >
           <LogOut className="mr-4" size={16} />
-          <span className="text-gray-500">Logout</span>
+          <span className="text-gray-500">{t('common.menu.logout')}</span>
         </button>
       </div>
     </div>

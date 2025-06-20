@@ -17,12 +17,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import supabase from '../../services/supabase';
 // import { useVerficationModal } from '../../Context/VerficationModal';
 import { useGetCustomer } from '../../hooks/useCustomers';
+import { useLanguage } from '../../Context/Languge';
 
 const NavLinks = () => {
   const [activeModal, setActiveModal] = useState('');
   const navigate = useNavigate();
   const { user } = useAuth();
   const navlinksRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguage();
   // const { open, setOpen } = useVerficationModal(); YW unused state
 
   const { customer } = useGetCustomer(
@@ -87,17 +89,22 @@ const NavLinks = () => {
           onClick={() => handleLinkClick('chats')}
         >
           <MessageCircle className="mr-1 h-4 w-4" />
-          <p className="text-sm text-gray-500">Chats</p>
+          <p className="text-sm text-gray-500">
+            {t('common.navigation.chats')}
+          </p>
         </div>
         {activeModal === 'chats' && (
-          <div className="dropdown-pointer absolute -right-4 top-12 z-50 w-64 rounded-lg bg-white p-4 shadow-lg">
+          <div className="dropdown-pointer absolute -right-4 top-12 z-[1000] w-64 rounded-lg bg-white p-4 shadow-lg">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-semibold capitalize">Chats</h3>
+              <h3 className="text-lg font-semibold capitalize">
+                {t('common.navigation.chats')}
+              </h3>
               <X className="h-4 w-4 cursor-pointer" onClick={closeModal} />
             </div>
-            <p className="text-sm text-gray-500">
-              Your chat messages will appear here.
-            </p>
+            <div className=" mt-4 flex flex-col items-center gap-2 text-lg font-medium text-gray-900">
+              <img src="/chat.gif" alt="chat gif" className="size-[150px]" />
+              {t('common.navigation.chatMessagesPlaceholder')}
+            </div>
           </div>
         )}
       </div>
@@ -116,7 +123,9 @@ const NavLinks = () => {
         {activeModal === 'profile' && (
           <div className="dropdown-pointer absolute right-5 top-10 z-[1000] w-64 rounded-lg bg-white p-4 shadow-lg">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-semibold capitalize">Profile</h3>
+              <h3 className="text-lg font-semibold capitalize">
+                {t('common.navigation.profile')}
+              </h3>
               <X className="h-4 w-4 cursor-pointer" onClick={closeModal} />
             </div>
             <ul className="space-y-2">
@@ -129,7 +138,9 @@ const NavLinks = () => {
               >
                 <button className="flex items-center space-x-2">
                   <User className="h-4 w-4" />
-                  <p className="text-sm text-gray-500">Profile</p>
+                  <p className="text-sm text-gray-500">
+                    {t('common.navigation.profile')}
+                  </p>
                 </button>
               </li>
               <li
@@ -141,7 +152,9 @@ const NavLinks = () => {
               >
                 <button className="flex items-center space-x-2">
                   <List className="h-4 w-4" />
-                  <p className="text-sm text-gray-500">My Ads</p>
+                  <p className="text-sm text-gray-500">
+                    {t('common.navigation.myAds')}
+                  </p>
                 </button>
               </li>
               <li
@@ -153,7 +166,9 @@ const NavLinks = () => {
               >
                 <button className="flex items-center space-x-2">
                   <Heart className="h-4 w-4" />
-                  <p className="text-sm text-gray-500">Favorites</p>
+                  <p className="text-sm text-gray-500">
+                    {t('common.navigation.favorites')}
+                  </p>
                 </button>
               </li>
 
@@ -175,8 +190,8 @@ const NavLinks = () => {
                   />
                   <p className="text-sm text-gray-500">
                     {customer?.verification_status === 'verified'
-                      ? 'Verified'
-                      : 'Verify your account'}
+                      ? t('common.navigation.verified')
+                      : t('common.navigation.verifyAccount')}
                   </p>
                 </button>
               </li>
@@ -190,7 +205,9 @@ const NavLinks = () => {
               >
                 <button className="flex items-center space-x-2">
                   <MessageCircle className="h-4 w-4" />
-                  <p className="text-sm text-gray-500">Chats</p>
+                  <p className="text-sm text-gray-500">
+                    {t('common.navigation.chats')}
+                  </p>
                 </button>
               </li>
               <li
@@ -205,12 +222,16 @@ const NavLinks = () => {
                   {customer?.email ? (
                     <>
                       <LogOutIcon className="h-4 w-4" />
-                      <p className="text-sm text-gray-500">Logout</p>
+                      <p className="text-sm text-gray-500">
+                        {t('common.navigation.logout')}
+                      </p>
                     </>
                   ) : (
                     <>
                       <LogInIcon className="h-4 w-4" />
-                      <p className="text-sm text-gray-500">Login</p>
+                      <p className="text-sm text-gray-500">
+                        {t('common.navigation.login')}
+                      </p>
                     </>
                   )}
                 </button>
@@ -224,7 +245,7 @@ const NavLinks = () => {
         to={'/post-ad'}
         className="rounded-md bg-blue-700 p-2 px-5 text-sm font-semibold text-white hover:bg-blue-800"
       >
-        Place Your Ad
+        {t('common.navigation.placeAd')}
       </Link>
     </div>
   );

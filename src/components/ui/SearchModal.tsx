@@ -5,6 +5,7 @@ import { useSearchProducts } from '../../hooks/useSearchProducts';
 import useCategories from '../../hooks/useCategories';
 import { cleanString } from '../../services/utils';
 import { CategoryType } from '../type';
+import { useLanguage } from '../../Context/Languge';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -28,6 +29,8 @@ const SearchModal = ({
     searchValue,
     activeCategory
   );
+
+  const { t } = useLanguage();
 
   const processedResults = useMemo(() => {
     if (!searchResults) return [];
@@ -84,7 +87,7 @@ const SearchModal = ({
               type="text"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              placeholder={`Search for ${activeCategory === 'all' ? 'anything' : activeCategory}`}
+              placeholder={`${t('common.searchh')} ${activeCategory === 'all' ? t('common.anything') : activeCategory}`}
               className="w-full rounded-lg bg-gray-100 px-4 py-2 focus:outline-none"
             />
             {searchValue && (

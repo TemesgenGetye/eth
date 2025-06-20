@@ -13,6 +13,7 @@ import {
 } from '../components/ui/Select';
 import { useNavigate } from 'react-router-dom';
 import { setItem } from '../services/db';
+import { useLanguage } from '../Context/Languge';
 
 interface Subcategory {
   id: number;
@@ -21,6 +22,7 @@ interface Subcategory {
 
 export default function PostAdPage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { categories = [] } = useCategories();
   const [isSavingDraft, setIsSavingDraft] = useState(false);
@@ -36,11 +38,11 @@ export default function PostAdPage() {
     saveAsDraft,
   } = useProductForm(
     () => {
-      toast.success('Product has been successfully uploaded.');
+      toast.success(t('common.postAd.postAdSuccess'));
       reset();
     },
     () => {
-      toast.error('Error trying to upload your product.');
+      toast.error(t('common.postAd.postAdError'));
     }
   );
 
@@ -94,7 +96,7 @@ export default function PostAdPage() {
         navigate('/pricing'); // Use navigate to go to the next page
       } catch (error) {
         console.error('Failed to save form data to IndexedDB', error);
-        toast.error('Could not proceed to pricing. Please try again.');
+        toast.error(t('common.postAd.fillRequiredFields'));
       }
     }
   };
@@ -117,11 +119,11 @@ export default function PostAdPage() {
           reset();
           navigate('/my-ads'); // Navigate to my ads page
         } else {
-          toast.error('Failed to save draft. Please try again.');
+          toast.error(t('common.postAd.fillRequiredFields'));
         }
       } catch (error) {
         console.error('Failed to save draft:', error);
-        toast.error('Failed to save draft. Please try again.');
+        toast.error(t('common.postAd.fillRequiredFields'));
       } finally {
         setIsSavingDraft(false);
       }
@@ -138,8 +140,8 @@ export default function PostAdPage() {
               <ArrowLeft className="h-5 w-5" />
             </button>
           </a>
-          <h1 className=" text-xl font-bold text-black sm:text-2xl">
-            Post New Ad
+          <h1 className="text-2xl font-bold text-black">
+            {t('common.postAd.title')}
           </h1>
         </div>
 
@@ -155,8 +157,8 @@ export default function PostAdPage() {
 
           {/* Images Section */}
           <div className="rounded-lg border border-gray-200 bg-white p-6">
-            <h2 className="mb-4 text-lg font-semibold text-black sm:text-xl">
-              Product Images
+            <h2 className="mb-4 text-xl font-semibold text-black">
+              {t('common.postAd.productImages')}
             </h2>
             <div className="mb-4 grid grid-cols-2 gap-4 md:grid-cols-4">
               {images.map((image: File, index: number) => (
@@ -181,7 +183,9 @@ export default function PostAdPage() {
                 className="flex h-32 flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 transition-colors hover:border-blue-400"
               >
                 <Upload className="mb-2 h-6 w-6 text-gray-400" />
-                <span className="text-sm text-gray-500">Add Image</span>
+                <span className="text-sm text-gray-500">
+                  {t('common.postAd.addImage')}
+                </span>
               </button>
             </div>
             <input
@@ -193,8 +197,7 @@ export default function PostAdPage() {
               className="hidden"
             />
             <p className="text-sm text-gray-500">
-              Upload up to 10 images. First image will be the main photo.
-              (Optional)
+              {t('common.postAd.uploadLimit')}
             </p>
             {errors.imgUrls && (
               <p className="text-xs text-red-500">{errors?.imgUrls?.message}</p>
@@ -203,18 +206,18 @@ export default function PostAdPage() {
 
           {/* Basic Information */}
           <div className="rounded-lg border border-gray-200 bg-white p-6">
-            <h2 className="mb-4 text-lg font-semibold text-black sm:text-xl">
-              Basic Information
+            <h2 className="mb-4 text-xl font-semibold text-black">
+              {t('common.postAd.basicInfo')}
             </h2>
             <div className="space-y-4">
               <div>
                 <label className="mb-2 block text-sm font-medium text-black">
-                  Product Title
+                  {t('common.postAd.productTitle')} *
                 </label>
                 <input
                   {...register('name')}
                   className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter a descriptive title for your product"
+                  placeholder={t('common.postAd.productTitlePlaceholder')}
                 />
                 {errors.name && (
                   <p className="mt-1 text-xs text-red-500">
@@ -224,13 +227,13 @@ export default function PostAdPage() {
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-black">
-                  Description
+                  {t('common.postAd.description')} *
                 </label>
                 <textarea
                   {...register('description')}
                   rows={6}
                   className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-blue-500"
-                  placeholder="Provide detailed description..."
+                  placeholder={t('common.postAd.descriptionPlaceholder')}
                 />
                 {errors.description && (
                   <p className="text-xs text-red-500">
@@ -241,7 +244,7 @@ export default function PostAdPage() {
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-black">
-                    Category *
+                    {t('common.postAd.category')} *
                   </label>
                   <Controller
                     name="category_id"
@@ -252,7 +255,9 @@ export default function PostAdPage() {
                         defaultValue={field.value?.toString()}
                       >
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select Category" />
+                          <SelectValue
+                            placeholder={t('common.postAd.selectCategory')}
+                          />
                         </SelectTrigger>
                         <SelectContent>
                           {categories.map((cat) => (
@@ -272,7 +277,7 @@ export default function PostAdPage() {
                 </div>
                 <div>
                   <label className="mb-2 block text-sm font-medium text-black">
-                    Subcategory *
+                    {t('common.postAd.subcategory')} *
                   </label>
                   <Controller
                     name="subcategory_id"
@@ -284,7 +289,9 @@ export default function PostAdPage() {
                         disabled={!selectedCategory}
                       >
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select Subcategory" />
+                          <SelectValue
+                            placeholder={t('common.postAd.selectSubcategory')}
+                          />
                         </SelectTrigger>
                         <SelectContent>
                           {subcategories.map((sub: Subcategory) => (
@@ -308,13 +315,13 @@ export default function PostAdPage() {
 
           {/* Pricing & stock */}
           <div className="rounded-lg border border-gray-200 bg-white p-6">
-            <h2 className="mb-4 text-lg font-semibold text-black sm:text-xl">
-              Pricing & Stock
+            <h2 className="mb-4 text-xl font-semibold text-black">
+              {t('common.postAd.pricingStock')}
             </h2>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
                 <label className="mb-2 block text-sm font-medium text-black">
-                  Currency
+                  {t('common.postAd.currency')}
                 </label>
                 <Controller
                   name="price.currency"
@@ -337,7 +344,7 @@ export default function PostAdPage() {
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-black">
-                  Original Price *
+                  {t('common.postAd.originalPrice')} *
                 </label>
                 <input
                   type="number"
@@ -352,7 +359,7 @@ export default function PostAdPage() {
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-black">
-                  Discounted Price
+                  {t('common.postAd.discountedPrice')}
                 </label>
                 <input
                   type="number"
@@ -362,7 +369,7 @@ export default function PostAdPage() {
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-black">
-                  Stock
+                  {t('common.postAd.stock')} *
                 </label>
                 <input
                   type="number"
@@ -378,13 +385,13 @@ export default function PostAdPage() {
 
           {/* Location & Contact */}
           <div className="rounded-lg border border-gray-200 bg-white p-6">
-            <h2 className="mb-4 text-lg font-semibold text-black sm:text-xl">
-              Location & Contact Information
+            <h2 className="mb-4 text-xl font-semibold text-black">
+              {t('common.postAd.locationContact')}
             </h2>
             <div className="space-y-4">
               <div>
                 <label className="mb-2 block text-sm font-medium text-black">
-                  Location
+                  {t('common.postAd.location')}
                 </label>
                 <Controller
                   name="location"
@@ -395,7 +402,9 @@ export default function PostAdPage() {
                       defaultValue={field.value}
                     >
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select City" />
+                        <SelectValue
+                          placeholder={t('common.postAd.locationPlaceholder')}
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         {cities.map((city) => (
@@ -416,12 +425,12 @@ export default function PostAdPage() {
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-black">
-                    Contact Name
+                    {t('common.postAd.contactName')} *
                   </label>
                   <input
                     {...register('contact_name')}
                     className="w-full rounded-lg border border-gray-300 px-4 py-3"
-                    placeholder="Your name"
+                    placeholder={t('common.postAd.contactNamePlaceholder')}
                   />
                   {errors.contact_name && (
                     <p className="mt-1 text-xs text-red-500">
@@ -431,12 +440,12 @@ export default function PostAdPage() {
                 </div>
                 <div>
                   <label className="mb-2 block text-sm font-medium text-black">
-                    Phone Number
+                    {t('common.postAd.phoneNumber')} *
                   </label>
                   <input
                     {...register('phone_num')}
                     className="w-full rounded-lg border border-gray-300 px-4 py-3"
-                    placeholder="Your phone number"
+                    placeholder={t('common.postAd.phoneNumberPlaceholder')}
                   />
                   {errors.phone_num && (
                     <p className="mt-1 text-xs text-red-500">
@@ -446,12 +455,12 @@ export default function PostAdPage() {
                 </div>
                 <div>
                   <label className="mb-2 block text-sm font-medium text-black">
-                    Email Address
+                    {t('common.postAd.emailAddress')}
                   </label>
                   <input
                     {...register('email')}
                     className="w-full rounded-lg border border-gray-300 px-4 py-3"
-                    placeholder="Your email address"
+                    placeholder={t('common.postAd.emailPlaceholder')}
                   />
                   {errors.email && (
                     <p className="mt-1 text-xs text-red-500">
@@ -478,7 +487,7 @@ export default function PostAdPage() {
                   </div>
                 </>
               ) : (
-                'Save as Draft'
+                t('common.postAd.saveAsDraft')
               )}
             </button>
             <button
@@ -493,7 +502,7 @@ export default function PostAdPage() {
                   </div>
                 </>
               ) : (
-                'Post Ad Now'
+                t('common.postAd.postAdNow')
               )}
             </button>
           </div>

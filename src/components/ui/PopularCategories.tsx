@@ -5,6 +5,7 @@ import useCategories from '../../hooks/useCategories';
 import { ProductType } from '../type';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import { ArrowRight } from 'lucide-react';
+import { useLanguage } from '../../Context/Languge';
 
 const LoadingSkeleton = () => {
   return (
@@ -39,6 +40,7 @@ const LoadingSkeleton = () => {
 export default function PopularCategories() {
   const { products, isLoading } = useProducts();
   const { categories } = useCategories();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width: 767px)');
 
@@ -90,8 +92,8 @@ export default function PopularCategories() {
         );
         return (
           <div key={category.id} className="my-8">
-            <h3 className="mb-4 font-semibold text-gray-800">
-              Popular in {category.name}
+            <h3 className="mb-4 text-xl font-semibold text-gray-800">
+              {t('common.popularIn')} {category.name}
             </h3>
             {isMobile ? (
               <div className="hide-scrollbar flex items-stretch gap-4 overflow-x-auto px-2 pb-2">

@@ -1,12 +1,14 @@
 import type React from 'react';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useSignup } from '../services/auth';
 import { useNavigate } from 'react-router-dom';
 import supabase from '../services/supabase';
 import toast from 'react-hot-toast';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { useLanguage } from '../Context/Languge';
 
 export default function SignUpPage() {
+  const { t } = useLanguage();
   const [error, setError] = useState<string>('');
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
@@ -28,10 +30,7 @@ export default function SignUpPage() {
       setError(error.message);
       return false;
     }
-    toast.success(
-      'Signup successful! Please check your email inbox and click the verification link to activate your account. You will not be able to log in until your email is verified.',
-      { duration: 8000 }
-    );
+    toast.success(t('common.signupSuccessful'), { duration: 8000 });
     return true;
   }
 
@@ -40,7 +39,7 @@ export default function SignUpPage() {
     setError('');
 
     if (!recaptchaToken) {
-      setError('Please complete the reCAPTCHA.');
+      setError(t('common.pleaseCompleteRecaptcha'));
       return;
     }
 
@@ -50,7 +49,7 @@ export default function SignUpPage() {
     const confirmPassword = formData.get('confirmPassword') as string;
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match.');
+      setError(t('common.passwordsDoNotMatch'));
       return;
     }
 
@@ -72,8 +71,8 @@ export default function SignUpPage() {
       });
       if (error) console.error('Google sign-up error:', error.message);
       await new Promise((resolve) => setTimeout(resolve, 2000));
-    } catch (error: any) {
-      setError(error.message || 'Google signup failed');
+    } catch (error: unknown) {
+      setError((error as Error).message || t('common.googleSignupFailed'));
     } finally {
       setIsGoogleLoading(false);
     }
@@ -85,9 +84,11 @@ export default function SignUpPage() {
         {/* Header */}
         <div className="text-center">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-            Create your account
+            {t('common.createYourAccount')}
           </h1>
-          <p className="mt-2 text-sm text-gray-600">Sign up to get started</p>
+          <p className="mt-2 text-sm text-gray-600">
+            {t('common.signUpToGetStarted')}
+          </p>
         </div>
         {/* Sign Up Card */}
         <div className="rounded-lg border border-gray-200 bg-white shadow-lg">
@@ -95,10 +96,10 @@ export default function SignUpPage() {
           <div className="border-b border-gray-200 px-6 py-4">
             <img src={'./logo.png'} alt="logo" className="mx-auto w-[20%]" />
             <h2 className="text-center text-2xl font-semibold text-gray-900">
-              Sign up
+              {t('common.signUp')}
             </h2>
             <p className="mt-1 text-center text-sm text-gray-600">
-              Enter your email and password to create your account
+              {t('common.enterEmailPasswordCreateAccount')}
             </p>
           </div>
           {/* Card Content */}
@@ -174,7 +175,7 @@ export default function SignUpPage() {
                   />
                 </svg>
               )}
-              Continue with Google
+              {t('common.continueWithGoogle')}
             </button>
             {/* Divider */}
             <div className="relative">
@@ -183,7 +184,7 @@ export default function SignUpPage() {
               </div>
               <div className="relative flex justify-center text-sm">
                 <span className="bg-white px-2 uppercase tracking-wide text-gray-500">
-                  Or continue with
+                  {t('common.orContinueWith')}
                 </span>
               </div>
             </div>
@@ -194,13 +195,13 @@ export default function SignUpPage() {
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Email
+                  {t('common.email')}
                 </label>
                 <input
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder={t('common.enterYourEmail')}
                   required
                   disabled={signUp.isPending || isGoogleLoading}
                   className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
@@ -211,13 +212,13 @@ export default function SignUpPage() {
                   htmlFor="password"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Password
+                  {t('common.password')}
                 </label>
                 <input
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder={t('common.enterYourPassword')}
                   required
                   disabled={signUp.isPending || isGoogleLoading}
                   className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
@@ -228,13 +229,13 @@ export default function SignUpPage() {
                   htmlFor="confirmPassword"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Confirm Password
+                  {t('common.confirmPassword')}
                 </label>
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
                   type="password"
-                  placeholder="Confirm your password"
+                  placeholder={t('common.confirmYourPassword')}
                   required
                   disabled={signUp.isPending || isGoogleLoading}
                   className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
@@ -273,7 +274,7 @@ export default function SignUpPage() {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       ></path>
                     </svg>
-                    Signing up...
+                    {t('common.signingUp')}
                   </>
                 ) : (
                   <>
@@ -290,7 +291,7 @@ export default function SignUpPage() {
                         d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                       />
                     </svg>
-                    Sign up with Email
+                    {t('common.signUpWithEmail')}
                   </>
                 )}
               </button>
@@ -299,31 +300,31 @@ export default function SignUpPage() {
           {/* Card Footer */}
           <div className="rounded-b-lg border-t border-gray-200 bg-gray-50 px-6 py-4">
             <p className="text-center text-sm text-gray-600">
-              Already have an account?{' '}
+              {t('common.alreadyHaveAccount')}{' '}
               <a
                 href="/login"
                 className="font-medium text-blue-600 hover:text-blue-500 hover:underline"
               >
-                Sign in
+                {t('common.signIn')}
               </a>
             </p>
           </div>
         </div>
         {/* Terms and Privacy */}
         <div className="text-center text-xs text-gray-500">
-          By signing up, you agree to our{' '}
+          {t('common.bySigningUpAgree')}{' '}
           <a
             href="/terms"
             className="text-blue-600 hover:text-blue-500 hover:underline"
           >
-            Terms of Service
-          </a>
-          and
+            {t('common.termsOfService')}
+          </a>{' '}
+          {t('common.and')}{' '}
           <a
             href="/privacy"
             className="text-blue-600 hover:text-blue-500 hover:underline"
           >
-            Privacy Policy
+            {t('common.privacyPolicy')}
           </a>
         </div>
       </div>

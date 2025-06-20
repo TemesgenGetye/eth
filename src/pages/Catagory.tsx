@@ -2,27 +2,22 @@ import { Search } from 'lucide-react';
 import Banners from '../components/Property.tsx/Banner';
 import ListProductHorizontal from '../components/ui/ListProductHorizontal';
 import PopularSubcatagory from '../components/ui/PopularSubcatagory';
-import {
-  useParams,
-  useNavigate,
-  // useLocation,
-  // useSearchParams,
-} from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import SolidBento from '../components/ui/BentoGridProduct';
 import useCategories from '../hooks/useCategories';
 import { cleanString } from '../services/utils';
 import { useState, useEffect } from 'react';
 import { useSearchProducts } from '../hooks/useSearchProducts';
-// import { useFilteredProducts } from '../hooks/useFilteredProducts';
+import { useLanguage } from '../Context/Languge';
+
 export default function CatagoryInfo() {
+  const { t } = useLanguage();
   const { cname } = useParams<{ cname: string }>();
   const { categories } = useCategories();
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeCategory, setActiveCategory] = useState(cname || '');
-  // const { refetchFiltered } = useFilteredProducts();
-  // const [_, setQuery] = useSearchParams();
   const category = categories?.find(
     (category) => cleanString(category.name) === activeCategory
   );
@@ -81,10 +76,10 @@ export default function CatagoryInfo() {
         <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-white shadow-2xl sm:text-5xl">
-              Every one is on ETH
+              {t('common.everyoneIsOnEth')}
             </h1>
             <p className="mb-3 mt-3  text-lg text-gray-300 shadow-2xl shadow-black">
-              The largest marketplace in the country
+              {t('common.largestMarketplace')}
             </p>
           </div>
           {/* search from the catagory */}
@@ -98,18 +93,18 @@ export default function CatagoryInfo() {
                       type="text"
                       value={searchValue}
                       onChange={(e) => setSearchValue(e.target.value)}
-                      placeholder={`Search in ${category?.name || 'category'}`}
+                      placeholder={`${t('common.search')} ${t('common.searchInCategory')} ${category?.name || 'category'}`}
                       className="flex-1 border-0 px-4 py-2 focus:outline-none focus:ring-0"
                     />
                     <button className="rounded-lg bg-blue-600 px-6 py-2 text-white hover:bg-blue-700">
-                      Search
+                      {t('common.search')}
                     </button>
                   </div>
                   {showSuggestions && (
                     <div className="absolute left-0 top-[calc(100%+5px)] z-50 w-full rounded-md border border-gray-200 bg-white text-black shadow-lg">
                       {isLoading ? (
                         <div className="p-4 text-sm text-gray-500">
-                          Loading...
+                          {t('common.loading')}
                         </div>
                       ) : (
                         <>
@@ -163,7 +158,9 @@ export default function CatagoryInfo() {
                                   >
                                     <div>
                                       <div className="text-sm">
-                                        <span>Search in</span>
+                                        <span>
+                                          {t('common.searchInCategory')}
+                                        </span>
                                         <span className="pl-1 font-semibold">
                                           {highlightText(
                                             cat?.name,

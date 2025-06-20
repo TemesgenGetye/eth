@@ -1,28 +1,23 @@
 import { Loader, ShoppingCart } from 'lucide-react';
 import { lazy, Suspense } from 'react';
 import { motion, useTransform, useMotionValue } from 'framer-motion';
+import { useLanguage } from '../../Context/Languge';
 
 const NoProductModel = lazy(() =>
   import('../model/Scene').then((mod) => ({ default: mod.CartModelSmall }))
 );
 
 function NoProductSmall() {
+  const { t } = useLanguage();
   const x = useMotionValue(0);
 
-  const xNumeric = useTransform(x, (latest) => parseFloat(latest));
+  const xNumeric = useTransform(x, (latest) => latest);
 
   const iconOpacity = useTransform(
     xNumeric,
     [-100, -50, 50, 100],
     [1, 0, 0, 1]
   );
-
-  xNumeric.onChange((latest) => {
-    // console.log('x numeric value:', latest);
-  });
-  iconOpacity.onChange((latest) => {
-    // console.log('iconOpacity value:', latest);
-  });
 
   return (
     <div className="relative h-[40vh] w-full overflow-hidden bg-gradient-to-b from-white to-blue-50">
@@ -33,7 +28,7 @@ function NoProductSmall() {
           transition={{ duration: 0.5 }}
           className="mb-2 text-sm font-bold text-blue-600"
         >
-          You don't have any items in your cart
+          {t('common.noProductSmallTitle')}
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -41,7 +36,7 @@ function NoProductSmall() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="mb-4 text-sm text-blue-400"
         >
-          Add some items to get started
+          {t('common.noProductSmallSubtitle')}
         </motion.p>
       </div>
 
@@ -77,7 +72,7 @@ function NoProductSmall() {
         <div>
           <ShoppingCart className="h-12 w-12 text-blue-500" />
           <p className="text-center text-sm font-semibold text-blue-500">
-            Your cart is empty
+            {t('common.yourCartIsEmpty')}
           </p>
         </div>
       </motion.div>
@@ -89,7 +84,7 @@ function NoProductSmall() {
         className="absolute bottom-8 left-0 right-0 z-10 text-center"
       >
         <p className="text-lg font-semibold text-blue-500">
-          Start shopping now!
+          {t('common.startShoppingNow')}
         </p>
       </motion.div>
     </div>

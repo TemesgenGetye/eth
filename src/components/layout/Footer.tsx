@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-// import { useLanguage } from '../../Context/Languge';
+import { useLanguage } from '../../Context/Languge';
 import InfoModal from '../ui/InfoModal';
 import ContactIcons from '../ui/ContactIcons';
 import toast from 'react-hot-toast';
 
 const Footer = () => {
-  // const { setLanguage } = useLanguage();
+  const { setLanguage, t, language } = useLanguage();
   const [aboutOpen, setAboutOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const [countryModal, setCountryModal] = useState<{
@@ -13,26 +13,31 @@ const Footer = () => {
     country: string | null;
   }>({ open: false, country: null });
 
-  // const handleLanguageChange = (lang: string) => {
-  //   // setLanguage(lang);
-  //   // Add logic to change the language of the website
-  // };
+  const handleLanguageChange = (lang: string) => {
+    setLanguage(lang);
+    toast.success(
+      lang === 'ar' ? 'تم التبديل إلى العربية' : 'Switched to English'
+    );
+  };
+
+  const getLocalizedCountryName = (country: string) => {
+    const key = country.toLowerCase().replace(/\s+/g, '');
+    return t(`common.footer.${key}`);
+  };
 
   return (
-    <footer className="hidden bg-gray-100 px-4 py-8 md:block">
+    <footer
+      className="hidden bg-gray-100 px-4 py-8 md:block"
+      dir={language === 'ar' ? 'rtl' : 'ltr'}
+    >
       {/* About Us Modal */}
       {aboutOpen && (
         <InfoModal
           open={aboutOpen}
           onClose={() => setAboutOpen(false)}
-          title="About 888Market"
+          title={`${t('common.aboutUs')} ${t('common.brandName')}`}
         >
-          888Market is a leading online marketplace in the UAE, offering a wide
-          range of products and services to customers across the region. Our
-          mission is to provide a seamless, secure, and enjoyable shopping
-          experience, connecting buyers and sellers with trust and convenience.
-          We are committed to quality, customer satisfaction, and innovation in
-          the e-commerce space.
+          {t('common.brandName')} {t('common.footer.aboutDescription')}
         </InfoModal>
       )}
       {/* Contact Us Modal */}
@@ -40,45 +45,44 @@ const Footer = () => {
         <InfoModal
           open={contactOpen}
           onClose={() => setContactOpen(false)}
-          title="Contact 888Market"
+          title={`${t('common.contactUs')} ${t('common.brandName')}`}
         >
           <div>
-            For any inquiries, support, or feedback, please reach out to us
-            through the following channels:
+            {t('common.footer.contactDescription')}
             <ContactIcons />
           </div>
         </InfoModal>
       )}
       {/* Country Coming Soon Modal */}
-      {countryModal.open && (
+      {countryModal.open && countryModal.country && (
         <InfoModal
           open={countryModal.open}
           onClose={() => setCountryModal({ open: false, country: null })}
-          title={
-            countryModal.country
-              ? `${countryModal.country} - Coming Soon!`
-              : 'Coming Soon!'
-          }
+          title={`${getLocalizedCountryName(countryModal.country)} ${t('common.footer.willBeAvailableSoon')}`}
+          country={countryModal.country}
         >
-          <div className="flex flex-col items-center justify-center">
-            <img
-              src="/alert.gif"
-              alt="Coming Soon"
-              className="mb-4 h-32 w-32"
-            />
-            <p className="text-center text-lg font-semibold">
-              We're working hard to bring 888Market to{' '}
-              {countryModal.country || 'this country'}! Stay tuned for updates.
+          <div>
+            <p className="mb-4">
+              {t('common.footer.countryComingSoon')}{' '}
+              {getLocalizedCountryName(countryModal.country)}{' '}
+              {t('common.footer.willBeAvailableSoon')}
+            </p>
+            <p>
+              {t('common.footer.stayTunedForUpdates')} {t('common.brandName')}{' '}
+              {t('common.footer.inCountry')}{' '}
+              {getLocalizedCountryName(countryModal.country)}!
             </p>
           </div>
         </InfoModal>
       )}
 
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-6">
           {/* Company Column */}
           <div>
-            <h3 className="mb-4 font-semibold text-gray-700">Company</h3>
+            <h3 className="mb-4 font-semibold text-gray-700">
+              {t('common.company')}
+            </h3>
             <ul className="space-y-2">
               <li>
                 <button
@@ -86,7 +90,7 @@ const Footer = () => {
                   className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
                   onClick={() => setAboutOpen(true)}
                 >
-                  About Us
+                  {t('common.aboutUs')}
                 </button>
               </li>
               <li>
@@ -95,7 +99,7 @@ const Footer = () => {
                   className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
                   onClick={() => setContactOpen(true)}
                 >
-                  Contact Us
+                  {t('common.contactUs')}
                 </button>
               </li>
               <li>
@@ -103,7 +107,7 @@ const Footer = () => {
                   href="/terms"
                   className="text-sm text-blue-400 hover:underline"
                 >
-                  Terms of Use
+                  {t('common.termsOfService')}
                 </a>
               </li>
               <li>
@@ -111,61 +115,62 @@ const Footer = () => {
                   href="/privacy"
                   className="text-sm text-blue-400 hover:underline"
                 >
-                  Privacy Policy
+                  {t('common.privacyPolicyy')}
                 </a>
               </li>
             </ul>
           </div>
 
           {/* UAE Column */}
-          <div>
-            <h3 className="mb-4 font-semibold text-gray-700">UAE</h3>
-            <ul
-              className="space-y-2"
-              onClick={() => {
-                toast.success(
-                  'We have product all around UAE select what you want to buy'
-                );
-              }}
-            >
+          <div
+            onClick={() => {
+              toast.success(
+                'we have products all around dubai search what ever you want'
+              );
+            }}
+          >
+            <h3 className="mb-4 font-semibold text-gray-700">
+              {t('common.footer.uae')}
+            </h3>
+            <ul className="space-y-2">
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Dubai
+                  {t('common.dubaii')}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Abu Dhabi
+                  {t('common.abuDhabi')}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Ras Al Khaimah
+                  {t('common.sharjah')}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Sharjah
+                  {t('common.ajman')}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Fujairah
+                  {t('common.rasAlKhaimah')}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Ajman
+                  {t('common.fujairah')}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Umm Al Quwain
+                  {t('common.ummAlQuwain')}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Al Ain
+                  {t('common.alAin')}
                 </a>
               </li>
             </ul>
@@ -174,149 +179,62 @@ const Footer = () => {
           {/* Other Countries Column */}
           <div>
             <h3 className="mb-4 font-semibold text-gray-700">
-              Other Countries
+              {t('common.footer.otherCountries')}
             </h3>
             <ul className="space-y-2">
-              <li>
-                <button
-                  type="button"
-                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
-                  onClick={() =>
-                    setCountryModal({ open: true, country: 'France' })
-                  }
-                >
-                  France
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
-                  onClick={() =>
-                    setCountryModal({ open: true, country: 'Spain' })
-                  }
-                >
-                  Spain
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
-                  onClick={() =>
-                    setCountryModal({ open: true, country: 'USA' })
-                  }
-                >
-                  USA
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
-                  onClick={() =>
-                    setCountryModal({ open: true, country: 'China' })
-                  }
-                >
-                  China
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
-                  onClick={() =>
-                    setCountryModal({ open: true, country: 'Italy' })
-                  }
-                >
-                  Italy
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
-                  onClick={() =>
-                    setCountryModal({ open: true, country: 'Turkey' })
-                  }
-                >
-                  Turkey
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
-                  onClick={() =>
-                    setCountryModal({ open: true, country: 'Mexico' })
-                  }
-                >
-                  Mexico
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
-                  onClick={() =>
-                    setCountryModal({ open: true, country: 'Germany' })
-                  }
-                >
-                  Germany
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
-                  onClick={() =>
-                    setCountryModal({ open: true, country: 'United Kingdom' })
-                  }
-                >
-                  United Kingdom
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
-                  onClick={() =>
-                    setCountryModal({ open: true, country: 'Japan' })
-                  }
-                >
-                  Japan
-                </button>
-              </li>
+              {[
+                'France',
+                'Spain',
+                'USA',
+                'China',
+                'Italy',
+                'Turkey',
+                'Mexico',
+                'Germany',
+                'Japan',
+              ].map((country) => (
+                <li key={country}>
+                  <button
+                    type="button"
+                    className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
+                    onClick={() => setCountryModal({ open: true, country })}
+                  >
+                    {getLocalizedCountryName(country)}
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Get Social Column */}
           <div>
-            <h3 className="mb-4 font-semibold text-gray-700">Get Social</h3>
+            <h3 className="mb-4 font-semibold text-gray-700">
+              {t('common.footer.getSocial')}
+            </h3>
             <ul className="space-y-2">
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Facebook
+                  {t('common.footer.facebook')}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Twitter
+                  {t('common.footer.twitter')}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Youtube
+                  {t('common.footer.instagram')}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Instagram
+                  {t('common.footer.linkedin')}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Whatsapp
+                  {t('common.footer.youtube')}
                 </a>
               </li>
             </ul>
@@ -324,25 +242,22 @@ const Footer = () => {
 
           {/* Support Column */}
           <div>
-            <h3 className="mb-4 font-semibold text-gray-700">Support</h3>
+            <h3 className="mb-4 font-semibold text-gray-700">
+              {t('common.support')}
+            </h3>
             <ul className="space-y-2">
-              {/* <li>
-                <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Help
-                </a>
-              </li> */}
               <li>
                 <button
                   type="button"
                   className="m-0 cursor-pointer border-none bg-transparent p-0 text-sm text-blue-400 hover:underline"
                   onClick={() => setContactOpen(true)}
                 >
-                  Contact Us
+                  {t('common.contactUs')}
                 </button>
               </li>
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  Call Us
+                  {t('common.callUs')}
                 </a>
               </li>
             </ul>
@@ -350,19 +265,25 @@ const Footer = () => {
 
           {/* Languages Column */}
           <div>
-            <h3 className="mb-4 font-semibold text-gray-700">Languages</h3>
+            <h3 className="mb-4 font-semibold text-gray-700">
+              {t('common.languages')}
+            </h3>
             <ul className="space-y-2">
               <li>
                 <a href="#" className="text-sm text-blue-400 hover:underline">
-                  English
+                  {t('common.english')}
                 </a>
               </li>
             </ul>
             <button
-              // onClick={() => handleLanguageChange('am')}
+              onClick={() =>
+                handleLanguageChange(language === 'en' ? 'ar' : 'en')
+              }
               className="mt-2 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
             >
-              Switch to Arabic
+              {language === 'ar'
+                ? t('common.switchToArabic')
+                : t('common.switchToEnglish')}
             </button>
           </div>
         </div>
@@ -370,9 +291,9 @@ const Footer = () => {
         {/* Bottom Section */}
         <div className="mt-12 flex flex-col items-center justify-between md:flex-row">
           <div className="mb-4 md:mb-0">
-            <img src="./logo.png" alt="Dubizzle Group" className="h-28" />
+            <img src="./logo.png" alt={t('common.logoAlt')} className="h-28" />
             <p className="mt-2 text-sm text-gray-500">
-              © 888Market 2025, All Rights Reserved.
+              {t('common.copyright')}
             </p>
           </div>
           <div></div>

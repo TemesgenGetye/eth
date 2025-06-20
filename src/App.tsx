@@ -1,7 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import {
-  BrowserRouter as Router,
-} from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
 import { AuthProvider } from './Context/AuthContext';
@@ -11,26 +9,29 @@ import { FavouriteProvider } from './Context/Favourite';
 import { SearchModalProvider } from './Context/SearchModalContext';
 
 import AppContent from './AppContent';
+import { LanguageProvider } from './Context/Languge';
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Toaster />
-      <Router>
-        <AuthProvider>
-          <BackgroundProvider>
-            <CartProvider>
-              <FavouriteProvider>
-                <SearchModalProvider>
-                  <AppContent />
-                </SearchModalProvider>
-              </FavouriteProvider>
-            </CartProvider>
-          </BackgroundProvider>
-        </AuthProvider>
-      </Router>
+      <LanguageProvider>
+        <Toaster />
+        <Router>
+          <AuthProvider>
+            <BackgroundProvider>
+              <CartProvider>
+                <FavouriteProvider>
+                  <SearchModalProvider>
+                    <AppContent />
+                  </SearchModalProvider>
+                </FavouriteProvider>
+              </CartProvider>
+            </BackgroundProvider>
+          </AuthProvider>
+        </Router>
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }

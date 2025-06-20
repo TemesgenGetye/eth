@@ -18,8 +18,10 @@ import { useOrder } from '../hooks/useOrder';
 import { useGetCustomer } from '../hooks/useCustomers';
 import { cleanString } from '../services/utils';
 import OrderConfirmationEmail from '../components/ui/OrderConformationEmail';
+import { useLanguage } from '../Context/Languge';
 
 export default function CartPage() {
+  const { t } = useLanguage();
   const { cartItems, isLoadingCart, refetchCart } = useCartItems();
   const navigate = useNavigate();
   const { cart, setCart } = useCart();
@@ -79,7 +81,7 @@ export default function CartPage() {
       // console.log(cart);
       setCart(cart?.filter((item) => +item !== id));
       refetchCart();
-      toast.success('Item removed sucessfully.');
+      toast.success(t('common.itemRemovedSuccessfully'));
     }
   }
 
@@ -157,16 +159,16 @@ export default function CartPage() {
               cost,
               customerEmail: customer?.email || '',
             });
-            toast.success('Order placed successfully!');
+            toast.success(t('common.orderPlacedSuccessfullyToast'));
             localStorage.removeItem('cart');
           },
           onError: () => {
-            toast.error('Failed to place order.');
+            toast.error(t('common.failedToPlaceOrder'));
           },
         }
       );
     } else {
-      toast.error('No items in cart to order.');
+      toast.error(t('common.noItemsInCart'));
     }
   }
 
@@ -211,15 +213,15 @@ export default function CartPage() {
   return (
     <div className="mx-auto mb-5 grid max-w-7xl grid-cols-1 gap-4">
       <div className="p-10">
-        <p className="text-lg font-semibold">My Cart</p>
+        <p className="text-lg font-semibold">{t('common.myCart')}</p>
         <p className="text-sm text-gray-500">
-          Your cart items will appear here.
+          {t('common.cartItemsAppearHere')}
         </p>
       </div>
       <div className="mx-auto flex w-full max-w-md flex-row items-center justify-end gap-2 p-4">
         <input
           type="text"
-          placeholder="Search in cart..."
+          placeholder={t('common.searchInCart')}
           className="w-full flex-1 rounded-lg border border-gray-300 p-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           aria-label="Search"
         />
@@ -235,16 +237,16 @@ export default function CartPage() {
         <div className="flex flex-col items-center justify-center p-10 text-center">
           <ShoppingCart className="h-16 w-16 text-gray-300" />
           <p className="mt-4 text-lg font-medium text-gray-900">
-            Your cart is empty
+            {t('common.yourCartIsEmpty')}
           </p>
           <p className="mt-2 text-sm text-gray-500">
-            Add items to your cart to see them here
+            {t('common.addItemsToCart')}
           </p>
           <button
             onClick={() => navigate('/')}
             className="mt-6 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
           >
-            Continue Shopping
+            {t('common.continueShopping')}
           </button>
         </div>
       ) : (
@@ -324,14 +326,14 @@ export default function CartPage() {
                                 <span>AED</span>
                                 <div className="text-red-500">
                                   {item?.price.orignal - item?.price.discounted}{' '}
-                                  AED Downpayment
+                                  {t('common.aedDownpayment')}
                                 </div>
                               </>
                             )}
                           </span>
                           {item?.stock > 0 && (
                             <span className="rounded bg-[#40b740] px-2 py-0.5 text-xs font-medium text-white">
-                              IN STOCK ({item?.stock})
+                              {t('common.inStock')} ({item?.stock})
                             </span>
                           )}
                         </div>
@@ -345,7 +347,7 @@ export default function CartPage() {
                         </div>
                         <div className="mt-2 flex items-center">
                           <span className="mr-2 text-sm font-medium text-gray-700">
-                            Quantity:
+                            {t('common.quantity')}
                           </span>
                           <div className="flex items-center rounded-lg border border-gray-300">
                             <button
@@ -369,7 +371,7 @@ export default function CartPage() {
                             </button>
                           </div>
                           <span className="ml-4 font-medium">
-                            Total:{' '}
+                            {t('common.total')}{' '}
                             {(
                               item?.price.discounted *
                               (quantities[item?.id] || 1)
@@ -403,19 +405,21 @@ export default function CartPage() {
 
           <div className="mt-6 rounded-lg bg-white p-6 shadow-sm">
             <div className="flex justify-between border-b pb-4">
-              <span className="text-lg font-medium">Order Summary</span>
+              <span className="text-lg font-medium">
+                {t('common.orderSummary')}
+              </span>
             </div>
             <div className="mt-4 space-y-2">
               <div className="flex justify-between">
-                <span>Subtotal</span>
+                <span>{t('common.subtotal')}</span>
                 <span>{calculateTotal()} AED</span>
               </div>
               <div className="flex justify-between">
-                <span>Shipping</span>
-                <span>Calculated at checkout</span>
+                <span>{t('common.shipping')}</span>
+                <span>{t('common.calculatedAtCheckout')}</span>
               </div>
               <div className="flex justify-between border-t pt-2">
-                <span className="text-lg font-bold">Total</span>
+                <span className="text-lg font-bold">{t('common.total')}</span>
                 <span className="text-lg font-bold">
                   {calculateTotal()} AED
                 </span>
@@ -426,7 +430,7 @@ export default function CartPage() {
                 className="w-full rounded-lg bg-blue-600 py-3 text-white hover:bg-blue-700"
                 onClick={() => handleCashOnDelivery()}
               >
-                Cash on Delivery
+                {t('common.cashOnDelivery')}
               </button>
               <button
                 className="w-full rounded-lg bg-gray-200 py-3 text-gray-700 hover:bg-gray-300"
@@ -435,7 +439,7 @@ export default function CartPage() {
                   setPaymentModal('credit');
                 }}
               >
-                Credit/Payment
+                {t('common.creditPayment')}
               </button>
             </div>
           </div>
@@ -468,13 +472,13 @@ export default function CartPage() {
                     />
                   </svg>
                   <h2 className="mb-2 text-3xl font-extrabold text-green-700">
-                    Order Placed Successfully!
+                    {t('common.orderPlacedSuccessfully')}
                   </h2>
                 </div>
                 <p className="mb-3 text-lg text-gray-800">
-                  Your order has been placed with{' '}
+                  {t('common.orderPlacedWithCash')}{' '}
                   <span className="font-bold text-green-700">
-                    Cash on Delivery
+                    {t('common.cashOnDeliveryText')}
                   </span>
                   .
                 </p>
@@ -493,18 +497,20 @@ export default function CartPage() {
                     />
                     <circle cx="12" cy="12" r="10" />
                   </svg>
-                  <span>We will contact you soon for delivery details.</span>
+                  <span>{t('common.weWillContactYou')}</span>
                 </div>
                 <div className="mb-8 rounded-lg bg-green-50 p-4 text-base text-gray-600">
-                  Thank you for shopping with us! If you have any questions, our{' '}
-                  <span className="font-semibold">support team</span> is here to
-                  help.
+                  {t('common.thankYouForShopping')}{' '}
+                  <span className="font-semibold">
+                    {t('common.supportTeam')}
+                  </span>{' '}
+                  {t('common.isHereToHelp')}
                 </div>
                 <button
                   className="rounded-lg bg-blue-600 px-8 py-3 text-lg font-semibold text-white shadow transition hover:bg-blue-700"
                   onClick={() => setPaymentModal(null)}
                 >
-                  Close
+                  {t('common.close')}
                 </button>
                 {/* Order Confirmation Email (hidden form, auto-send) */}
                 {orderEmailData && (
@@ -548,11 +554,11 @@ export default function CartPage() {
                     />
                   </svg>
                   <h2 className="mb-2 text-3xl font-extrabold text-yellow-700">
-                    Coming Soon!
+                    {t('common.comingSoon')}
                   </h2>
                 </div>
                 <p className="mb-3 text-lg text-gray-800">
-                  Credit/Payment option will be available soon.
+                  {t('common.creditPaymentSoon')}
                 </p>
                 <div className="mb-5 flex items-center justify-center gap-2 text-base text-yellow-700">
                   <svg
@@ -569,18 +575,16 @@ export default function CartPage() {
                     />
                     <circle cx="12" cy="12" r="10" />
                   </svg>
-                  <span>
-                    We're working hard to bring you more payment options.
-                  </span>
+                  <span>{t('common.workingHardForPayment')}</span>
                 </div>
                 <div className="mb-8 rounded-lg bg-yellow-50 p-4 text-base text-gray-600">
-                  Stay tuned for updates and thank you for your patience!
+                  {t('common.stayTunedForUpdates')}
                 </div>
                 <button
                   className="rounded-lg bg-blue-600 px-8 py-3 text-lg font-semibold text-white shadow transition hover:bg-blue-700"
                   onClick={() => setPaymentModal(null)}
                 >
-                  Close
+                  {t('common.close')}
                 </button>
               </div>
             </div>
