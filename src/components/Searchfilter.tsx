@@ -17,7 +17,7 @@ function SearchFilters({
 }) {
   const [query, setQuery] = useSearchParams();
   const keyword = query.get('keyword') || '';
-  console.log('keyword', keyword);
+  // console.log('keyword', keyword);
   const [isCitySelectOpen, setIsCitySelectOpen] = useState(false);
   const [isYearOpen, setIsYearOpen] = useState(false);
   const [isPriceOpen, setIsPriceOpen] = useState(false);
@@ -195,7 +195,7 @@ function SearchFilters({
 
   // Update URL query only for non-search filters
   useEffect(() => {
-    console.log('filterOptions', filterOptions);
+    // console.log('filterOptions', filterOptions);
     setQuery((prev) => {
       const newParams = new URLSearchParams(prev);
       // Only update non-search filters
@@ -569,11 +569,7 @@ function SearchFilters({
           </div>
 
           <div
-            className={`relative w-full ${
-              city || yearRange !== 'Select' || priceRange !== 'Select' || key
-                ? 'rounded-br-xl rounded-tr-xl py-2'
-                : ''
-            } hover:bg-gray-100`}
+            className={`relative w-full rounded-br-xl rounded-tr-xl py-2 hover:bg-gray-100`}
             ref={yearRef}
           >
             <button

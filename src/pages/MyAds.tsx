@@ -7,12 +7,12 @@ import MyAdsSkeleton from '../components/MyAdsSkeleton';
 
 export default function MyAds() {
   const uId = localStorage.getItem('user-id');
-  console.log('id', uId);
+  // console.log('id', uId);
   const { customers, isLoading } = useCustomers();
-  console.log('customers', customers);
+  // console.log('customers', customers);
 
   const loggedUser = customers?.find((customer) => customer.uuid === uId);
-  console.log('loggedUser', loggedUser);
+  // console.log('loggedUser', loggedUser);
   const [activeTab, setActiveTab] = useState('all');
   const { myAdds, isLoadingAds } = useMyAds(loggedUser?.id);
 
@@ -55,7 +55,7 @@ export default function MyAds() {
     },
     {} as Record<string, Record<string, ProductType[]>>
   );
-  console.log(grouped);
+  // console.log(grouped);
 
   const tabs = [
     { id: 'all', label: 'All Ads', count: myAdds?.length || 0 },

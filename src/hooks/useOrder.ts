@@ -20,8 +20,8 @@ export const useOrder = () =>
         detail,
       }).select();
 
-      console.log(data);
-      console.log(error);
+      // console.log(data);
+      // console.log(error);
 
       if (error) {
         throw error;

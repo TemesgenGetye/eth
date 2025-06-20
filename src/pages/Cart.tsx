@@ -74,9 +74,9 @@ export default function CartPage() {
     id: number
   ) {
     e.stopPropagation();
-    console.log('item to be removed', id);
+    // console.log('item to be removed', id);
     if (cart?.length) {
-      console.log(cart);
+      // console.log(cart);
       setCart(cart?.filter((item) => +item !== id));
       refetchCart();
       toast.success('Item removed sucessfully.');
@@ -140,7 +140,7 @@ export default function CartPage() {
         },
         {
           onSuccess: (data) => {
-            console.log('order mutation data', data);
+            // console.log('order mutation data', data);
             const orderId = data?.[0]?.id || 'N/A';
             const orders = (cartItems || []).map((item) => ({
               name: item?.name || '',

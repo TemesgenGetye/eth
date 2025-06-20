@@ -123,7 +123,7 @@ export default function CatagoryInfo() {
                                       setSearchValue(item.name);
                                       setShowSuggestions(false);
                                       // setQuery({ term: searchValue });
-                                      console.log('searchValue', searchValue);
+                                      // console.log('searchValue', searchValue);
                                       // refetchFiltered();
                                       navigate(
                                         `/${cleanString(item.category.name)}/search?keyword=${cleanString(item.name)}`
@@ -154,7 +154,7 @@ export default function CatagoryInfo() {
                                       setActiveCategory(cleanString(cat.name));
 
                                       // setQuery({ term: searchValue });
-                                      console.log('searchValue', searchValue);
+                                      // console.log('searchValue', searchValue);
                                       // refetchFiltered();
                                       navigate(
                                         `/${cleanString(cat.name)}/search?keyword=${cleanString(searchValue)}`

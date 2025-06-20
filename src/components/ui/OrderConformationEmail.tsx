@@ -67,7 +67,7 @@ export default function OrderConfirmationEmail({
 
       emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY).then(
         (result) => {
-          console.log('Email sent!', result.status, result.text);
+          // console.log('Email sent!', result.status, result.text);
           setSent(true);
         },
         (error) => {

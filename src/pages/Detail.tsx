@@ -149,7 +149,7 @@ export default function Detail() {
         JSON.stringify(favourite.filter((fav) => fav !== id))
       );
     }
-    console.log('fav before', localStorage.getItem('favourite'));
+    // console.log('fav before', localStorage.getItem('favourite'));
     refetchFavorites();
   }
 

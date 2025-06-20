@@ -282,7 +282,7 @@ export const getSearchedProducts = async (term: string, category?: string) => {
     const { data, error } = await query;
 
     if (error) throw new Error(error.message);
-    console.log(data);
+    // console.log(data);
 
     return data?.map((product) => camelCase(product)) || [];
   } catch (err) {

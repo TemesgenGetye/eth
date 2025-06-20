@@ -30,7 +30,7 @@ const schema = yup.object().shape({
 
 export function useProductForm(onSuccess?: () => void, onError?: () => void) {
   const onSubmit = async (data: any) => {
-    console.log('data', data);
+    // console.log('data', data);
 
     // If discounted price is not provided, set it to the original price
     if (!data.price.discounted || data.price.discounted <= 0) {

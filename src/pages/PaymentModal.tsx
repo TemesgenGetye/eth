@@ -234,7 +234,7 @@ export default function PaymentModal({
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Process payment (here you would integrate with your payment gateway)
-      console.log('Processing payment:', formData);
+      // console.log('Processing payment:', formData);
 
       // Post product to Supabase after successful payment
       await postProduct();

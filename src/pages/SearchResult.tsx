@@ -101,7 +101,7 @@ function SearchResult() {
         </div>
 
         {/* <BrandFilter brands={brands} /> */}
-        <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-1">
+        <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-1">
           {filteredProducts?.length ? (
             <ProductList products={paginatedProducts} />
           ) : (

@@ -207,7 +207,7 @@ const VerificationBar = () => {
           videoBlob: videoBlob,
         }));
         extractVideoFrame(videoBlob);
-        console.log('Video recording completed:', videoBlob);
+        // console.log('Video recording completed:', videoBlob);
       };
 
       mediaRecorderRef.current = mediaRecorder;
@@ -227,7 +227,7 @@ const VerificationBar = () => {
         }
       }, 1000);
 
-      console.log('Video recording started');
+      // console.log('Video recording started');
     } catch (error) {
       console.error('Failed to start recording:', error);
     }
@@ -249,28 +249,28 @@ const VerificationBar = () => {
     setStep('initial');
     setCapturedMedia({});
     setCameraError(null);
-    console.log('Modal closed');
+    // console.log('Modal closed');
   };
 
   const handleGetVerified = () => {
     setStep('id-selection');
-    console.log('Get Verified clicked - moving to ID selection');
+    // console.log('Get Verified clicked - moving to ID selection');
   };
 
   const handleIdTypeSelect = (type: 'emirates' | 'passport') => {
     setSelectedIdType(type);
-    console.log('ID type selected:', type);
+    // console.log('ID type selected:', type);
   };
 
   const handleContinueFromIdSelection = () => {
     setStep('front-photo');
-    console.log('Continuing from ID selection to front photo step');
+    // console.log('Continuing from ID selection to front photo step');
   };
 
   const handleTakePhoto = (photoType: 'front' | 'back') => {
     setCurrentPhotoType(photoType);
     setStep(photoType === 'front' ? 'camera-front' : 'camera-back');
-    console.log(`Taking ${photoType} photo`);
+    // console.log(`Taking ${photoType} photo`);
 
     // Initialize camera when entering camera mode
     setTimeout(() => {
@@ -281,10 +281,10 @@ const VerificationBar = () => {
   const handleConfirmPhoto = () => {
     if (currentPhotoType === 'front') {
       setStep('back-photo');
-      console.log('Front photo confirmed, moving to back photo');
+      // console.log('Front photo confirmed, moving to back photo');
     } else {
       setStep('uploading');
-      console.log('Back photo confirmed, starting upload');
+      // console.log('Back photo confirmed, starting upload');
 
       // Simulate upload progress
       // let progress = 0;
@@ -296,7 +296,7 @@ const VerificationBar = () => {
       //     clearInterval(interval);
 
       setStep('video-intro');
-      console.log('Upload complete, moving to video intro');
+      // console.log('Upload complete, moving to video intro');
 
       //   }
       // }, 300);
@@ -307,7 +307,7 @@ const VerificationBar = () => {
     const cameraStep =
       currentPhotoType === 'front' ? 'camera-front' : 'camera-back';
     setStep(cameraStep);
-    console.log('Retrying photo capture');
+    // console.log('Retrying photo capture');
     setTimeout(() => {
       initializeCamera();
     }, 100);
@@ -315,7 +315,7 @@ const VerificationBar = () => {
 
   const handleOpenCamera = () => {
     setStep('video-recording');
-    console.log('Opening camera for video recording');
+    // console.log('Opening camera for video recording');
     setTimeout(() => {
       initializeCamera();
     }, 100);
@@ -341,7 +341,7 @@ const VerificationBar = () => {
   const handleSubmitVideo = async () => {
     setStep('uploading');
     setUploadProgress(0);
-    console.log('Upload starting', capturedMedia);
+    // console.log('Upload starting', capturedMedia);
 
     // Helper to convert base64 to Blob
     function base64ToBlob(base64: string, type = 'image/jpeg') {
@@ -435,12 +435,12 @@ const VerificationBar = () => {
         }
         completed++;
         setUploadProgress(Math.round((completed / total) * 100));
-        console.log(uploadError);
+        // console.log(uploadError);
       })
     );
 
     setUploadProgress(100);
-    console.log('Uploaded file URLs:', uploadedUrls);
+    // console.log('Uploaded file URLs:', uploadedUrls);
 
     updateCustomerMutate({
       id: customer?.id,
@@ -463,8 +463,8 @@ const VerificationBar = () => {
 
   const handleFinalOk = () => {
     handleClose();
-    console.log('Verification process completed');
-    console.log('Final captured media:', capturedMedia);
+    // console.log('Verification process completed');
+    // console.log('Final captured media:', capturedMedia);
   };
 
   const currentPhoto =

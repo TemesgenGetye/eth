@@ -42,7 +42,7 @@ export default function Category({
             ))}
         </ul>
         <Link
-          to={`/category/${cleanString(category?.name)}`}
+          to={`/${cleanString(category?.name)}`}
           className="group inline-flex items-center text-base font-medium text-blue-600 hover:text-blue-700"
         >
           All in {category.name}

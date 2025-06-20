@@ -16,8 +16,8 @@ export const useLogin = () =>
       });
       if (error) throw error;
 
-      console.log(data);
-      console.log(error);
+      // console.log(data);
+      // console.log(error);
       return data;
     },
   });
@@ -37,8 +37,8 @@ export const useSignup = () =>
       });
       if (error) throw error;
 
-      console.log(data);
-      console.log(error);
+      // console.log(data);
+      // console.log(error);
 
       return data;
     },

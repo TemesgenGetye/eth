@@ -20,7 +20,7 @@ export default function Favourites() {
   );
 
   const { favourite, setFavourite } = useFavourite();
-  console.log('favorite', favourite);
+  // console.log('favorite', favourite);
   const { favoriteProducts } = useFavouriteItems();
 
   const handleImageChange = (

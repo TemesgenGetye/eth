@@ -248,7 +248,7 @@ export default function Job() {
                   const file = e.target.files?.[0];
                   if (file) {
                     // Handle file upload logic here
-                    console.log('File selected:', file.name);
+                    // console.log('File selected:', file.name);
                   }
                 }}
               />

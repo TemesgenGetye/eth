@@ -11,7 +11,7 @@ const useMyAds = (id: number) => {
     queryKey: ['my-ads'],
     queryFn: () => getAds(id),
   });
-  console.log('myAdds', myAdds);
+  // console.log('myAdds', myAdds);
   return { myAdds, isLoadingAds, isErrorAds, refetchAds };
 };
 
