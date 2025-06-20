@@ -301,15 +301,15 @@ export const getFilteredProducts = async ({
     }
 
     if (city && city !== 'All Cities') {
-      query = query.eq('city', city);
+      query = query.ilike('city', `%${city}%`);
     }
 
     if (minPrice !== undefined) {
-      query = query.gte('price', minPrice);
+      query = query.gte('price->>discounted', minPrice);
     }
 
     if (maxPrice !== undefined) {
-      query = query.lte('price', maxPrice);
+      query = query.lte('price->>discounted', maxPrice);
     }
 
     if (minYear !== undefined) {

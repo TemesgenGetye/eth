@@ -77,12 +77,6 @@ function SearchFilters({
   const handleSearchSelect = async (product: ProductType) => {
     setKey(product.name);
     setShowSearchResults(false);
-    // Update URL query directly when product is selected
-    // setQuery((prev) => {
-    //   const newParams = new URLSearchParams(prev);
-    //   newParams.set('keyword', product.name);
-    //   return newParams;
-    // });
     onFilterApplied?.(true);
     // Trigger refetch to get filtered results with the selected product and current filters
     setFilterOptions((prev) => ({ ...prev, keyword: product.name }));

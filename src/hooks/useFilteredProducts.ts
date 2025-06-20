@@ -43,8 +43,8 @@ export const useFilteredProducts = () => {
     ],
     queryFn: () =>
       getFilteredProducts({
-        keyword,
-        city,
+        keyword: keyword || undefined,
+        city: city || undefined,
         minPrice: minPrice !== null ? +minPrice : undefined,
         maxPrice: maxPrice !== null ? +maxPrice : undefined,
         minYear: minYear !== null ? +minYear : undefined,
