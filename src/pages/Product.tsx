@@ -84,7 +84,8 @@ const ProductSkeleton = () => {
 };
 
 function Product() {
-  const { pname } = useParams<{ pname: string }>();
+  const { cid, pname } = useParams<{ cid: string; pname: string }>();
+  const cName = cid?.split('-')?.join(' ');
   const pName = pname?.split('-')?.join(' ');
   const [filtereApplied, setFilterApplied] = useState(false);
 
@@ -93,13 +94,21 @@ function Product() {
 
   const { products, isLoading: isLoadingProducts } = useProducts();
 
-  const _filteredProducts: ProductType[] | undefined = pname
-    ? filtereApplied || hasActiveFilters
-      ? filteredProducts
-      : products?.filter((product): product is ProductType =>
-          product?.subcategory?.name.toLowerCase()?.includes(pName)
-        )
-    : [];
+  // Always filter by category and subcategory if cid and pname exist, regardless of other filters
+  const _filteredProducts: ProductType[] | undefined =
+    cid && pname
+      ? filtereApplied || hasActiveFilters
+        ? filteredProducts
+        : products?.filter(
+            (product): product is ProductType =>
+              product?.category?.name
+                .toLowerCase()
+                ?.includes(cName?.toLowerCase() || '') &&
+              product?.subcategory?.name
+                .toLowerCase()
+                ?.includes(pName?.toLowerCase() || '')
+          )
+      : [];
 
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 10;
@@ -117,12 +126,8 @@ function Product() {
       )
     : [];
 
-  // useEffect(() => {
-  //   refetchFiltered();
-  // }, [refetchFiltered]);
-
   // Show loading skeleton while loading
-  if (isLoadingProducts || isLoadingFiltered) {
+  if (isLoadingProducts || (pname && isLoadingFiltered)) {
     return <ProductSkeleton />;
   }
 

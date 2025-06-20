@@ -5,7 +5,7 @@ import { ProductType } from '../components/type';
 
 export const useFilteredProducts = () => {
   const [query] = useSearchParams();
-  const { pname } = useParams();
+  const { cid, pname } = useParams();
   const keyword = query.get('keyword');
   const city = query.get('city');
   const minPrice = query.get('minPrice');
@@ -13,7 +13,7 @@ export const useFilteredProducts = () => {
   const minYear = query.get('minYear');
   const maxYear = query.get('maxYear');
 
-  // Check if any filter is active
+  // Check if any filter is active - cid and pname should always be considered as filters
   const hasActiveFilters = !!(
     keyword?.trim() ||
     city ||
@@ -21,6 +21,7 @@ export const useFilteredProducts = () => {
     maxPrice ||
     minYear ||
     maxYear ||
+    cid ||
     pname
   );
 
@@ -37,6 +38,7 @@ export const useFilteredProducts = () => {
       maxPrice,
       minYear,
       maxYear,
+      cid,
       pname,
     ],
     queryFn: () =>
@@ -47,7 +49,8 @@ export const useFilteredProducts = () => {
         maxPrice: maxPrice !== null ? +maxPrice : undefined,
         minYear: minYear !== null ? +minYear : undefined,
         maxYear: maxYear !== null ? +maxYear : undefined,
-        pname,
+        cid: cid || undefined,
+        pname: pname || undefined,
       }),
     enabled: hasActiveFilters,
     staleTime: 1000 * 60 * 5, // 5 minutes

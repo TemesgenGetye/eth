@@ -153,8 +153,8 @@ export default function Detail() {
   ) {
     e.stopPropagation();
     if (!cart.some((item) => item === id)) {
-      setCart([...cart, id]);
-      localStorage.setItem('cart', JSON.stringify([...cart, id]));
+      setCart([id, ...cart]);
+      localStorage.setItem('cart', JSON.stringify([id, ...cart]));
       toast.success('Item added to cart successfully.');
     }
   }

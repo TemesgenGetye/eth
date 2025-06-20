@@ -259,6 +259,7 @@ export const getFilteredProducts = async ({
   maxPrice,
   minYear,
   maxYear,
+  cid,
   pname,
 }: {
   keyword?: string;
@@ -267,6 +268,7 @@ export const getFilteredProducts = async ({
   maxPrice?: number;
   minYear?: number;
   maxYear?: number;
+  cid?: string;
   pname?: string;
 }) => {
   try {
@@ -318,17 +320,32 @@ export const getFilteredProducts = async ({
       query = query.lte('year', maxYear);
     }
 
-    if (pname) {
-      const subcategoryName = pname.split('-').join(' ');
-      query = query.eq('subcategories.name', subcategoryName);
-    }
-
     const { data, error } = await query;
 
     if (error) throw new Error(error?.message);
-    const camelCasedData = data?.map((product) => camelCase(product));
+    let camelCasedData = data?.map((product) => camelCase(product)) || [];
 
-    return camelCasedData || [];
+    // Apply category filter after fetching if cid is provided
+    if (cid) {
+      const categoryName = cid.split('-').join(' ');
+      camelCasedData = camelCasedData.filter((product) =>
+        product.category?.name
+          .toLowerCase()
+          .includes(categoryName.toLowerCase())
+      );
+    }
+
+    // Apply subcategory filter after fetching if pname is provided
+    if (pname) {
+      const subcategoryName = pname.split('-').join(' ');
+      camelCasedData = camelCasedData.filter((product) =>
+        product.subcategory?.name
+          .toLowerCase()
+          .includes(subcategoryName.toLowerCase())
+      );
+    }
+
+    return camelCasedData;
   } catch (err) {
     console.error('Error fetching filtered products:', err);
     throw err;
