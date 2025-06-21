@@ -28,7 +28,7 @@ export default function Favourite({
         >
           <Heart className="mr-1 h-4 w-4" />
           <p className="text-s text-gray-500">
-            {t('common.navigation.favorites')}
+            {t('common.navigation.myFavourites')}
           </p>
         </div>
         {activeModal === 'favorites' && (
@@ -47,7 +47,9 @@ export default function Favourite({
               {favoriteProducts?.length === 0 ? (
                 <div className="flex flex-col items-center justify-center p-8 text-center">
                   <Heart className="h-12 w-12 text-gray-300" />
-                  <p className="mt-2 text-sm text-gray-500">No favorites yet</p>
+                  <p className="mt-2 text-sm text-gray-500">
+                    {t('common.noFavorites')}
+                  </p>
                 </div>
               ) : (
                 <ul>
@@ -103,7 +105,7 @@ export default function Favourite({
                   closeModal();
                 }}
               >
-                {t('common.viewAllFavorites')}
+                {t('common.viewAllFav')}
               </button>
             </div>
           </div>
