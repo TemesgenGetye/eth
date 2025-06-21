@@ -22,6 +22,7 @@ import { useGetCustomerById } from '../hooks/useCustomers';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { useLanguage } from '../Context/Languge';
 
 // NOTE: If you haven't already, install leaflet and react-leaflet:
 // pnpm add leaflet react-leaflet
@@ -36,6 +37,8 @@ export default function Detail() {
   const { products, isLoading } = useProducts();
   const { favourite, setFavourite } = useFavourite();
   const { cart, setCart } = useCart();
+
+  const { t } = useLanguage();
 
   // Always call hooks at the top level
   const location = useLocation();
@@ -313,7 +316,7 @@ export default function Detail() {
                 }}
               >
                 <div className="flex w-full items-center gap-2 text-sm font-medium text-white">
-                  <p>Add to Cart</p>
+                  <p>{t('common.addToCart')}</p>
                   <ShoppingCart className="h-4 w-4" />
                 </div>
               </button>

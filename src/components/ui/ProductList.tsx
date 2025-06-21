@@ -184,19 +184,22 @@ export default function ProductList({ products }: ProductProps) {
                   <div className="absolute right-3 top-5 flex space-x-2 md:static">
                     {!product.createdBy ? (
                       <button
-                        className="rounded-lg bg-[#40b740] p-1 text-white hover:bg-[#42c242] md:p-2 " // YW color scheme change
+                        className="rounded-lg bg-[#40b740] p-1 text-white hover:bg-[#42c242] md:p-2 "
                         onClick={(e) => {
                           e.stopPropagation();
                           handleCart(e, product?.id);
                         }}
                       >
                         <div className="flex w-full items-center gap-2 text-sm font-medium text-white">
-                          <p>{t('common.addToCart')}</p>
+                          <p>{t('common.addToCartt')}</p>
                           <ShoppingCart className="h-4 w-4" />
                         </div>
                       </button>
                     ) : (
-                      ''
+                      <p className="mr-2 text-blue-500 hover:underline">
+                        {' '}
+                        {t('common.contactSellerr')}
+                      </p>
                     )}
                     <button
                       className="h-7 w-7 text-red-500"
@@ -225,7 +228,7 @@ export default function ProductList({ products }: ProductProps) {
                   <div className="flex items-center gap-1">
                     <VerifiedIcon className="h-5 w-5 text-[#40b740]" />
                     <span className="text-sm  text-[#40b740]">
-                      {t('common.verified')}
+                      {t('common.verifiedd')}
                     </span>{' '}
                     {/* YW color scheme change */}
                   </div>

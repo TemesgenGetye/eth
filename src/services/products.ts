@@ -283,6 +283,12 @@ export const getFilteredProducts = async ({
           img_urls,
           views,
           description,
+          created_by,
+          status,
+          city,
+          contact_name,
+          phone_num,
+          email,
           category:categories (
             id,
             name

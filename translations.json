@@ -9,6 +9,9 @@
         "menu": "Menu"
       },
       "cartt": "Cart",
+      "addToCartt": "Add to Cart",
+      "verifiedd": "Verified",
+      "contactSellerr": "Contact Seller",
       "searchh": "Search",
       "anything": "anything",
       "dubaii": "Dubai",
@@ -965,6 +968,9 @@
         "chats": "محادثات",
         "menu": "القائمة"
       },
+      "addToCartt": "إضافة إلى السلة",
+      "verifiedd": "موثوق",
+      "contactSellerr": "تواصل مع البائع",
       "cartt": "عربة التسوق",
       "anything": "أي شيء",
       "searchh": "بحث",
