@@ -73,7 +73,14 @@ const AppContent = () => {
             }
           />
           <Route path="/my-ads" element={<MyAds />} />
-          <Route path="/post-ad" element={<PostAds />} />
+          <Route
+            path="/post-ad"
+            element={
+              <ProtectedRoute>
+                <PostAds />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/order-confirmation" element={<OrderConformation />} />
           <Route path="/favourites" element={<Favourites />} />
           <Route path="/search" element={<SearchResult />} />
