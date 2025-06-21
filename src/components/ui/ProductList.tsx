@@ -175,9 +175,9 @@ export default function ProductList({ products }: ProductProps) {
                     <div className="flex flex-col items-start ">
                       {/* <span>• {product.slug}</span> */}
                       <p className="cursor-pointer text-sm text-blue-500 hover:underline">
-                        {products.length > 0
+                        {/* {products.length > 0
                           ? products.length + ' ' + t('common.variants')
-                          : ''}
+                          : ''} */}
                       </p>
                     </div>
                   </div>
