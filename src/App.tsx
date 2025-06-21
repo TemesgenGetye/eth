@@ -10,6 +10,7 @@ import { SearchModalProvider } from './Context/SearchModalContext';
 
 import AppContent from './AppContent';
 import { LanguageProvider } from './Context/Languge';
+import { VerficationModalProvider } from './Context/VerficationModal';
 
 const queryClient = new QueryClient();
 
@@ -20,15 +21,17 @@ function App() {
         <Toaster />
         <Router>
           <AuthProvider>
-            <BackgroundProvider>
-              <CartProvider>
-                <FavouriteProvider>
-                  <SearchModalProvider>
-                    <AppContent />
-                  </SearchModalProvider>
-                </FavouriteProvider>
-              </CartProvider>
-            </BackgroundProvider>
+            <VerficationModalProvider>
+              <BackgroundProvider>
+                <CartProvider>
+                  <FavouriteProvider>
+                    <SearchModalProvider>
+                      <AppContent />
+                    </SearchModalProvider>
+                  </FavouriteProvider>
+                </CartProvider>
+              </BackgroundProvider>
+            </VerficationModalProvider>
           </AuthProvider>
         </Router>
       </LanguageProvider>

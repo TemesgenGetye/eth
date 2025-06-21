@@ -15,6 +15,8 @@ import AnimatedCategoryIcon from '../components/ui/AnimatedCategoryIcon';
 import { CategoryType } from '../components/type';
 import { useSearchModal } from '../Context/SearchModalContext';
 import { useLanguage } from '../Context/Languge';
+import { useVerficationModal } from '../Context/VerficationModal';
+import VerificationBar from '../components/Verfication/verification';
 
 const Home = () => {
   const { blurBackground } = useBackground();
@@ -31,6 +33,7 @@ const Home = () => {
     active
   );
   const navigate = useNavigate();
+  const { open, setOpen } = useVerficationModal();
 
   const highlightText = (text: string, highlight: string) => {
     if (!highlight.trim()) return text;
@@ -69,6 +72,7 @@ const Home = () => {
     <div className="m-auto min-h-screen max-w-7xl rounded-lg">
       <FloatingCart />
       {/* Improved Overlay */}
+
       {isMdUp ? (
         <div className="m-auto max-w-7xl rounded-lg px-2 pt-6">
           <div className="flex w-full items-center rounded-full border border-gray-300 bg-white px-4 py-1 shadow transition-all focus-within:border-blue-500">

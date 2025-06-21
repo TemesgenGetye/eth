@@ -16,6 +16,8 @@ export const VerficationModalProvider = ({
 }) => {
   const [open, setOpen] = useState(false);
 
+  console.log('open', open);
+
   return (
     <VerficationModalContext.Provider value={{ open, setOpen }}>
       {children}
@@ -26,7 +28,7 @@ export const VerficationModalProvider = ({
 export const useVerficationModal = () => {
   const context = useContext(VerficationModalContext);
   if (!context) {
-    throw new Error('useCart must be used within a CartProvider');
+    throw new Error('verificxation modal error');
   }
   return context;
 };

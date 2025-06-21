@@ -1458,6 +1458,8 @@ const VerificationBar = () => {
       </div>
     );
   }
+  console.log(customer?.verification_status);
+
   if (customer?.verification_status === 'verified') return null;
   return (
     <>
