@@ -145,9 +145,12 @@ export default function Favourites() {
   return (
     <div className="mx-auto mb-20 grid max-w-7xl grid-cols-1 gap-4 md:mb-0">
       <div className="p-4 sm:p-10">
-        <p className="text-lg font-semibold">{t('common.myFavourites')}</p>
+        <p className="text-lg font-semibold">
+          {' '}
+          {t('common.navigation.myFavourites')}
+        </p>
         <p className="text-sm text-gray-500">
-          {t('common.favouriteItemsMessage')}
+          {t('common.navigation.yourFavItems')}
         </p>
       </div>
       <div className="mx-auto flex w-full max-w-md flex-row items-center justify-end gap-2 p-4">

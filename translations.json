@@ -11,7 +11,10 @@
       "cartt": "Cart",
       "addToCartt": "Add to Cart",
       "verifiedd": "Verified",
+      "viewAllFav": "View All Favorites",
+
       "contactSellerr": "Contact Seller",
+      "noFavorites": "No favorites yet",
       "searchh": "Search",
       "anything": "anything",
       "dubaii": "Dubai",
@@ -823,8 +826,11 @@
         "selectExtended": "اختر الباقة الممتدة"
       },
       "navigation": {
+        "fav": "Favorites",
         "profile": "Profile",
+        "myFavourites": "My Favourites",
         "myAds": "My Ads",
+        "yourFavItems": "Your favorite items will appear here",
         "favorites": "Favorites",
         "verifyAccount": "Verify Account",
         "verified": "Verified",
@@ -997,6 +1003,8 @@
       "save": "حفظ",
       "edit": "تعديل",
       "delete": "حذف",
+      "noFavorites": "لا يوجد مفضلات بعد",
+      "viewAllFav": "عرض الكل",
       "search": "بحث",
       "loading": "جاري التحميل...",
       "error": "حدث خطأ. يرجى المحاولة مرة أخرى.",
@@ -1788,6 +1796,9 @@
       },
       "navigation": {
         "profile": "الملف الشخصي",
+        "yourFavItems": "عناصر المفضلة ستظهر هنا",
+        "myFavourites": "المفضلة",
+        "fav": "المفضلة",
         "myAds": "إعلاناتي",
         "favorites": "المفضلة",
         "verifyAccount": "توثيق الحساب",
