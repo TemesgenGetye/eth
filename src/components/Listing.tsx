@@ -1,5 +1,6 @@
 import { Clock, Trash2, Edit } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../Context/Languge';
 
 interface Product {
   id: number;
@@ -16,14 +17,9 @@ interface ListingProps {
   key: string;
   subcategories: Record<string, Product[]>;
   title: string;
-  showEditButton?: boolean;
 }
 
-export default function Listing({
-  title,
-  subcategories,
-  showEditButton,
-}: ListingProps) {
+export default function Listing({ title, subcategories }: ListingProps) {
   const scats = Object.entries(subcategories);
   return (
     <div className="bg-white">
@@ -33,12 +29,7 @@ export default function Listing({
         </h2>
       </div>
       {scats?.map(([subcategoryName, products]: [string, Product[]], index) => (
-        <ListItem
-          name={subcategoryName}
-          products={products}
-          key={index}
-          showEditButton={showEditButton}
-        />
+        <ListItem name={subcategoryName} products={products} key={index} />
       ))}
     </div>
   );
@@ -47,13 +38,32 @@ export default function Listing({
 const ListItem = ({
   name,
   products,
-  showEditButton,
 }: {
   name: string;
   products: Product[];
-  showEditButton?: boolean;
 }) => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
+
+  const handleContinuePosting = (product: Product) => {
+    // Navigate to PostAds with product data for editing
+    navigate('/post-ad', {
+      state: {
+        editMode: true,
+        productData: product,
+      },
+    });
+  };
+
+  const handleUpdateAd = (product: Product) => {
+    // Navigate to PostAds with product data for updating live ads
+    navigate('/post-ad', {
+      state: {
+        editMode: true,
+        productData: product,
+      },
+    });
+  };
 
   return (
     <div>
@@ -126,19 +136,22 @@ const ListItem = ({
             </div>
 
             <div className="flex justify-end px-4 pb-4">
-              {showEditButton ? (
+              {product?.status === 'live' ? (
                 <button
-                  onClick={() => navigate(`/edit-ad/${product.id}`)}
-                  className="flex items-center gap-2 rounded-lg border border-blue-600 bg-blue-50 px-4 py-2 text-sm text-blue-700 hover:bg-blue-100"
+                  onClick={() => handleUpdateAd(product)}
+                  className="flex items-center gap-2 rounded-lg border border-blue-300 bg-blue-50 px-4 py-2 text-sm text-blue-600 transition-colors hover:bg-blue-100"
                 >
                   <Edit className="h-4 w-4" />
-                  Edit Ad
+                  {t('common.postAd.updateAd')}
                 </button>
-              ) : (
-                <button className="rounded-lg border border-green-600 bg-green-50 p-2 text-sm text-green-700 hover:bg-green-100">
-                  Continue Posting Ad
+              ) : product?.status === 'draft' ? (
+                <button
+                  onClick={() => handleContinuePosting(product)}
+                  className="rounded-lg border border-green-600 bg-green-50 p-2 text-sm text-green-700 hover:bg-green-100"
+                >
+                  {t('common.postAd.continuePostingAd')}
                 </button>
-              )}
+              ) : null}
             </div>
           </li>
         ))}

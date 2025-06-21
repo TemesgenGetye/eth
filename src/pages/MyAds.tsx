@@ -114,12 +114,12 @@ export default function MyAds() {
     <div className="flex min-h-screen justify-center bg-gray-50">
       <div className="mx-auto w-[65rem]">
         {/* Header */}
-        <h1 className="mb-8 text-2xl font-bold text-black">
+        <h1 className=" p-4 px-6 text-2xl font-bold text-black">
           {t('common.adss.title')}
         </h1>
 
         {/* Filter Tabs */}
-        <div className="mb-8 flex flex-wrap gap-4 p-6">
+        <div className="mb-8 flex flex-wrap gap-4 p-6 pt-1">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -142,7 +142,6 @@ export default function MyAds() {
                 key={categoryName}
                 title={categoryName}
                 subcategories={subcategories}
-                showEditButton={activeTab === 'live'}
               />
             ))
           ) : (

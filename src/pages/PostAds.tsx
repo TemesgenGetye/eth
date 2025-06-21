@@ -11,9 +11,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../components/ui/Select';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { setItem } from '../services/db';
 import { useLanguage } from '../Context/Languge';
+import { ProductData } from '../components/type';
 
 interface Subcategory {
   id: number;
@@ -22,10 +23,16 @@ interface Subcategory {
 
 export default function PostAdPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { categories = [] } = useCategories();
   const [isSavingDraft, setIsSavingDraft] = useState(false);
+
+  // Check if we're in edit mode
+  const editMode = location.state?.editMode || false;
+  const productData = location.state?.productData || null;
+
   const {
     register,
     handleSubmit,
@@ -34,16 +41,30 @@ export default function PostAdPage() {
     watch,
     formState: { errors, isSubmitting },
     reset,
-    trigger,
     saveAsDraft,
+    onSubmit,
   } = useProductForm(
     () => {
-      toast.success(t('common.postAd.postAdSuccess'));
-      reset();
+      toast.success(
+        editMode
+          ? t('common.postAd.updateAdSuccess')
+          : t('common.postAd.postAdSuccess')
+      );
+      if (editMode) {
+        navigate('/my-ads');
+      } else {
+        reset();
+      }
     },
     () => {
-      toast.error(t('common.postAd.postAdError'));
-    }
+      toast.error(
+        editMode
+          ? t('common.postAd.updateAdError')
+          : t('common.postAd.postAdError')
+      );
+    },
+    editMode,
+    productData
   );
 
   const cities = [
@@ -81,19 +102,16 @@ export default function PostAdPage() {
   );
   const subcategories = selectedCategory?.subcategories || [];
 
-  // Handle form submission with validation check
-  const handleFormSubmit = async () => {
-    // Trigger validation for all fields
-    const isValid = await trigger();
-
-    if (isValid) {
-      // Get the current form data
-      const formData = watch();
-
+  // Handle form submission
+  const handleFormSubmit = async (data: ProductData) => {
+    if (editMode) {
+      // In edit mode, use the form's onSubmit directly
+      return onSubmit(data);
+    } else {
+      // For new ads, store form data in IndexedDB for the subscription page
       try {
-        // Store form data in IndexedDB for the subscription page
-        await setItem('productFormData', formData);
-        navigate('/pricing'); // Use navigate to go to the next page
+        await setItem('productFormData', data);
+        navigate('/pricing');
       } catch (error) {
         console.error('Failed to save form data to IndexedDB', error);
         toast.error(t('common.postAd.fillRequiredFields'));
@@ -103,30 +121,26 @@ export default function PostAdPage() {
 
   // Handle save as draft
   const handleSaveAsDraft = async () => {
-    // Trigger validation for all fields
-    const isValid = await trigger();
-
-    if (isValid) {
-      setIsSavingDraft(true);
-      // Get the current form data
+    setIsSavingDraft(true);
+    try {
       const formData = watch();
-
-      try {
-        // Save as draft to Supabase
-        const error = await saveAsDraft(formData);
-        if (!error) {
-          toast.success('Ad saved as draft successfully!');
-          reset();
-          navigate('/my-ads'); // Navigate to my ads page
-        } else {
-          toast.error(t('common.postAd.fillRequiredFields'));
-        }
-      } catch (error) {
-        console.error('Failed to save draft:', error);
+      const error = await saveAsDraft(formData);
+      if (!error) {
+        toast.success(
+          editMode
+            ? 'Ad updated as draft successfully!'
+            : 'Ad saved as draft successfully!'
+        );
+        reset();
+        navigate('/my-ads'); // Navigate to my ads page
+      } else {
         toast.error(t('common.postAd.fillRequiredFields'));
-      } finally {
-        setIsSavingDraft(false);
       }
+    } catch (error) {
+      console.error('Failed to save draft:', error);
+      toast.error(t('common.postAd.fillRequiredFields'));
+    } finally {
+      setIsSavingDraft(false);
     }
   };
 
@@ -141,7 +155,9 @@ export default function PostAdPage() {
             </button>
           </a>
           <h1 className="text-2xl font-bold text-black">
-            {t('common.postAd.title')}
+            {editMode
+              ? t('common.postAd.editAdTitle')
+              : t('common.postAd.title')}
           </h1>
         </div>
 
@@ -149,9 +165,8 @@ export default function PostAdPage() {
           {/* Required Fields Note */}
           <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
             <p className="text-sm text-blue-800">
-              <strong>Note:</strong> Only Category, Subcategory, and Original
-              Price are required. All other fields are optional and can be
-              filled in later.
+              <strong>{t('common.postAd.note')}:</strong>{' '}
+              {t('common.postAd.requiredFieldsNote')}
             </p>
           </div>
 
@@ -252,7 +267,7 @@ export default function PostAdPage() {
                     render={({ field }) => (
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value?.toString()}
+                        value={field.value?.toString()}
                       >
                         <SelectTrigger className="w-full">
                           <SelectValue
@@ -285,7 +300,7 @@ export default function PostAdPage() {
                     render={({ field }) => (
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value?.toString()}
+                        value={field.value?.toString()}
                         disabled={!selectedCategory}
                       >
                         <SelectTrigger className="w-full">
@@ -327,10 +342,7 @@ export default function PostAdPage() {
                   name="price.currency"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select Currency" />
                       </SelectTrigger>
@@ -397,10 +409,7 @@ export default function PostAdPage() {
                   name="location"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full">
                         <SelectValue
                           placeholder={t('common.postAd.locationPlaceholder')}
@@ -486,6 +495,8 @@ export default function PostAdPage() {
                     <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-gray-600"></div>
                   </div>
                 </>
+              ) : editMode ? (
+                t('common.postAd.updateAsDraft')
               ) : (
                 t('common.postAd.saveAsDraft')
               )}
@@ -501,6 +512,8 @@ export default function PostAdPage() {
                     <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-white"></div>
                   </div>
                 </>
+              ) : editMode ? (
+                t('common.postAd.updateAdNow')
               ) : (
                 t('common.postAd.postAdNow')
               )}

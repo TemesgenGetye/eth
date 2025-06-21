@@ -756,6 +756,7 @@
       },
       "postAd": {
         "title": "Post New Ad",
+        "editAdTitle": "Edit Ad",
         "productImages": "Product Images",
         "addImage": "Add Image",
         "uploadLimit": "Upload up to 10 images. First image will be the main photo.",
@@ -783,8 +784,18 @@
         "emailAddress": "Email Address",
         "emailPlaceholder": "Your email address",
         "saveAsDraft": "Save as Draft",
+        "updateAsDraft": "Update as Draft",
+        "continuePostingAd": "Continue Posting Ad",
         "postAdNow": "Post Ad Now",
-        "fillRequiredFields": "Please fill in all required fields correctly."
+        "updateAdNow": "Update Ad Now",
+        "updateAd": "Update Ad",
+        "postAdSuccess": "Product has been successfully uploaded.",
+        "postAdError": "Error trying to upload your product.",
+        "updateAdSuccess": "Product has been successfully updated.",
+        "updateAdError": "Error trying to update your product.",
+        "fillRequiredFields": "Please fill in all required fields correctly.",
+        "requiredFieldsNote": "Note: Only Category, Subcategory, and Original Price are required. All other fields are optional and can be filled in later.",
+        "note": "Note"
       },
       "pricing": {
         "selectPackage": "اختر الباقة المناسبة لك",
@@ -1709,6 +1720,7 @@
       },
       "postAd": {
         "title": "نشر إعلان جديد",
+        "editAdTitle": "تعديل الإعلان",
         "productImages": "صور المنتج",
         "addImage": "إضافة صورة",
         "uploadLimit": "يمكنك تحميل حتى 10 صور. الصورة الأولى ستكون الصورة الرئيسية.",
@@ -1736,8 +1748,18 @@
         "emailAddress": "البريد الإلكتروني",
         "emailPlaceholder": "عنوان بريدك الإلكتروني",
         "saveAsDraft": "حفظ كمسودة",
+        "updateAsDraft": "تحديث كمسودة",
+        "continuePostingAd": "متابعة نشر الإعلان",
         "postAdNow": "نشر الإعلان الآن",
-        "fillRequiredFields": "يرجى ملء جميع الحقول المطلوبة بشكل صحيح."
+        "updateAdNow": "تحديث الإعلان الآن",
+        "updateAd": "تحديث الإعلان",
+        "postAdSuccess": "تم رفع المنتج بنجاح.",
+        "postAdError": "خطأ في محاولة رفع منتجك.",
+        "updateAdSuccess": "تم تحديث المنتج بنجاح.",
+        "updateAdError": "خطأ في محاولة تحديث منتجك.",
+        "fillRequiredFields": "يرجى ملء جميع الحقول المطلوبة بشكل صحيح.",
+        "requiredFieldsNote": "ملاحظة: الفئة الفئة الفرعية والسعر الأصلي مطلوبة فقط. جميع الحقول الأخرى اختيارية ويمكن ملؤها لاحقاً.",
+        "note": "ملاحظة"
       },
       "pricing": {
         "selectPackage": "اختر الباقة المناسبة لك",

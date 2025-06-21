@@ -80,7 +80,7 @@ export default function Pricing() {
           </Card>
 
           {/* Basic Plan - Recommended */}
-          <Card className="relative border-2 border-blue-200 bg-blue-50 shadow-lg">
+          <Card className="relative border-2 border-blue-200 bg-blue-50 bg-[linear-gradient(to_right,rgba(89,138,237,0.185),rgba(62,122,244,0.115))] shadow-lg">
             <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 transform border-b border-gray-200 bg-blue-900 px-4 py-1 text-white">
               {t('common.pricing.recommended')}
             </Badge>

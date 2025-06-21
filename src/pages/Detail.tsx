@@ -344,10 +344,10 @@ export default function Detail() {
         </p>
       </div>
       {/* Slug Section */}
-      <div>
+      {/* <div>
         <h3 className="mb-4 text-lg font-semibold">Slug</h3>
         <p className="text-gray-600">{'N/A'}</p>
-      </div>
+      </div> */}
       {/* Contact Seller Section */}
       {createdBy && (
         <div className="mt-10 max-w-sm rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">

@@ -34,7 +34,7 @@ function ListForHome() {
     <div className="bg-white py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-5 lg:px-6">
         <div className="flex gap-2">
-          <h2 className="mb-8 text-2xl font-semibold text-gray-800">
+          <h2 className="mb-8 hidden text-2xl font-semibold text-gray-800 md:block">
             {t('common.viewAllCategories')}
           </h2>
           <div className="hidden md:block">

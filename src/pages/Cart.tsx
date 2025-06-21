@@ -287,12 +287,12 @@ export default function CartPage() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <button
+        {/* <button
           className="rounded-lg bg-gray-100 p-2 text-gray-600 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
           aria-label="Filter"
         >
           <Filter className="h-5 w-5" />
-        </button>
+        </button> */}  
       </div>
 
       {isSearching ? (
