@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   ShoppingCart,
   Image,
@@ -19,6 +19,7 @@ import { useGetCustomer } from '../hooks/useCustomers';
 import { cleanString } from '../services/utils';
 import OrderConfirmationEmail from '../components/ui/OrderConformationEmail';
 import { useLanguage } from '../Context/Languge';
+import { Product } from '../components/type.d';
 
 export default function CartPage() {
   const { cartItems, isLoadingCart } = useCartItems();
@@ -34,6 +35,10 @@ export default function CartPage() {
   const [imageIndexes, setImageIndexes] = useState<{ [key: string]: number }>(
     {}
   );
+  const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const [showInitialSkeleton, setShowInitialSkeleton] = useState(true);
   const [paymentModal, setPaymentModal] = useState<'cash' | 'credit' | null>(
     null
   );
@@ -49,6 +54,43 @@ export default function CartPage() {
     cost: { shipping: number; tax: number };
     customerEmail: string;
   }>(null);
+
+  useEffect(() => {
+    if (!isLoadingCart) {
+      const timer = setTimeout(() => {
+        setShowInitialSkeleton(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoadingCart]);
+
+  useEffect(() => {
+    setIsSearching(true);
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      setIsSearching(false);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
+
+  const displayedItems = useMemo(() => {
+    if (showInitialSkeleton) return [];
+    return (
+      cartItems?.filter((item): item is Product => {
+        if (!item) return false;
+        const nameMatch = item.name
+          .toLowerCase()
+          .includes(debouncedSearchTerm.toLowerCase());
+        const descMatch = item.description
+          ?.toLowerCase()
+          .includes(debouncedSearchTerm.toLowerCase());
+        return nameMatch || !!descMatch;
+      }) || []
+    );
+  }, [cartItems, debouncedSearchTerm, showInitialSkeleton]);
 
   // const { customers } = useCustomers();
   // const filterdCustomers = customers?.filter(
@@ -92,7 +134,7 @@ export default function CartPage() {
       cartItems?.forEach((item) => {
         initialQuantities[item?.id] = item?.quantity || 1;
       });
-      setQuantities(initialQuantities);
+      // setQuantities(initialQuantities);
     }
   }, [cartItems]);
 
@@ -171,10 +213,10 @@ export default function CartPage() {
     }
   }
 
-  if (isLoadingCart) {
+  if (showInitialSkeleton) {
     return (
-      <div className="mx-auto mb-5 grid max-w-7xl grid-cols-1 gap-4">
-        <div className="p-10">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 md:mb-20">
+        <div className="p-4 sm:p-10">
           <div className="mb-2 h-6 w-32 animate-pulse rounded bg-gray-200" />
           <div className="h-4 w-48 animate-pulse rounded bg-gray-200" />
         </div>
@@ -185,9 +227,9 @@ export default function CartPage() {
         {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={i}
-            className="relative flex animate-pulse gap-4 rounded-lg border-b border-b-gray-200 bg-white p-4 shadow-sm"
+            className="relative flex animate-pulse flex-col gap-4 rounded-lg border-b border-b-gray-200 bg-white p-4 shadow-sm md:flex-row"
           >
-            <div className="h-48 w-72 rounded-lg bg-gray-200" />
+            <div className="h-48 w-full rounded-lg bg-gray-200 md:w-72" />
             <div className="flex-1 space-y-3">
               <div className="h-6 w-32 rounded bg-gray-200" />
               <div className="h-4 w-24 rounded bg-gray-200" />
@@ -209,9 +251,28 @@ export default function CartPage() {
     );
   }
 
+  const CartItemsSkeleton = () => (
+    <>
+      {Array.from({ length: 3 }).map((_, i) => (
+        <div
+          key={i}
+          className="relative flex animate-pulse flex-col gap-4 rounded-lg border-b border-b-gray-200 bg-white p-4 shadow-sm md:flex-row"
+        >
+          <div className="h-48 w-full rounded-lg bg-gray-200 md:w-72" />
+          <div className="flex-1 space-y-3">
+            <div className="h-6 w-32 rounded bg-gray-200" />
+            <div className="h-4 w-24 rounded bg-gray-200" />
+            <div className="h-4 w-40 rounded bg-gray-200" />
+            <div className="h-8 w-32 rounded bg-gray-200" />
+          </div>
+        </div>
+      ))}
+    </>
+  );
+
   return (
-    <div className="mx-auto mb-5 grid max-w-7xl grid-cols-1 gap-4">
-      <div className="p-10">
+    <div className="mx-auto mb-20 grid max-w-7xl grid-cols-1 gap-4 md:mb-0">
+      <div className="p-4 sm:p-10">
         <p className="text-lg font-semibold">{t('common.myCart')}</p>
         <p className="text-sm text-gray-500">
           {t('common.cartItemsAppearHere')}
@@ -223,6 +284,8 @@ export default function CartPage() {
           placeholder={t('common.searchInCart')}
           className="w-full flex-1 rounded-lg border border-gray-300 p-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           aria-label="Search"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
         <button
           className="rounded-lg bg-gray-100 p-2 text-gray-600 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -232,25 +295,40 @@ export default function CartPage() {
         </button>
       </div>
 
-      {cartItems?.length === 0 ? (
+      {isSearching ? (
+        <CartItemsSkeleton />
+      ) : displayedItems.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-10 text-center">
-          <ShoppingCart className="h-16 w-16 text-gray-300" />
-          <p className="mt-4 text-lg font-medium text-gray-900">
-            {t('common.yourCartIsEmpty')}
-          </p>
-          <p className="mt-2 text-sm text-gray-500">
-            {t('common.addItemsToCart')}
-          </p>
-          <button
-            onClick={() => navigate('/')}
-            className="mt-6 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-          >
-            {t('common.continueShopping')}
-          </button>
+          {cartItems && cartItems.length > 0 ? (
+            <div>
+              <p className="mt-4 text-lg font-medium text-gray-900">
+                No results for "{searchTerm}"
+              </p>
+              <p className="mt-2 text-sm text-gray-500">
+                Try checking your spelling or use more general terms
+              </p>
+            </div>
+          ) : (
+            <>
+              <ShoppingCart className="h-16 w-16 text-gray-300" />
+              <p className="mt-4 text-lg font-medium text-gray-900">
+                {t('common.yourCartIsEmpty')}
+              </p>
+              <p className="mt-2 text-sm text-gray-500">
+                {t('common.addItemsToCart')}
+              </p>
+              <button
+                onClick={() => navigate('/')}
+                className="mt-6 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+              >
+                {t('common.continueShopping')}
+              </button>
+            </>
+          )}
         </div>
       ) : (
         <>
-          {cartItems?.map((item) => {
+          {displayedItems.map((item) => {
             const currentImageIndex = imageIndexes[item?.id] ?? 0;
 
             return (
@@ -265,15 +343,19 @@ export default function CartPage() {
                 }
                 // /:cid/:pname/:pid
               >
-                <div className="flex gap-4">
-                  <div className="relative h-48 w-72 flex-shrink-0 overflow-hidden rounded-lg">
+                <div className="flex flex-col gap-4 md:flex-row">
+                  <div className="relative h-48 w-full flex-shrink-0 overflow-hidden rounded-lg md:w-72">
                     {item?.imgUrls.length > 1 && (
                       <>
                         <button
                           className="absolute left-0.5 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full bg-white/80 p-1 ring-1 ring-gray-300 hover:bg-gray-300 hover:ring-2 hover:ring-gray-400"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleImageChange(item?.id, 'prev', item?.imgUrls);
+                            handleImageChange(
+                              String(item?.id),
+                              'prev',
+                              item?.imgUrls
+                            );
                           }}
                         >
                           <ChevronLeft size={16} />
@@ -282,7 +364,11 @@ export default function CartPage() {
                           className="absolute right-0.5 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center rounded-full bg-white/80 p-1 ring-1 ring-gray-300 hover:bg-gray-300 hover:ring-2 hover:ring-gray-400"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleImageChange(item?._id, 'next', item?.imgUrls);
+                            handleImageChange(
+                              String(item?.id),
+                              'next',
+                              item?.imgUrls
+                            );
                           }}
                         >
                           <ChevronRight size={16} />
@@ -424,7 +510,7 @@ export default function CartPage() {
                 </span>
               </div>
             </div>
-            <div className="mt-6 flex gap-3">
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <button
                 className="w-full rounded-lg bg-blue-600 py-3 text-white hover:bg-blue-700"
                 onClick={() => handleCashOnDelivery()}

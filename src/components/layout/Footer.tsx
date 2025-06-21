@@ -282,8 +282,8 @@ const Footer = () => {
               className="mt-2 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
             >
               {language === 'ar'
-                ? t('common.switchToArabic')
-                : t('common.switchToEnglish')}
+                ? t('common.switchToEnglish')
+                : t('common.switchToArabic')}
             </button>
           </div>
         </div>

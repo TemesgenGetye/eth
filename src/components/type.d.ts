@@ -62,3 +62,23 @@ export interface ProductData {
   phone_num?: string;
   email?: string | null;
 }
+
+export type Product = {
+  id: number;
+  name: string;
+  price: {
+    discounted: number;
+    orignal: number;
+  };
+  imgUrls: string[];
+  slug: string;
+  description: string;
+  stock: number;
+  category: {
+    name: string;
+  };
+  subcategory: {
+    name: string;
+  };
+  quantity?: number;
+};
