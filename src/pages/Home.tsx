@@ -152,7 +152,7 @@ const Home = () => {
                       }
                       className="flex-1 border-0 bg-transparent px-4 py-2 text-lg text-gray-700 focus:outline-none focus:ring-0"
                     />
-                    <button className="ml-3 flex items-center justify-center p-3 text-blue-600 transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <button className="ml-3 flex items-center justify-center p-3 text-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400">
                       <Search className="h-6 w-6" />
                     </button>
                   </div>

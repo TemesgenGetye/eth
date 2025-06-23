@@ -154,27 +154,27 @@ export default function PopularCategories() {
                   const pName = cleanString(product?.name || '');
                   const pid = product?.id;
                   return (
-                    <button
+                    <div
                       key={index}
-                      className="group relative w-full cursor-pointer"
+                      className="group relative w-full cursor-pointer rounded-lg p-4 hover:shadow-[rgba(0,_0,_0,_0.12)_0px_8px_24px_0px]"
                       onClick={() =>
                         navigate(`/${cName}/${scName}/${pName}`, {
                           state: { pid },
                         })
                       }
                     >
-                      <div className="relative h-48 w-full overflow-hidden rounded-lg">
+                      <div className="relative h-40 w-full overflow-hidden rounded-lg">
                         <img
                           src={product.imgUrls[0] || '/logo.png'}
                           alt={`pro_img ${index}`}
                           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                           loading="lazy"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                        {/* <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" /> */}
                         {/* Blue gradient overlay */}
                         <div className="absolute inset-x-0 bottom-0 h-0 bg-gradient-to-t from-blue-600/60 to-transparent transition-all duration-500 ease-out group-hover:h-full" />
                         {/* Animated border */}
-                        <div className="absolute inset-0 p-2">
+                        {/* <div className="absolute inset-0 p-2">
                           <div className="relative h-full w-full overflow-hidden">
                             <div className="border-1 absolute inset-0 border-white/0 transition-colors duration-500 group-hover:border-white/100">
                               <div className="absolute inset-0">
@@ -185,12 +185,22 @@ export default function PopularCategories() {
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <h3 className="absolute bottom-4 left-4 z-10 text-lg font-semibold text-white drop-shadow-lg">
+                        </div> */}
+                        {/* <h3 className="absolute bottom-4 left-4 z-10 text-lg font-semibold text-white drop-shadow-lg">
                           {product.name}
-                        </h3>
+                        </h3> */}
                       </div>
-                    </button>
+                      <div className="mt-2 flex gap-2 text-base font-semibold">
+                        <span className="text-blue-600">
+                          {product.price.currency}
+                        </span>
+                        <span>{product.price.discounted}</span>
+                      </div>
+                      <h1 className="text-sm text-gray-500">{product.name}</h1>
+                      <p className="mt-1 border-t border-gray-100 pt-2 text-xs text-gray-500">
+                        {product.description.slice(0, 80)}...
+                      </p>
+                    </div>
                   );
                 })}
                 <div className="flex flex-col items-center justify-center">
