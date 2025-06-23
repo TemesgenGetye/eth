@@ -18,6 +18,7 @@ import supabase from '../../services/supabase';
 // import { useVerficationModal } from '../../Context/VerficationModal';
 import { useGetCustomer } from '../../hooks/useCustomers';
 import { useLanguage } from '../../Context/Languge';
+import { useVerficationModal } from '../../Context/VerficationModal';
 
 const NavLinks = () => {
   const [activeModal, setActiveModal] = useState('');
@@ -25,7 +26,7 @@ const NavLinks = () => {
   const { user } = useAuth();
   const navlinksRef = useRef<HTMLDivElement>(null);
   const { t } = useLanguage();
-  // const { open, setOpen } = useVerficationModal(); YW unused state
+  const { open, setOpen } = useVerficationModal();
 
   const { customer } = useGetCustomer(
     user?.identities?.at(0)?.user_id as string
@@ -61,7 +62,7 @@ const NavLinks = () => {
 
   return (
     <div
-      className="navlinks mmd:flex relative hidden items-center space-x-6"
+      className="navlinks relative  hidden items-center space-x-6 mmd:flex"
       ref={navlinksRef}
     >
       {/* Notifications */}
@@ -175,7 +176,7 @@ const NavLinks = () => {
               <li
                 className="hover flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100"
                 onClick={() => {
-                  // setOpen(true);
+                  setOpen(true);
                   closeModal();
                 }}
               >

@@ -27,6 +27,8 @@ import MobileBottomNav from './components/layout/MobileBottomNav';
 import ScrollToTop from './components/ui/ScrollToTop';
 import CatagoryInfo from './pages/Catagory';
 import Menu from './pages/Menu';
+import VerificationBar from './components/Verfication/verification';
+import { useAuth } from './Context/AuthContext';
 
 const AppContent = () => {
   const location = useLocation();
@@ -46,9 +48,11 @@ const AppContent = () => {
   const shouldHideNavbar =
     shouldHideAllNav || hideNavbarOnlyRoutes.includes(location.pathname);
   const isProfilePage = location.pathname.startsWith(profileRoute);
+  const { user } = useAuth();
 
   return (
     <div className="flex min-h-screen flex-col">
+      {user?.email && <VerificationBar />}
       <ScrollToTop />
       {!shouldHideNavbar && <Navbar />}
       <main className="flex-grow">

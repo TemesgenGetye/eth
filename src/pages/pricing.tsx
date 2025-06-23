@@ -33,7 +33,7 @@ export default function Pricing() {
           {/* Lite Plan */}
           <Card className="relative flex flex-col justify-between rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
             <div>
-              <CardHeader className="border-b border-gray-200 pb-4">
+              <CardHeader className="border-b border-gray-200 pb-4 ">
                 <h3 className="text-xl font-semibold text-gray-900">
                   {t('common.pricing.lite')}
                 </h3>
@@ -80,7 +80,7 @@ export default function Pricing() {
           </Card>
 
           {/* Basic Plan - Recommended */}
-          <Card className="relative border-2 border-blue-200 bg-blue-50 bg-[linear-gradient(to_right,rgba(89,138,237,0.185),rgba(62,122,244,0.115))] shadow-lg">
+          <Card className="relative border-2 border-blue-200 bg-blue-50 bg-[linear-gradient(to_right,rgba(89,138,237,0.185),rgba(62,122,244,0.115))] p-3 shadow-lg">
             <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 transform border-b border-gray-200 bg-blue-900 px-4 py-1 text-white">
               {t('common.pricing.recommended')}
             </Badge>
@@ -152,7 +152,7 @@ export default function Pricing() {
 
           {/* Extended Plan */}
           <Card className="relative border border-gray-200 bg-white shadow-sm">
-            <CardHeader className="pb-4">
+            <CardHeader className="p-6 pb-4">
               <h3 className="text-xl font-semibold text-gray-900">
                 {t('common.pricing.extended')}
               </h3>
