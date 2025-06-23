@@ -1463,7 +1463,7 @@ const VerificationBar = () => {
   if (customer?.verification_status === 'verified') return null;
   return (
     <>
-      <div className="flex w-full items-center justify-center gap-4 bg-blue-500 px-6 py-2 text-white">
+      <div className=" hidden w-full items-center justify-center gap-4 bg-blue-500 px-6 py-2 text-white md:flex">
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-6">
           <span className="text-lg font-bold">
             <CircleCheckBig />

@@ -15,8 +15,6 @@ import AnimatedCategoryIcon from '../components/ui/AnimatedCategoryIcon';
 import { CategoryType } from '../components/type';
 import { useSearchModal } from '../Context/SearchModalContext';
 import { useLanguage } from '../Context/Languge';
-import { useVerficationModal } from '../Context/VerficationModal';
-import VerificationBar from '../components/Verfication/verification';
 
 const Home = () => {
   const { blurBackground } = useBackground();
@@ -33,7 +31,6 @@ const Home = () => {
     active
   );
   const navigate = useNavigate();
-  const { open, setOpen } = useVerficationModal();
 
   const highlightText = (text: string, highlight: string) => {
     if (!highlight.trim()) return text;

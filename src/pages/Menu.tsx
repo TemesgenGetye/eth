@@ -22,6 +22,7 @@ import { Badge } from '../components/ui/Badge';
 import { Link, useNavigate } from 'react-router-dom';
 import supabase from '../services/supabase';
 import { useLanguage } from '../Context/Languge';
+import { useVerficationModal } from '../Context/VerficationModal';
 import toast from 'react-hot-toast';
 
 const Menu = () => {
@@ -32,6 +33,7 @@ const Menu = () => {
   const [isCityExpanded, setIsCityExpanded] = useState(false);
   const [selectedCity, setSelectedCity] = useState('Dubai');
   const { language, setLanguage, t } = useLanguage();
+  const { setOpen } = useVerficationModal();
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -110,13 +112,11 @@ const Menu = () => {
         <div className="m-4 flex items-center justify-between rounded-lg bg-blue-50 p-4">
           <div className="flex items-center">
             <div className="relative mr-4 flex-shrink-0">
-              <svg
-                className="h-10 w-10 text-blue-500"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-3.5-3.5 1.41-1.41L11 14.17l5.59-5.59L18 10l-7 7z" />
-              </svg>
+              <img
+                src="/verified-badge.png"
+                alt="Verified Badge"
+                className="h-20 w-20 object-contain"
+              />
             </div>
             <div>
               <h2 className="font-semibold text-gray-800">
@@ -133,7 +133,11 @@ const Menu = () => {
               </a>
             </div>
           </div>
-          <ChevronRight size={24} className="text-gray-500" />
+          <ChevronRight
+            size={24}
+            className="cursor-pointer text-gray-500 hover:text-gray-700"
+            onClick={() => setOpen(true)}
+          />
         </div>
       )}
       <div className="grid grid-cols-2 gap-4 p-4">

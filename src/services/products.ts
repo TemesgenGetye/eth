@@ -391,17 +391,20 @@ export const getSearchedProducts = async (
       query = query.ilike('name', `%${searchTerm.trim()}%`);
     }
 
-    // Apply category filter if not 'all'
-    if (category && category !== 'all') {
-      query = query.eq('categories.name', category);
-    }
-
     const { data, error } = await query;
 
     if (error) throw new Error(error?.message);
-    const camelCasedData = data?.map((product) => camelCase(product));
+    let camelCasedData = data?.map((product) => camelCase(product)) || [];
 
-    return camelCasedData || [];
+    // Apply category filter after fetching if not 'all'
+    if (category && category !== 'all') {
+      camelCasedData = camelCasedData.filter(
+        (product) =>
+          product.category?.name?.toLowerCase() === category.toLowerCase()
+      );
+    }
+
+    return camelCasedData;
   } catch (err) {
     console.error('Error fetching searched products:', err);
     throw err;

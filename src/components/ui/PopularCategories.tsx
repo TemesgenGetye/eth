@@ -103,7 +103,7 @@ export default function PopularCategories() {
                   const pName = cleanString(product?.name || '');
                   const pid = product?.id;
                   return (
-                    <button
+                    <div
                       key={index}
                       className="group relative h-full w-64 flex-shrink-0 cursor-pointer"
                       onClick={() =>
@@ -123,7 +123,7 @@ export default function PopularCategories() {
                         {/* Blue gradient overlay */}
                         <div className="absolute inset-x-0 bottom-0 h-0 bg-gradient-to-t from-blue-600/60 to-transparent transition-all duration-500 ease-out group-hover:h-full" />
                         {/* Animated border */}
-                        <div className="absolute inset-0 p-2">
+                        {/* <div className="absolute inset-0 p-2">
                           <div className="relative h-full w-full overflow-hidden">
                             <div className="border-1 absolute inset-0 border-white/0 transition-colors duration-500 group-hover:border-white/100">
                               <div className="absolute inset-0">
@@ -134,12 +134,20 @@ export default function PopularCategories() {
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <h3 className="absolute bottom-4 left-4 z-10 text-lg font-semibold text-white drop-shadow-lg">
-                          {product.name}
-                        </h3>
+                        </div> */}
+                        {/* RM Animated border  YW*/}
                       </div>
-                    </button>
+                      <div className="mt-2 flex gap-2 text-base font-semibold">
+                        <span className="text-blue-600">
+                          {product.price.currency}
+                        </span>
+                        <span>{product.price.discounted}</span>
+                      </div>
+                      <h1 className="text-sm text-gray-500">{product.name}</h1>
+                      <p className="mt-1 border-t border-gray-100 pt-2 text-xs text-gray-500">
+                        {product.description.slice(0, 80)}...
+                      </p>
+                    </div>
                   );
                 })}
                 <div className="flex w-64 flex-shrink-0 flex-col items-center justify-center">
@@ -186,9 +194,7 @@ export default function PopularCategories() {
                             </div>
                           </div>
                         </div> */}
-                        {/* <h3 className="absolute bottom-4 left-4 z-10 text-lg font-semibold text-white drop-shadow-lg">
-                          {product.name}
-                        </h3> */}
+                        {/* RM Animated border  YW*/}
                       </div>
                       <div className="mt-2 flex gap-2 text-base font-semibold">
                         <span className="text-blue-600">
