@@ -20,13 +20,13 @@ const Navbar = () => {
       {/* Top Bar */}
       <div className=" bg-white md:border-b md:border-gray-200">
         <div className="m-auto max-w-6xl">
-          <div className="relative mx-auto flex h-[5rem]  max-w-6xl items-center justify-center px-4 sm:px-6 mmd:h-12 mmd:justify-between lg:px-8 lg:py-[30px]">
+          <div className="relative mx-auto flex h-[5rem]  max-w-6xl items-center justify-center px-4 sm:px-6 mmd:h-12 mmd:justify-between lg:px-8 lg:py-[50px]">
             <div className=" flex items-center space-x-2">
               <Link to="/" className="flex items-center">
                 <img
                   src="/logo.png"
                   alt="888market"
-                  className="h-16 w-auto mmd:h-10"
+                  className="h-16 w-auto mmd:h-[5.5rem]"
                 />
                 <div className="flex items-center">
                   <button className="flex items-center text-xl font-semibold text-gray-600 hover:text-gray-900 mmd:text-sm">
