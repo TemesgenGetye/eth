@@ -20,16 +20,16 @@ const Navbar = () => {
       {/* Top Bar */}
       <div className=" bg-white md:border-b md:border-gray-200">
         <div className="m-auto max-w-6xl">
-          <div className="mmd:h-12 mmd:justify-between relative mx-auto  flex h-[5rem] max-w-6xl items-center justify-center px-4 sm:px-6 lg:px-8">
+          <div className="relative mx-auto flex h-[5rem]  max-w-6xl items-center justify-center px-4 sm:px-6 mmd:h-12 mmd:justify-between lg:px-8 lg:py-[30px]">
             <div className=" flex items-center space-x-2">
               <Link to="/" className="flex items-center">
                 <img
                   src="/logo.png"
                   alt="888market"
-                  className="mmd:h-10 h-16 w-auto"
+                  className="h-16 w-auto mmd:h-10"
                 />
                 <div className="flex items-center">
-                  <button className="mmd:text-sm flex items-center text-xl font-semibold text-gray-600 hover:text-gray-900">
+                  <button className="flex items-center text-xl font-semibold text-gray-600 hover:text-gray-900 mmd:text-sm">
                     {t('common.brandName')}
                   </button>
                 </div>
@@ -170,7 +170,7 @@ const HoverMenu = () => {
     >
       <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-6">
         <div
-          className="mmd:flex mmd:h-12 llg:space-x-20 hidden h-24 items-center space-x-10 "
+          className="hidden h-24 items-center space-x-10 mmd:flex mmd:h-12 llg:space-x-20 "
           dir={direction}
         >
           {/* Render the top-level categories */}

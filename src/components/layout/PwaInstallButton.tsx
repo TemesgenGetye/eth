@@ -43,11 +43,11 @@ const PwaInstallButton = ({ compact, className }: PwaInstallButtonProps) => {
         title={label}
         aria-label={label}
         className={clsx(
-          'group relative flex h-11 w-11 items-center justify-center rounded-2xl',
+          'group relative flex h-11 w-11 items-center justify-center rounded-full',
           'bg-gradient-to-br from-sky-500 via-blue-600 to-indigo-700 text-white shadow-md shadow-blue-600/25',
           'ring-2 ring-white/20 transition hover:scale-[1.03] hover:shadow-lg hover:shadow-blue-600/35 active:scale-[0.98]',
           'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600',
-          className,
+          className
         )}
       >
         <Download
@@ -75,7 +75,7 @@ const PwaInstallButton = ({ compact, className }: PwaInstallButtonProps) => {
         'hover:from-sky-400 hover:via-blue-500 hover:to-indigo-500 hover:shadow-lg hover:shadow-blue-500/35',
         'active:scale-[0.98]',
         'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600',
-        className,
+        className
       )}
     >
       <span
