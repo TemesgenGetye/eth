@@ -8,6 +8,7 @@ import type { CategoryType } from '../type';
 import { useLanguage } from '../../Context/Languge';
 import { cleanString } from '../../services/utils';
 import MobileBottomNav from './MobileBottomNav';
+import PwaInstallButton from './PwaInstallButton';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -42,6 +43,10 @@ const Navbar = () => {
                 <ArrowLeft size={20} />
               </button>
             )}
+
+            <div className="absolute right-3 top-1/2 z-[15] -translate-y-1/2 mmd:hidden">
+              <PwaInstallButton compact />
+            </div>
 
             {/* TopNav Component */}
             <TopNav />

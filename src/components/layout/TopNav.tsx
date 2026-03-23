@@ -19,6 +19,7 @@ import supabase from '../../services/supabase';
 import { useGetCustomer } from '../../hooks/useCustomers';
 import { useLanguage } from '../../Context/Languge';
 import { useVerficationModal } from '../../Context/VerficationModal';
+import PwaInstallButton from './PwaInstallButton';
 
 const NavLinks = () => {
   const [activeModal, setActiveModal] = useState('');
@@ -241,6 +242,7 @@ const NavLinks = () => {
           </div>
         )}
       </div>
+      <PwaInstallButton />
       {/* Place Ad */}
       <Link
         to={'/post-ad'}
