@@ -1,4 +1,4 @@
-import { categories } from '../../Data/Catagorie';
+import { categories } from '../../data/Catagorie';
 
 export default function Banners({ id }: { id: string }) {
   const filterdCategory = categories[0]?.children?.filter(
