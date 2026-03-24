@@ -66,20 +66,10 @@ export default function CatagoryInfo() {
 
   return (
     <div className="min-h-screen overflow-x-hidden rounded-lg">
-      <div
-        className="relative m-auto mt-2 w-full max-w-[1600px] px-3 sm:mt-3 sm:w-[92%] sm:px-0 md:w-[85%] lg:w-[80%]"
-        style={{
-          backgroundImage: image ? `url(${image})` : undefined,
-          backgroundColor: image ? undefined : '#1e293b',
-        }}
-      >
+      <div className="relative m-auto mt-2 w-full max-w-[1600px] px-3 sm:mt-3 sm:w-[92%] sm:px-0 md:w-[85%] lg:w-[80%]">
         <div
-          className="relative min-h-[280px] rounded-xl bg-cover bg-center py-8 sm:min-h-[320px] sm:py-12 md:py-16"
-          style={
-            image
-              ? { backgroundImage: `url(${image})` }
-              : { backgroundImage: 'none' }
-          }
+          className="relative min-h-[260px] overflow-hidden rounded-xl bg-slate-800 bg-cover bg-center py-7 sm:min-h-[300px] sm:py-10 md:min-h-[320px] md:py-12 lg:py-16"
+          style={image ? { backgroundImage: `url(${image})` } : undefined}
         >
           <div className="absolute inset-0 z-10 rounded-xl bg-black/50" />
           <div className="relative z-20 mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
@@ -91,7 +81,7 @@ export default function CatagoryInfo() {
                 {t('common.largestMarketplace')}
               </p>
             </div>
-            <div className="relative z-20 mx-auto mt-6 max-w-2xl sm:mt-8">
+            <div className="relative mx-auto mt-6 max-w-2xl sm:mt-8">
               <div className="relative">
                 <div className="flex flex-col gap-2 rounded-lg border-2 border-white/20 bg-white p-1.5 shadow-lg focus-within:border-blue-500 sm:flex-row sm:items-stretch sm:gap-0 sm:p-1">
                   <div className="flex min-w-0 flex-1 items-center">
@@ -124,7 +114,7 @@ export default function CatagoryInfo() {
                               ? (searchResults ?? []).map((item, idx) => (
                                   <li
                                     key={idx}
-                                    className="flex w-full cursor-pointer items-center justify-between border-b border-gray-200 px-4 py-2 hover:bg-[rgba(0,_0,_0,_0.04)]"
+                                    className="flex w-full cursor-pointer items-center justify-between gap-2 border-b border-gray-200 px-3 py-2.5 hover:bg-black/[0.04] sm:px-4"
                                     onClick={() => {
                                       setSearchValue(item.name);
                                       setShowSuggestions(false);
@@ -153,7 +143,7 @@ export default function CatagoryInfo() {
                               : (categories ?? []).map((cat, idx) => (
                                   <li
                                     key={idx}
-                                    className="flex w-full cursor-pointer items-center justify-between border-b border-gray-200 px-4 py-2 hover:bg-[rgba(0,_0,_0,_0.04)]"
+                                    className="flex w-full cursor-pointer items-center justify-between gap-2 border-b border-gray-200 px-3 py-2.5 hover:bg-black/[0.04] sm:px-4"
                                     onClick={() => {
                                       setSearchValue(cat.name);
                                       setShowSuggestions(false);
@@ -187,14 +177,13 @@ export default function CatagoryInfo() {
                       )}
                     </div>
                   )}
-                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-7xl flex-col gap-6 px-3 py-4 sm:gap-8 sm:px-4 sm:py-6 md:px-6 lg:px-8">
         <PopularSubcatagory id={activeCategory || ''} />
         <Banners id={activeCategory ?? ''} />
         {/* <PopularCategories /> */}
