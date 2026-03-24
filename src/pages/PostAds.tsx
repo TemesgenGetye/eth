@@ -389,7 +389,7 @@ export default function PostAdPage() {
           {/* Location & Contact */}
           <div className="rounded-lg border border-gray-200 bg-white p-6">
             <h2 className="mb-4 text-xl font-semibold text-black">
-              {t('common.postAd.locationContact')}fda
+              {t('common.postAd.locationContact')}
             </h2>
             <div className="space-y-4">
               <div>
