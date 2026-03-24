@@ -118,12 +118,14 @@ const NavLinks = () => {
           onClick={() => handleLinkClick('profile')}
         >
           <User className="h-4 w-4" />
-          <p className="text-sm text-gray-500">
-            {t('common.navigation.profile')}
-          </p>
-          {(customer?.name || user?.email) && (
+          {!user?.email && (
+            <p className="text-sm text-gray-500">
+              {t('common.navigation.profile')}
+            </p>
+          )}
+          {user?.email && (
             <p
-              className="max-w-[5.5rem] truncate text-center text-xs leading-tight text-gray-400"
+              className="max-w-[6.5rem] truncate text-center text-sm leading-tight text-gray-500"
               title={customer?.name || user?.email || undefined}
             >
               {customer?.name || user?.email}
