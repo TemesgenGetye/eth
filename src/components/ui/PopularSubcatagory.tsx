@@ -13,21 +13,19 @@ function PopularSubcatagory({ id }: { id: string }) {
   const subcategories = category?.subcategories || [];
 
   return (
-    <div className="container m-auto mx-auto max-w-7xl px-4">
-      <div className=" flex flex-1 items-center justify-center gap-4 md:flex-nowrap">
-        {subcategories?.length === 0 ? (
-          <div></div>
-        ) : (
-          subcategories?.map((subcategory: Subcategory) => (
+    <div className="container mx-auto max-w-7xl px-3 sm:px-4">
+      {subcategories?.length === 0 ? null : (
+        <div className="mt-6 flex flex-wrap items-stretch justify-center gap-3 sm:mt-8 sm:gap-4">
+          {subcategories?.map((subcategory: Subcategory) => (
             <Link
               to={`/${category?.name?.toLowerCase()?.split(' ').join('-')}/${subcategory?.name?.toLowerCase()?.split(' ').join('-')}`}
               key={subcategory.id}
-              className=" mt-8 w-44 rounded-lg border border-gray-200 bg-white p-4 text-center shadow-xl transition-shadow hover:shadow-md"
+              className="min-w-[150px] shrink-0 rounded-lg border border-gray-200 bg-white p-3 text-center shadow-xl transition-shadow hover:shadow-md sm:p-4"
             >
-              <h3 className="mb-2 text-nowrap text-sm font-semibold text-gray-600">
+              <h3 className="mb-1 line-clamp-2 min-h-[2.5rem] break-words text-xs font-semibold leading-snug text-gray-600 sm:mb-2 sm:min-h-[2.75rem] sm:text-sm">
                 {subcategory?.name}
               </h3>
-              <p className="text-xl text-gray-600">
+              <p className="text-lg font-medium tabular-nums text-gray-600 sm:text-xl">
                 {
                   products?.filter(
                     (p) =>
@@ -39,9 +37,9 @@ function PopularSubcatagory({ id }: { id: string }) {
                 }
               </p>
             </Link>
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

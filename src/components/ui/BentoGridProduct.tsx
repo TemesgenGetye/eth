@@ -64,41 +64,33 @@ export default function SolidBento() {
   if (!mounted) return null;
 
   return (
-    <div className="grid h-auto max-h-screen gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 lg:grid-rows-3 ">
+    <div className="grid grid-cols-1 auto-rows-fr gap-3 px-3  sm:py-2 sm:gap-4 sm:px-4 sm:pt-3 pb-20 md:grid-cols-2 md:gap-4 lg:grid-cols-3 lg:grid-rows-3 lg:gap-4">
       {blogs.map((blog, index) => (
         <Link
           key={blog.id}
           to={blog.link}
-          className={`group relative flex overflow-hidden rounded-2xl  bg-blue-50  transition-transform  duration-300 ease-in-out hover:scale-[1.02] ${
+          className={`group relative flex min-h-[200px] flex-col overflow-hidden rounded-xl bg-blue-50 transition-transform duration-300 ease-out hover:scale-[1.01] motion-reduce:transition-none motion-reduce:hover:scale-100 sm:min-h-[220px] sm:rounded-2xl md:min-h-[240px] ${
             index === 0
-              ? 'md:col-span-2 md:row-span-2'
+              ? 'md:col-span-2 md:row-span-2 md:min-h-[min(88vw,440px)] lg:min-h-[min(62vh,520px)]'
               : index === 1
-                ? 'md:col-span-1 md:row-span-1'
-                : 'md:col-span-1 md:row-span-1 lg:row-span-2'
+                ? ''
+                : 'lg:row-span-2 lg:min-h-[min(42vh,380px)]'
           }`}
         >
           <img
             src={blog.image}
             alt={blog.title}
-            className="object-cover transition-transform duration-300 group-hover:scale-110 group-hover:opacity-50"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:group-hover:scale-100"
           />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-          <div className="relative flex h-full w-full flex-col justify-end p-6 text-white ">
-            <h2 className="mb-2 text-2xl font-bold leading-tight">
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/10" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-blue-600/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 motion-reduce:group-hover:opacity-0" />
+
+          <div className="relative z-10 flex min-h-[inherit] flex-1 flex-col justify-end p-4 text-white sm:p-5 md:p-6">
+            <h2 className="text-balance text-lg font-bold leading-tight sm:text-xl md:text-2xl">
               {blog.title}
             </h2>
-          </div>
-          <div className="absolute inset-x-0 bottom-0 h-0 bg-gradient-to-t from-blue-600/60 to-transparent transition-all duration-500 ease-out group-hover:h-full" />
-
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-
-          <div className="absolute inset-0 flex translate-y-4 transform flex-col justify-end p-4 text-white transition-transform duration-300 group-hover:translate-y-0">
-            <h3 className="mb-1 text-xl font-semibold opacity-0 transition-opacity delay-100 duration-300 group-hover:opacity-100">
-              {blog.title}
-            </h3>
-
-            <p className="text-sm text-gray-200 opacity-0 transition-opacity delay-200 duration-300 group-hover:opacity-100">
+            <p className="mt-2 max-w-prose text-pretty text-xs leading-snug text-gray-200 line-clamp-2 sm:line-clamp-3 sm:text-sm md:line-clamp-4">
               {blog.description}
             </p>
           </div>
@@ -107,31 +99,3 @@ export default function SolidBento() {
     </div>
   );
 }
-
-// {blogs.map((blog, index) => (
-//     <div
-//       key={index}
-//       className={`group relative overflow-hidden rounded-lg bg-blue-50 transition-transform duration-300 ease-in-out `}
-//       onMouseEnter={() => setHoveredIndex(index)}
-//       onMouseLeave={() => setHoveredIndex(null)}
-//     >
-//       <div className={`aspect-w-14 aspect-h-9 max-h-72 `}>
-//         <img
-//           src={blog.image || '/placeholder.svg'}
-//           alt={blog.title}
-//           className="h-full w-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
-//         />
-//         <div className="absolute inset-x-0 bottom-0 h-0 bg-gradient-to-t from-blue-600/60 to-transparent transition-all duration-500 ease-out group-hover:h-full" />
-
-//         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-//         <div className="absolute inset-0 flex translate-y-4 transform flex-col justify-end p-4 text-white transition-transform duration-300 group-hover:translate-y-0">
-//           <h3 className="mb-1 text-xl font-semibold opacity-0 transition-opacity delay-100 duration-300 group-hover:opacity-100">
-//             {blog.title}
-//           </h3>
-//           <p className="text-sm text-gray-200 opacity-0 transition-opacity delay-200 duration-300 group-hover:opacity-100">
-//             {blog.description}
-//           </p>
-//         </div>
-//       </div>
-//     </div>
-//   ))}
