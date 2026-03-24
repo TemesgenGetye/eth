@@ -114,16 +114,24 @@ const NavLinks = () => {
       {/* Profile */}
       <div className="relative">
         <div
-          className="flex cursor-pointer flex-row items-center justify-center text-sm text-gray-400 hover:text-gray-900"
+          className="flex cursor-pointer flex-col items-center justify-center text-sm text-gray-400 hover:text-gray-900"
           onClick={() => handleLinkClick('profile')}
         >
-          <User className="mr-1 h-4 w-4" />
+          <User className="h-4 w-4" />
           <p className="text-sm text-gray-500">
-            {customer?.name || user?.email}
+            {t('common.navigation.profile')}
           </p>
+          {(customer?.name || user?.email) && (
+            <p
+              className="max-w-[5.5rem] truncate text-center text-xs leading-tight text-gray-400"
+              title={customer?.name || user?.email || undefined}
+            >
+              {customer?.name || user?.email}
+            </p>
+          )}
         </div>
         {activeModal === 'profile' && (
-          <div className="dropdown-pointer absolute right-5 top-10 z-[1000] w-64 rounded-lg bg-white p-4 shadow-lg">
+          <div className="dropdown-pointer absolute right-5 top-[4.25rem] z-[1000] w-64 rounded-lg bg-white p-4 shadow-lg">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-lg font-semibold capitalize">
                 {t('common.navigation.profile')}
