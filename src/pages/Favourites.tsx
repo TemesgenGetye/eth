@@ -293,7 +293,7 @@ export default function Favourites() {
                                 {product.price.orignal}
                               </span>
                               <span> {t('common.aed')}</span>
-                              <div className="text-red-500">
+                              <div className="text-blue-600">
                                 {Number(
                                   product.price.orignal -
                                     product.price.discounted
