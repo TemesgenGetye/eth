@@ -7,6 +7,7 @@ import { useFilteredProducts } from '../hooks/useFilteredProducts';
 import { ProductType } from './type';
 import useMediaQuery from '../hooks/useMediaQuery';
 import { cn } from '../services/utils';
+import FilterCityComponent from './ProductFilters/FilterCityComponent';
 
 function SearchFilters({
   use,
@@ -620,102 +621,6 @@ function SearchFilters({
             </button>
           )}
         </div>
-      </div>
-    </div>
-  );
-}
-
-const cities = [
-  'All Cities',
-  'Dubai',
-  'Abu Dhabi',
-  'Ras Al Khaimah',
-  'Sharjah',
-  'Fujairah',
-  'Ajman',
-  'Umm Al Quwain',
-  'Al Ain',
-];
-
-function FilterCityComponent({
-  onSetCity,
-  city,
-  isLoading,
-  result,
-  onClear,
-}: {
-  onSetCity: (city: string) => void;
-  city: string;
-  isLoading: boolean;
-  result: ProductType[] | undefined;
-  onClear?: () => void;
-}) {
-  const [selectedCity, setSelectedCity] = useState(city);
-  const isMobile = useMediaQuery('(max-width: 600px)');
-
-  // Reorder cities to put the selected city first
-  const orderedCities = selectedCity
-    ? [selectedCity, ...cities.filter((c) => c !== selectedCity)]
-    : cities;
-
-  const handleCitySelect = (city: string) => {
-    setSelectedCity(city);
-  };
-
-  const handleApplyFilters = () => {
-    onSetCity(selectedCity);
-  };
-
-  return (
-    <div
-      className={
-        isMobile
-          ? ''
-          : 'absolute top-[calc(100%+5px)] z-[9000] min-w-[400px] rounded-lg border border-gray-200 bg-white p-6 shadow-sm'
-      }
-    >
-      <div className="mb-6 flex flex-wrap gap-3">
-        {orderedCities.map((city) => (
-          <button
-            key={city}
-            onClick={() => handleCitySelect(city)}
-            className={`
-              rounded-full border px-6 py-3 text-sm font-medium transition-all duration-200
-              ${
-                selectedCity === city
-                  ? 'border-blue-400 bg-blue-50 text-blue-700'
-                  : 'border-gray-300 bg-white text-gray-700 hover:border-blue-400 hover:bg-blue-50'
-              }
-            `}
-          >
-            {city}
-          </button>
-        ))}
-      </div>
-      <div
-        className={`grid gap-4 border-t border-gray-200 pt-4 ${onClear ? 'grid-cols-2' : ''}`}
-        style={{ gridTemplateColumns: '1fr 2fr' }}
-      >
-        {onClear && (
-          <button
-            onClick={onClear}
-            disabled={isLoading}
-            className="rounded-lg border border-gray-300 bg-white px-4 py-4 font-medium text-gray-700 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50 focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
-          >
-            Clear
-          </button>
-        )}
-        <button
-          onClick={handleApplyFilters}
-          disabled={isLoading}
-          className={`rounded-lg bg-blue-700 px-6 py-4 font-semibold text-white transition-colors duration-200 hover:bg-blue-800 disabled:bg-blue-400 ${onClear ? '' : 'w-full'}`}
-        >
-          {isLoading
-            ? 'Loading...'
-            : result?.length
-              ? `Show ${result.length} Results`
-              : 'Apply Filters'}
-        </button>
       </div>
     </div>
   );

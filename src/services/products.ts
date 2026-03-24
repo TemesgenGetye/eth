@@ -1,4 +1,5 @@
 import supabase from './supabase';
+import { isAllCitiesFilterValue } from '../data/ethiopiaCities';
 import { camelCase } from './utils';
 
 export const getPopularProducts = async () => {
@@ -306,7 +307,7 @@ export const getFilteredProducts = async ({
       query = query.ilike('name', `%${keyword}%`);
     }
 
-    if (city && city !== 'All Cities') {
+    if (city && !isAllCitiesFilterValue(city)) {
       query = query.ilike('city', `%${city}%`);
     }
 

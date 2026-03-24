@@ -15,6 +15,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { setItem } from '../services/db';
 import { useLanguage } from '../Context/Languge';
 import { ProductData } from '../components/type';
+import { getFlatCityListForCountry } from '../data/ethiopiaCities';
 
 interface Subcategory {
   id: number;
@@ -67,17 +68,7 @@ export default function PostAdPage() {
     productData
   );
 
-  const cities = [
-    'All Cities (UAE)',
-    'Abu Dhabi',
-    'Ajman',
-    'Al Ain',
-    'Dubai',
-    'Fujairah',
-    'Ras al Khaimah',
-    'Sharjah',
-    'Umm al Quwain',
-  ];
+  const cities = getFlatCityListForCountry('Ethiopia');
 
   // Images state for preview
   const images = watch('imgUrls') || [];
@@ -398,7 +389,7 @@ export default function PostAdPage() {
           {/* Location & Contact */}
           <div className="rounded-lg border border-gray-200 bg-white p-6">
             <h2 className="mb-4 text-xl font-semibold text-black">
-              {t('common.postAd.locationContact')}
+              {t('common.postAd.locationContact')}fda
             </h2>
             <div className="space-y-4">
               <div>

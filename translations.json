@@ -980,6 +980,19 @@
         "sharjah": "Sharjah",
         "ummAlQuwain": "Umm al Quwain"
       }
+    },
+    "filters": {
+      "from": "From",
+      "upto": "Upto",
+      "clear": "Clear",
+      "show": "Show",
+      "results": "Results",
+      "applyFilters": "Apply Filters",
+      "allCities": "All Cities",
+      "yearPlaceholderMin": "2000",
+      "yearPlaceholderMax": "2026",
+      "pricePlaceholderMin": "0",
+      "pricePlaceholderMax": "1000000"
     }
   },
   "ar": {
@@ -1970,6 +1983,19 @@
         "sharjah": "الشارقة",
         "ummAlQuwain": "أم القيوين"
       }
+    },
+    "filters": {
+      "from": "من",
+      "upto": "إلى",
+      "clear": "مسح",
+      "show": "عرض",
+      "results": "نتيجة",
+      "applyFilters": "تطبيق المرشحات",
+      "allCities": "جميع المدن",
+      "yearPlaceholderMin": "2000",
+      "yearPlaceholderMax": "2026",
+      "pricePlaceholderMin": "0",
+      "pricePlaceholderMax": "1000000"
     }
   }
 }
