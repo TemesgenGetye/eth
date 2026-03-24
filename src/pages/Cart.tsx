@@ -8,9 +8,11 @@ import {
   Filter,
   Minus,
   Plus,
+  Heart,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../Context/Cart';
+import { useFavourite } from '../Context/Favourite';
 import { useCartItems } from '../hooks/store';
 import toast from 'react-hot-toast';
 import { useAuth } from '../Context/AuthContext';
@@ -26,6 +28,7 @@ export default function CartPage() {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const { cart, setCart } = useCart();
+  const { favourite, setFavourite } = useFavourite();
   const { user } = useAuth();
   const orderMutation = useOrder();
   const { customer } = useGetCustomer(
@@ -123,6 +126,22 @@ export default function CartPage() {
       setCart(updatedCart);
       localStorage.setItem('cart', JSON.stringify(updatedCart));
       toast.success(t('common.itemRemovedSuccessfully'));
+    }
+  }
+
+  function handleFavourite(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    id: number
+  ) {
+    e.stopPropagation();
+    if (!favourite.some((fav) => fav === id)) {
+      const next = [...favourite, id];
+      setFavourite(next);
+      localStorage.setItem('favourite', JSON.stringify(next));
+    } else {
+      const next = favourite.filter((fav) => fav !== id);
+      setFavourite(next);
+      localStorage.setItem('favourite', JSON.stringify(next));
     }
   }
 
@@ -330,6 +349,7 @@ export default function CartPage() {
         <>
           {displayedItems.map((item) => {
             const currentImageIndex = imageIndexes[item?.id] ?? 0;
+            const isFavourite = favourite.some((fav) => fav === item?.id);
 
             return (
               <div
@@ -465,9 +485,33 @@ export default function CartPage() {
                           </span>
                         </div>
                       </div>
-                      <div className="flex space-x-2">
+                      <div className="flex items-center gap-2">
                         <button
-                          className="h-7 w-7 text-red-500"
+                          type="button"
+                          aria-pressed={isFavourite}
+                          aria-label={
+                            isFavourite ? t('common.saved') : t('common.save')
+                          }
+                          title={
+                            isFavourite ? t('common.saved') : t('common.save')
+                          }
+                          className={`inline-flex items-center justify-center rounded-full p-2 ring-1 transition-colors ${
+                            isFavourite
+                              ? 'bg-blue-50 text-blue-600 ring-blue-200 hover:bg-blue-100'
+                              : 'bg-gray-100 text-gray-600 ring-gray-200 hover:bg-gray-200 hover:text-gray-800'
+                          }`}
+                          onClick={(e) => handleFavourite(e, item?.id)}
+                        >
+                          <Heart
+                            className="h-5 w-5 shrink-0"
+                            fill={isFavourite ? 'currentColor' : 'none'}
+                            strokeWidth={2}
+                          />
+                        </button>
+                        <button
+                          type="button"
+                          title={t('common.remove')}
+                          className="inline-flex items-center justify-center rounded-full bg-gray-100 p-2 text-gray-600 ring-1 ring-gray-200 transition-colors hover:bg-red-50 hover:text-red-600 hover:ring-red-200"
                           onClick={(e) => {
                             handleRemoveFromCart(e, item?.id);
                           }}

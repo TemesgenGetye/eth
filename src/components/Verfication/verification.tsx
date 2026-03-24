@@ -477,25 +477,25 @@ const VerificationBar = () => {
     switch (step) {
       case 'initial':
         return (
-          <div className="relative flex w-full max-w-lg flex-col items-center rounded-2xl bg-white p-8 text-gray-800 shadow-xl">
+          <div className="relative flex w-full max-w-lg flex-col items-center rounded-2xl bg-white p-4 text-gray-800 shadow-xl sm:p-6 md:p-8">
             {/* Illustration */}
-            <div className="mb-4 flex justify-center">
+            <div className="mb-3 flex justify-center sm:mb-4">
               <img
                 src="/user.gif"
                 alt="Get Verified Illustration"
-                className="h-32 w-48 object-contain"
+                className="h-24 w-40 object-contain sm:h-32 sm:w-48"
                 style={{ filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.06))' }}
               />
             </div>
-            <h2 className="mb-4 text-center text-2xl font-bold text-gray-900">
+            <h2 className="mb-3 text-center text-xl font-bold text-gray-900 sm:mb-4 sm:text-2xl">
               {t('common.getVerifiedOn888Market')}
             </h2>
-            <div className="mb-2 flex flex-row items-center justify-center gap-2 text-center text-base font-medium text-gray-700">
-              <span className="text-sm">{t('common.buildTrust')}</span>
-              <span className="mx-1 text-lg font-bold">•</span>
-              <span className="text-sm">{t('common.gainVisibility')}</span>
-              <span className="mx-1 text-lg font-bold">•</span>
-              <span className="text-sm">{t('common.unlockRewards')}</span>
+            <div className="mb-2 flex flex-col items-center gap-1 text-center text-sm font-medium text-gray-700 xs:flex-row xs:flex-wrap xs:justify-center xs:gap-x-2 xs:gap-y-1 sm:text-base">
+              <span>{t('common.buildTrust')}</span>
+              <span className="hidden xs:inline">•</span>
+              <span>{t('common.gainVisibility')}</span>
+              <span className="hidden xs:inline">•</span>
+              <span>{t('common.unlockRewards')}</span>
             </div>
             <hr className="my-6 w-full border-white" />
             <div className="mb-6 flex w-full flex-col gap-6">
@@ -527,15 +527,15 @@ const VerificationBar = () => {
               </div>
             </div>
 
-            <div className="mt-5 flex w-full justify-end gap-3">
+            <div className="mt-5 flex w-full flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-3">
               <button
-                className="rounded-lg border border-gray-300 bg-white px-8 py-2 font-medium text-gray-700 hover:bg-gray-100"
+                className="w-full rounded-lg border border-gray-300 bg-white py-2.5 font-medium text-gray-700 hover:bg-gray-100 sm:w-auto sm:px-6 md:px-8"
                 onClick={handleClose}
               >
                 {t('common.later')}
               </button>
               <button
-                className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-8 py-2 font-semibold text-white hover:bg-blue-700"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 font-semibold text-white hover:bg-blue-700 sm:w-auto sm:px-6 md:px-8"
                 onClick={handleGetVerified}
               >
                 <span>{t('common.getVerified')}</span>
@@ -558,14 +558,16 @@ const VerificationBar = () => {
 
       case 'id-selection':
         return (
-          <div className="relative w-full max-w-lg rounded-2xl bg-white p-8 text-gray-800 shadow-xl">
+          <div className="relative w-full max-w-lg rounded-2xl bg-white p-4 pt-12 text-gray-800 shadow-xl sm:p-6 sm:pt-14 md:p-8 md:pt-16">
             <button
               onClick={handleClose}
-              className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 sm:right-4 sm:top-4"
+              type="button"
+              aria-label={t('common.close')}
             >
-              <X className="h-6 w-6" />
+              <X className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
-            <h2 className="mb-6 text-center text-xl font-bold">
+            <h2 className="mb-4 text-center text-lg font-bold sm:mb-6 sm:text-xl">
               {t('common.selectIdTypeToAdd')}
             </h2>
             {/* Progress bar */}
@@ -582,28 +584,28 @@ const VerificationBar = () => {
             </p>
             <div className="mb-6 space-y-4">
               <div
-                className={`flex cursor-pointer items-center justify-between rounded-lg border p-4 transition-all duration-150 ${
+                className={`flex cursor-pointer flex-col gap-3 rounded-lg border p-3 transition-all duration-150 sm:flex-row sm:items-center sm:justify-between sm:p-4 ${
                   selectedIdType === 'emirates'
                     ? 'border-blue-600 bg-blue-50'
                     : 'border-gray-200 bg-white'
                 }`}
                 onClick={() => handleIdTypeSelect('emirates')}
               >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded bg-gray-800">
+                <div className="flex min-w-0 flex-wrap items-center gap-3">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-gray-800">
                     <span className="text-xs text-white">ID</span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex min-w-0 flex-col gap-1 xs:flex-row xs:items-center xs:gap-2">
                     <span className="font-semibold">
                       {t('common.emiratesId')}
                     </span>
-                    <span className="rounded bg-blue-100 px-2 py-1 text-xs text-blue-600">
+                    <span className="w-fit rounded bg-blue-100 px-2 py-1 text-xs text-blue-600">
                       {t('common.recommended')}
                     </span>
                   </div>
                 </div>
                 <div
-                  className={`flex h-6 w-6 items-center justify-center rounded-full border-2 ${
+                  className={`flex h-6 w-6 shrink-0 items-center justify-center self-end rounded-full border-2 sm:self-auto ${
                     selectedIdType === 'emirates'
                       ? 'border-blue-600 bg-blue-600'
                       : 'border-gray-300 bg-white'
@@ -615,14 +617,14 @@ const VerificationBar = () => {
                 </div>
               </div>
               <div
-                className={`flex cursor-pointer items-center justify-between rounded-lg border p-4 transition-all duration-150 ${
-                  selectedIdType === 'emirates'
+                className={`flex cursor-pointer flex-col gap-3 rounded-lg border p-3 transition-all duration-150 sm:flex-row sm:items-center sm:justify-between sm:p-4 ${
+                  selectedIdType === 'passport'
                     ? 'border-blue-600 bg-blue-50'
                     : 'border-gray-200 bg-white'
                 }`}
-                onClick={() => handleIdTypeSelect('emirates')}
+                onClick={() => handleIdTypeSelect('passport')}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex min-w-0 items-center gap-3">
                   <div className="flex h-8 w-8 items-center justify-center rounded bg-gray-600">
                     <span className="text-xs text-white">PP</span>
                   </div>
@@ -631,7 +633,7 @@ const VerificationBar = () => {
                   </span>
                 </div>
                 <div
-                  className={`flex h-6 w-6 items-center justify-center rounded-full border-2 ${
+                  className={`flex h-6 w-6 shrink-0 items-center justify-center self-end rounded-full border-2 sm:self-auto ${
                     selectedIdType === 'passport'
                       ? 'border-blue-600 bg-blue-600'
                       : 'border-gray-300 bg-white'
@@ -654,9 +656,10 @@ const VerificationBar = () => {
               </span>
             </div>
 
-            <div className="flex w-full justify-end">
+            <div className="flex w-full justify-stretch sm:justify-end">
               <button
-                className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-8 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+                type="button"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-3 text-sm font-semibold text-white hover:bg-blue-700 sm:w-auto sm:px-6 md:px-8"
                 onClick={handleContinueFromIdSelection}
               >
                 <span>{t('common.continue')}</span>
@@ -679,14 +682,16 @@ const VerificationBar = () => {
 
       case 'front-photo':
         return (
-          <div className="relative w-full max-w-xl rounded-2xl bg-white p-8 text-gray-800 shadow-xl">
+          <div className="relative w-full max-w-xl rounded-2xl bg-white p-4 pt-12 text-gray-800 shadow-xl sm:p-6 sm:pt-14 md:p-8 md:pt-16">
             <button
+              type="button"
               onClick={handleClose}
-              className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 sm:right-4 sm:top-4"
+              aria-label={t('common.close')}
             >
-              <X className="h-6 w-6" />
+              <X className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
-            <h2 className="mb-6 text-center text-xl font-bold">
+            <h2 className="mb-4 text-center text-lg font-bold sm:mb-6 sm:text-xl">
               {t('common.takeFirstPhotoFront')}
             </h2>
 
@@ -698,9 +703,9 @@ const VerificationBar = () => {
               <div className="ml-1 h-1 flex-1 rounded bg-gray-200"></div>
             </div>
 
-            <div className="mb-8 flex items-center justify-between">
+            <div className="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3">
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-black text-sm font-bold text-white">
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-black text-sm font-bold text-white">
                   1
                 </div>
                 <span className="text-sm font-semibold">
@@ -708,7 +713,7 @@ const VerificationBar = () => {
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-300 text-sm font-bold text-gray-600">
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-300 text-sm font-bold text-gray-600">
                   2
                 </div>
                 <span className="text-sm text-gray-500">
@@ -717,11 +722,11 @@ const VerificationBar = () => {
               </div>
             </div>
 
-            <div className="mx-auto mb-8 flex h-[60%] w-[60%] justify-center rounded-2xl">
+            <div className="mx-auto mb-6 flex w-full max-w-[280px] justify-center sm:mb-8 sm:max-w-xs md:max-w-sm">
               <img
                 src="/id_front.png"
                 alt="Emirates ID illustration"
-                className="rounded-lg shadow-md"
+                className="w-full rounded-lg object-contain shadow-md"
               />
             </div>
 
@@ -737,9 +742,10 @@ const VerificationBar = () => {
               <ChevronDown className="h-4 w-4 text-gray-600" />
             </div>
             {/* Take Photo Button */}
-            <div className="flex w-full justify-end">
+            <div className="flex w-full justify-stretch sm:justify-end">
               <button
-                className="flex items-center gap-1 rounded-lg bg-blue-600 px-4 py-3  text-sm font-semibold text-white hover:bg-blue-700"
+                type="button"
+                className="flex w-full items-center justify-center gap-1 rounded-lg bg-blue-600 py-3 text-sm font-semibold text-white hover:bg-blue-700 sm:w-auto sm:px-5"
                 onClick={() => handleTakePhoto('front')}
               >
                 {t('common.takePhoto')}
@@ -762,14 +768,16 @@ const VerificationBar = () => {
 
       case 'camera-front':
         return (
-          <div className="relative w-full max-w-2xl  rounded-xl bg-white p-4 text-gray-800 shadow-lg">
+          <div className="relative w-full max-w-2xl rounded-xl bg-white p-3 pt-11 text-gray-800 shadow-lg sm:p-4 sm:pt-14">
             <button
+              type="button"
               onClick={handleClose}
-              className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+              className="absolute right-2 top-2 text-gray-400 hover:text-gray-600 sm:right-4 sm:top-4"
+              aria-label={t('common.close')}
             >
-              <X className="h-6 w-6" />
+              <X className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
-            <h2 className="mb-4 text-center text-xl font-bold">
+            <h2 className="mb-3 text-center text-lg font-bold sm:mb-4 sm:text-xl">
               {currentPhotoType === 'front'
                 ? t('common.takeFirstPhotoFront')
                 : t('secondPhotoFlipId')}
@@ -786,10 +794,10 @@ const VerificationBar = () => {
               </div>
             </div>
 
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-3 flex flex-col gap-2 sm:mb-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-2">
                 <div
-                  className={`flex h-6 w-6 items-center justify-center rounded-full text-sm font-bold ${
+                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
                     currentPhotoType === 'front'
                       ? 'bg-black text-white'
                       : 'bg-green-500 text-white'
@@ -801,13 +809,13 @@ const VerificationBar = () => {
                     <Check className="h-4 w-4" />
                   )}
                 </div>
-                <span className="text-sm font-semibold">
+                <span className="text-xs font-semibold sm:text-sm">
                   {t('common.frontOfId')}
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <div
-                  className={`flex h-6 w-6 items-center justify-center rounded-full text-sm font-bold ${
+                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
                     currentPhotoType === 'back'
                       ? 'bg-black text-white'
                       : 'bg-gray-300 text-gray-600'
@@ -815,7 +823,7 @@ const VerificationBar = () => {
                 >
                   2
                 </div>
-                <span className="text-sm text-gray-500">
+                <span className="text-xs text-gray-500 sm:text-sm">
                   {t('common.backOfId')}
                 </span>
               </div>
@@ -825,6 +833,7 @@ const VerificationBar = () => {
               <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
                 <p className="text-sm text-blue-600">{cameraError}</p>
                 <button
+                  type="button"
                   className="mt-2 text-sm text-blue-600 underline"
                   onClick={initializeCamera}
                 >
@@ -838,21 +847,22 @@ const VerificationBar = () => {
                   autoPlay
                   playsInline
                   muted
-                  className="h-64 w-full object-cover"
+                  className="aspect-[4/3] max-h-[min(50vh,18rem)] min-h-[12rem] w-full object-cover sm:aspect-auto sm:h-64 sm:max-h-none"
                 />
                 <canvas ref={canvasRef} className="hidden" />
                 <button
-                  className="absolute bottom-4 left-1/2 flex -translate-x-1/2 transform items-center gap-2 rounded-lg bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"
+                  type="button"
+                  className="absolute bottom-3 left-1/2 flex max-w-[calc(100%-1rem)] -translate-x-1/2 items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 sm:bottom-4 sm:px-6"
                   onClick={capturePhoto}
                 >
-                  <Camera className="h-4 w-4" />
+                  <Camera className="h-4 w-4 shrink-0" />
                   {t('common.capture')}
                 </button>
               </div>
             )}
 
-            <div className="flex items-start gap-2 text-sm text-gray-600">
-              <div className="mt-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-blue-500">
+            <div className="flex items-start gap-2 text-xs text-gray-600 sm:text-sm">
+              <div className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-500">
                 <span className="text-xs text-white">!</span>
               </div>
               <span>{t('common.positionIdClearly')}</span>
@@ -861,8 +871,8 @@ const VerificationBar = () => {
         );
       case 'camera-back':
         return (
-          <div className="relative w-full max-w-2xl rounded-xl bg-white p-4 text-gray-800 shadow-lg">
-            <h2 className="mb-4 text-center text-xl font-bold">
+          <div className="relative w-full max-w-2xl rounded-xl bg-white p-3 pt-4 text-gray-800 shadow-lg sm:p-4">
+            <h2 className="mb-3 text-center text-lg font-bold sm:mb-4 sm:text-xl">
               {currentPhotoType === 'front'
                 ? t('common.takeFirstPhotoFront')
                 : t('secondPhotoFlipId')}
@@ -879,10 +889,10 @@ const VerificationBar = () => {
               </div>
             </div>
 
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-3 flex flex-col gap-2 sm:mb-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-2">
                 <div
-                  className={`flex h-6 w-6 items-center justify-center rounded-full text-sm font-bold ${
+                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
                     currentPhotoType === 'front'
                       ? 'bg-black text-white'
                       : 'bg-green-500 text-white'
@@ -894,13 +904,13 @@ const VerificationBar = () => {
                     <Check className="h-4 w-4" />
                   )}
                 </div>
-                <span className="text-sm font-semibold">
+                <span className="text-xs font-semibold sm:text-sm">
                   {t('common.frontOfId')}
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <div
-                  className={`flex h-6 w-6 items-center justify-center rounded-full text-sm font-bold ${
+                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
                     currentPhotoType === 'back'
                       ? 'bg-black text-white'
                       : 'bg-gray-300 text-gray-600'
@@ -908,7 +918,7 @@ const VerificationBar = () => {
                 >
                   2
                 </div>
-                <span className="text-sm text-gray-500">
+                <span className="text-xs text-gray-500 sm:text-sm">
                   {t('common.backOfId')}
                 </span>
               </div>
@@ -918,6 +928,7 @@ const VerificationBar = () => {
               <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
                 <p className="text-sm text-red-600">{cameraError}</p>
                 <button
+                  type="button"
                   className="mt-2 text-sm text-red-600 underline"
                   onClick={initializeCamera}
                 >
@@ -931,21 +942,22 @@ const VerificationBar = () => {
                   autoPlay
                   playsInline
                   muted
-                  className="h-64 w-full object-cover"
+                  className="aspect-[4/3] max-h-[min(50vh,18rem)] min-h-[12rem] w-full object-cover sm:aspect-auto sm:h-64 sm:max-h-none"
                 />
                 <canvas ref={canvasRef} className="hidden" />
                 <button
-                  className="absolute bottom-4 left-1/2 flex -translate-x-1/2 transform items-center gap-2 rounded-lg bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"
+                  type="button"
+                  className="absolute bottom-3 left-1/2 flex max-w-[calc(100%-1rem)] -translate-x-1/2 items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 sm:bottom-4 sm:px-6"
                   onClick={capturePhoto}
                 >
-                  <Camera className="h-4 w-4" />
+                  <Camera className="h-4 w-4 shrink-0" />
                   {t('common.capture')}
                 </button>
               </div>
             )}
 
-            <div className="flex items-start gap-2 text-sm text-gray-600">
-              <div className="mt-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-blue-500">
+            <div className="flex items-start gap-2 text-xs text-gray-600 sm:text-sm">
+              <div className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-500">
                 <span className="text-xs text-white">!</span>
               </div>
               <span>{t('common.positionIdClearly')}</span>
@@ -955,14 +967,16 @@ const VerificationBar = () => {
 
       case 'photo-captured':
         return (
-          <div className="relative w-full max-w-xl rounded-xl bg-white p-6 text-gray-800 shadow-lg">
+          <div className="relative w-full max-w-xl rounded-xl bg-white p-4 pt-12 text-gray-800 shadow-lg sm:p-6 sm:pt-14">
             <button
+              type="button"
               onClick={handleClose}
-              className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 sm:right-4 sm:top-4"
+              aria-label={t('common.close')}
             >
-              <X className="h-6 w-6" />
+              <X className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
-            <h2 className="mb-4 text-center text-xl font-bold">
+            <h2 className="mb-3 text-center text-lg font-bold sm:mb-4 sm:text-xl">
               {currentPhotoType === 'front'
                 ? t('common.frontPhotoCaptured')
                 : t('common.backPhotoCaptured')}
@@ -1004,7 +1018,8 @@ const VerificationBar = () => {
                   className="w-full rounded-lg shadow-md"
                 />
                 <button
-                  className="absolute bottom-2 left-2 rounded bg-black bg-opacity-50 px-3 py-1 text-sm text-white hover:bg-opacity-70"
+                  type="button"
+                  className="absolute bottom-2 left-2 rounded bg-black/50 px-2 py-1 text-xs text-white hover:bg-black/70 sm:px-3 sm:text-sm"
                   onClick={handleTryAgain}
                 >
                   {t('common.retake')}
@@ -1019,15 +1034,17 @@ const VerificationBar = () => {
               <span>{t('common.ensureDetailsClear')}</span>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
               <button
-                className="flex-1 rounded-lg border border-gray-300 py-2 font-semibold hover:bg-gray-50"
+                type="button"
+                className="w-full rounded-lg border border-gray-300 py-2.5 text-sm font-semibold hover:bg-gray-50 sm:flex-1 sm:py-2 sm:text-base"
                 onClick={handleTryAgain}
               >
                 {t('common.tryAgain')}
               </button>
               <button
-                className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-blue-600 py-2 font-semibold text-white hover:bg-blue-700"
+                type="button"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 sm:flex-1 sm:py-2 sm:text-base"
                 onClick={handleConfirmPhoto}
               >
                 {t('common.confirm')}
@@ -1039,15 +1056,17 @@ const VerificationBar = () => {
 
       case 'back-photo':
         return (
-          <div className="relative w-full max-w-xl rounded-xl bg-white p-8 text-gray-800 shadow-lg">
+          <div className="relative w-full max-w-xl rounded-xl bg-white p-4 pt-12 text-gray-800 shadow-lg sm:p-6 sm:pt-14 md:p-8 md:pt-16">
             <button
+              type="button"
               onClick={handleClose}
-              className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 sm:right-4 sm:top-4"
+              aria-label={t('common.close')}
             >
-              <X className="h-6 w-6" />
+              <X className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
 
-            <h2 className="mb-6 text-center text-xl font-bold">
+            <h2 className="mb-4 text-center text-lg font-bold sm:mb-6 sm:text-xl">
               {t('common.secondPhotoFlipId')}
             </h2>
 
@@ -1060,9 +1079,9 @@ const VerificationBar = () => {
               </div>
             </div>
 
-            <div className="mb-8 flex items-center justify-between">
+            <div className="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3">
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-500 text-sm font-bold text-white">
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-500 text-sm font-bold text-white">
                   <Check className="h-4 w-4" />
                 </div>
                 <span className="text-sm text-gray-500">
@@ -1070,7 +1089,7 @@ const VerificationBar = () => {
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-black text-sm font-bold text-white">
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-black text-sm font-bold text-white">
                   2
                 </div>
                 <span className="text-sm font-semibold">
@@ -1079,11 +1098,11 @@ const VerificationBar = () => {
               </div>
             </div>
 
-            <div className="mx-auto mb-8 flex h-[60%] w-[60%] justify-center rounded-2xl">
+            <div className="mx-auto mb-6 flex w-full max-w-[280px] justify-center sm:mb-8 sm:max-w-xs md:max-w-sm">
               <img
                 src="/id_back.png"
                 alt="Emirates ID back illustration"
-                className="rounded-lg shadow-md"
+                className="w-full rounded-lg object-contain shadow-md"
               />
             </div>
 
@@ -1094,12 +1113,13 @@ const VerificationBar = () => {
               <span>{t('common.ensureDetailsClear')}</span>
             </div>
 
-            <div className="flex w-full justify-end">
+            <div className="flex w-full justify-stretch sm:justify-end">
               <button
-                className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-8 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+                type="button"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-3 text-sm font-semibold text-white hover:bg-blue-700 sm:w-auto sm:px-6 md:px-8"
                 onClick={() => handleTakePhoto('back')}
               >
-                <Camera className="h-5 w-5" />
+                <Camera className="h-5 w-5 shrink-0" />
                 {t('common.takePhoto')}
                 <span>→</span>
               </button>
@@ -1109,15 +1129,17 @@ const VerificationBar = () => {
 
       case 'video-intro':
         return (
-          <div className="relative w-full max-w-xl rounded-xl bg-white p-8 text-gray-800 shadow-lg">
+          <div className="relative w-full max-w-xl rounded-xl bg-white p-4 pt-12 text-gray-800 shadow-lg sm:p-6 sm:pt-14 md:p-8 md:pt-16">
             <button
+              type="button"
               onClick={handleClose}
-              className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 sm:right-4 sm:top-4"
+              aria-label={t('common.close')}
             >
-              <X className="h-6 w-6" />
+              <X className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
 
-            <h2 className="mb-6 text-center text-xl font-bold">
+            <h2 className="mb-4 text-center text-lg font-bold sm:mb-6 sm:text-xl">
               {t('common.almostThere')}
             </h2>
 
@@ -1130,21 +1152,23 @@ const VerificationBar = () => {
               </div>
             </div>
 
-            <h3 className="mb-4 text-lg font-semibold">
+            <h3 className="mb-3 text-base font-semibold sm:mb-4 sm:text-lg">
               {t('common.recordVideoToCompleteVerification')}
             </h3>
 
-            <p className="mb-6 text-gray-600">
+            <p className="mb-4 text-sm text-gray-600 sm:mb-6 sm:text-base">
               {t('common.positionFaceInCenterVideo')}
             </p>
 
-            <div className="mb-6">
-              <h4 className="mb-2 font-semibold">{t('common.videoExample')}</h4>
-              <div className="flex justify-center rounded-lg p-4">
+            <div className="mb-4 sm:mb-6">
+              <h4 className="mb-2 text-sm font-semibold sm:text-base">
+                {t('common.videoExample')}
+              </h4>
+              <div className="flex justify-center rounded-lg p-2 sm:p-4">
                 <img
                   src="/person.png"
                   alt="Video example"
-                  className="h-80 w-full rounded-lg"
+                  className="max-h-[min(42vh,20rem)] w-full rounded-lg object-contain sm:max-h-80"
                 />
               </div>
             </div>
@@ -1157,10 +1181,11 @@ const VerificationBar = () => {
             </div>
 
             <button
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700"
+              type="button"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-3 text-sm font-semibold text-white hover:bg-blue-700 sm:text-base"
               onClick={handleOpenCamera}
             >
-              <Video className="h-5 w-5" />
+              <Video className="h-5 w-5 shrink-0" />
               {t('common.openCamera')}
               <span>→</span>
             </button>
@@ -1169,15 +1194,17 @@ const VerificationBar = () => {
 
       case 'video-recording':
         return (
-          <div className="relative w-full max-w-xl rounded-xl bg-white p-6 text-gray-800 shadow-lg">
+          <div className="relative w-full max-w-xl rounded-xl bg-white p-4 pt-12 text-gray-800 shadow-lg sm:p-6 sm:pt-14">
             <button
+              type="button"
               onClick={handleClose}
-              className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 sm:right-4 sm:top-4"
+              aria-label={t('common.close')}
             >
-              <X className="h-6 w-6" />
+              <X className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
 
-            <h2 className="mb-4 text-center text-xl font-bold">
+            <h2 className="mb-3 text-center text-lg font-bold sm:mb-4 sm:text-xl">
               {t('common.selfieVideo')}
             </h2>
 
@@ -1190,12 +1217,12 @@ const VerificationBar = () => {
               </div>
             </div>
 
-            <p className="mb-4 text-center text-gray-600">
+            <p className="mb-3 px-1 text-center text-sm text-gray-600 sm:mb-4 sm:text-base">
               {t('common.ensureFaceInCentreVideo')}
             </p>
 
             {isRecording && (
-              <div className="mb-4 flex items-center justify-center gap-2 rounded-lg bg-red-50 p-3">
+              <div className="mb-3 flex items-center justify-center gap-2 rounded-lg bg-red-50 p-2.5 sm:mb-4 sm:p-3">
                 <div className="h-2 w-2 animate-pulse rounded-full bg-blue-600"></div>
                 <span className="text-sm font-semibold">
                   {t('common.recording')} {recordingTime}s / 5s
@@ -1207,6 +1234,7 @@ const VerificationBar = () => {
               <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
                 <p className="text-sm text-red-600">{cameraError}</p>
                 <button
+                  type="button"
                   className="mt-2 text-sm text-red-600 underline"
                   onClick={initializeCamera}
                 >
@@ -1220,17 +1248,18 @@ const VerificationBar = () => {
                   autoPlay
                   playsInline
                   muted
-                  className="h-64 w-full object-cover"
+                  className="aspect-[4/3] max-h-[min(50vh,18rem)] min-h-[12rem] w-full object-cover sm:aspect-auto sm:h-64 sm:max-h-none"
                 />
                 <button
-                  className={`absolute bottom-4 left-1/2 flex -translate-x-1/2 transform items-center gap-2 rounded-lg px-6 py-2 text-sm font-semibold ${
+                  type="button"
+                  className={`absolute bottom-3 left-1/2 flex max-w-[calc(100%-1rem)] -translate-x-1/2 items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold sm:bottom-4 sm:px-6 sm:text-sm ${
                     isRecording
                       ? 'bg-gray-600 text-white hover:bg-gray-700'
                       : 'bg-blue-600 text-white hover:bg-blue-700'
                   }`}
                   onClick={handleRecord}
                 >
-                  <Video className="h-4 w-4" />
+                  <Video className="h-4 w-4 shrink-0" />
                   {isRecording
                     ? t('common.stopRecording')
                     : t('common.startRecording')}
@@ -1247,13 +1276,14 @@ const VerificationBar = () => {
                   <img
                     src={capturedMedia.videoFrames[0] || '/placeholder.svg'}
                     alt="Video frame"
-                    className="mx-auto max-h-64 w-auto rounded-lg object-contain shadow-sm"
+                    className="mx-auto max-h-48 w-auto rounded-lg object-contain shadow-sm sm:max-h-64"
                   />
                 </div>
               )}
 
             <button
-              className={`flex w-full items-center justify-center gap-2 rounded-lg py-3 font-semibold ${
+              type="button"
+              className={`flex w-full items-center justify-center gap-2 rounded-lg py-3 text-sm font-semibold sm:text-base ${
                 capturedMedia.videoBlob
                   ? 'bg-blue-600 text-white hover:bg-blue-700'
                   : 'cursor-not-allowed bg-gray-300 text-gray-500'
@@ -1269,12 +1299,14 @@ const VerificationBar = () => {
 
       case 'uploading':
         return (
-          <div className="relative w-full max-w-xl rounded-xl bg-white p-8 text-gray-800 shadow-lg">
+          <div className="relative w-full max-w-xl rounded-xl bg-white p-4 pt-12 text-gray-800 shadow-lg sm:p-6 sm:pt-14 md:p-8 md:pt-16">
             <button
+              type="button"
               onClick={handleClose}
-              className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 sm:right-4 sm:top-4"
+              aria-label={t('common.close')}
             >
-              <X className="h-6 w-6" />
+              <X className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
             <div className="text-center">
               <div className="mb-6">
@@ -1285,18 +1317,18 @@ const VerificationBar = () => {
                   ></div>
                 </div>
               </div>
-              <h2 className="mb-4 text-2xl font-bold">
+              <h2 className="mb-4 text-xl font-bold sm:text-2xl">
                 {t('common.uploading')} {uploadProgress}%
               </h2>
 
               {(capturedMedia.frontPhoto ||
                 capturedMedia.backPhoto ||
                 capturedMedia.videoFrames) && (
-                <div className="mb-6 rounded-lg bg-gray-50 p-4">
-                  <p className="mb-2 text-sm text-gray-600">
+                <div className="mb-6 rounded-lg bg-gray-50 p-3 sm:p-4">
+                  <p className="mb-2 text-left text-sm text-gray-600">
                     {t('common.submittedMedia')}:
                   </p>
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-1 gap-3 xs:grid-cols-2 sm:grid-cols-3 sm:gap-2">
                     {capturedMedia.frontPhoto && (
                       <div>
                         <p className="text-xs text-gray-500">
@@ -1348,19 +1380,19 @@ const VerificationBar = () => {
 
       case 'success':
         return (
-          <div className="relative w-full max-w-xl rounded-xl bg-white p-8 text-gray-800 shadow-lg">
+          <div className="relative w-full max-w-xl rounded-xl bg-white p-4 text-gray-800 shadow-lg sm:p-6 md:p-8">
             <div className="text-center">
-              <div className="mb-10 flex justify-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100">
-                  <Check className="h-8 w-8 text-blue-600" />
+              <div className="mb-6 flex justify-center sm:mb-10">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-100 sm:h-16 sm:w-16">
+                  <Check className="h-7 w-7 text-blue-600 sm:h-8 sm:w-8" />
                 </div>
               </div>
 
-              <h2 className="mb-6 text-2xl font-bold">
+              <h2 className="mb-4 text-xl font-bold sm:mb-6 sm:text-2xl">
                 {t('common.verificationRequestSubmitted')}
               </h2>
 
-              <div className="mb-6 text-left">
+              <div className="mb-6 text-start text-sm sm:text-base">
                 <p className="mb-4 text-gray-600">
                   {t('common.requestBeingReviewed')}
                 </p>
@@ -1379,11 +1411,11 @@ const VerificationBar = () => {
               {(capturedMedia.frontPhoto ||
                 capturedMedia.backPhoto ||
                 capturedMedia.videoFrames) && (
-                <div className="mb-6 rounded-lg bg-gray-50 p-4">
+                <div className="mb-6 rounded-lg bg-gray-50 p-3 text-start sm:p-4">
                   <p className="mb-2 text-sm text-gray-600">
                     {t('common.submittedMedia')}:
                   </p>
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-1 gap-3 xs:grid-cols-2 sm:grid-cols-3 sm:gap-2">
                     {capturedMedia.frontPhoto && (
                       <div>
                         <p className="text-xs text-gray-500">
@@ -1392,7 +1424,7 @@ const VerificationBar = () => {
                         <img
                           src={capturedMedia.frontPhoto || './no-picture.png'}
                           alt="Front ID"
-                          className="mx-auto h-auto max-h-40 w-full rounded object-cover"
+                          className="mx-auto h-auto max-h-36 w-full rounded object-cover sm:max-h-40"
                           style={{ aspectRatio: '4/3' }}
                         />
                       </div>
@@ -1405,7 +1437,7 @@ const VerificationBar = () => {
                         <img
                           src={capturedMedia.backPhoto || './no-picture.png'}
                           alt="Back ID"
-                          className="mx-auto h-auto max-h-40 w-full rounded object-cover"
+                          className="mx-auto h-auto max-h-36 w-full rounded object-cover sm:max-h-40"
                           style={{ aspectRatio: '4/3' }}
                         />
                       </div>
@@ -1421,7 +1453,7 @@ const VerificationBar = () => {
                               capturedMedia.videoFrames[0] || './no-picture.png'
                             }
                             alt="Video frame"
-                            className="mx-auto h-auto max-h-40 w-full rounded object-cover"
+                            className="mx-auto h-auto max-h-36 w-full rounded object-cover sm:max-h-40"
                             style={{ aspectRatio: '4/3' }}
                           />
                         </div>
@@ -1431,7 +1463,8 @@ const VerificationBar = () => {
               )}
 
               <button
-                className="w-full rounded-lg bg-gray-800 py-3 font-semibold text-white hover:bg-gray-900"
+                type="button"
+                className="w-full rounded-lg bg-gray-800 py-3 text-sm font-semibold text-white hover:bg-gray-900 sm:text-base"
                 onClick={handleFinalOk}
               >
                 {t('common.ok')}
@@ -1447,8 +1480,8 @@ const VerificationBar = () => {
 
   if (isLoadingCustomer) {
     return (
-      <div className="flex w-full items-center justify-center gap-4 bg-blue-100 px-6 py-1">
-        <div className="flex w-full max-w-lg animate-pulse items-center gap-4">
+      <div className="flex w-full items-center justify-center gap-4 bg-blue-100 px-3 py-2 sm:px-6 sm:py-1">
+        <div className="flex w-full max-w-lg animate-pulse items-center gap-3 sm:gap-4">
           <div className="h-10 w-10 rounded-full bg-blue-200" />
           <div className="flex-1 space-y-2">
             <div className="h-4 w-3/4 rounded bg-blue-200" />
@@ -1463,17 +1496,17 @@ const VerificationBar = () => {
   if (customer?.verification_status === 'verified') return null;
   return (
     <>
-      <div className=" hidden w-full items-center justify-center gap-4 bg-blue-500 px-6 py-2 text-white md:flex">
-        <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-6">
-          <span className="text-lg font-bold">
-            <CircleCheckBig />
+      <div className="flex w-full flex-col gap-3 bg-blue-500 px-3 py-2.5 text-white sm:flex-row sm:items-center sm:justify-center sm:gap-4 sm:px-4 md:px-6">
+        <div className="flex items-start gap-3 sm:items-center md:gap-6">
+          <span className="shrink-0 text-lg font-bold">
+            <CircleCheckBig className="h-6 w-6 sm:h-7 sm:w-7" />
           </span>
-          <span className="text-sm md:text-sm">
+          <span className="min-w-0 text-xs leading-snug sm:text-sm">
             {t('common.joinUsBuildingSafer')}
           </span>
         </div>
         <button
-          className="ml-4 rounded-xl px-5 py-1 text-sm text-white ring-1 ring-white transition-colors hover:bg-blue-100 hover:text-blue-600"
+          className="w-full shrink-0 rounded-xl px-4 py-2 text-sm font-semibold text-white ring-1 ring-white/80 transition-colors hover:bg-white/10 sm:ms-auto sm:w-auto sm:px-5 sm:py-1 md:ms-4"
           onClick={() => setOpen(true)}
         >
           {t('common.verifyNow')}
@@ -1481,8 +1514,16 @@ const VerificationBar = () => {
       </div>
 
       {open && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-40">
-          {renderModalContent()}
+        <div
+          className="fixed inset-0 z-[9999] overflow-y-auto bg-black/50"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="flex min-h-[100dvh] w-full items-center justify-center p-3 py-6 sm:p-4 sm:py-8">
+            <div className="relative w-full max-w-2xl shrink-0">
+              {renderModalContent()}
+            </div>
+          </div>
         </div>
       )}
     </>

@@ -88,9 +88,13 @@ export default function Favourites() {
     e.stopPropagation();
 
     if (!favourite.some((fav) => fav == id)) {
-      setFavourite([...favourite, id]);
+      const next = [...favourite, id];
+      setFavourite(next);
+      localStorage.setItem('favourite', JSON.stringify(next));
     } else {
-      setFavourite(favourite.filter((fav) => fav != id));
+      const next = favourite.filter((fav) => fav != id);
+      setFavourite(next);
+      localStorage.setItem('favourite', JSON.stringify(next));
     }
   }
 
@@ -185,7 +189,9 @@ export default function Favourites() {
             </div>
           ) : (
             <>
-              <Heart className="h-16 w-16 text-gray-300" />
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gray-100 ring-1 ring-gray-200">
+                <Heart className="h-10 w-10 text-gray-400" />
+              </div>
               <p className="mt-4 text-lg font-medium text-gray-900">
                 {t('common.noFavouritesYet')}
               </p>
@@ -204,6 +210,7 @@ export default function Favourites() {
       ) : (
         displayedItems.map((product) => {
           const currentImageIndex = imageIndexes[product.id] ?? 0;
+          const isFavourite = favourite.some((fav) => fav === product.id);
 
           return (
             <div
@@ -321,16 +328,28 @@ export default function Favourites() {
                       </button> */}
                       {/* // TODO: Share product logic */}
                       <button
-                        className="h-7 w-7 text-red-500"
+                        type="button"
+                        aria-pressed={isFavourite}
+                        aria-label={
+                          isFavourite ? t('common.saved') : t('common.save')
+                        }
+                        title={
+                          isFavourite ? t('common.saved') : t('common.save')
+                        }
+                        className={`inline-flex items-center justify-center rounded-full p-2 ring-1 transition-colors ${
+                          isFavourite
+                            ? 'bg-blue-50 text-blue-600 ring-blue-200 hover:bg-blue-100'
+                            : 'bg-gray-100 text-gray-600 ring-gray-200 hover:bg-gray-200 hover:text-gray-800'
+                        }`}
                         onClick={(e) => {
                           handleFavourite(e, product?.id);
                         }}
                       >
-                        {favourite.some((fav) => fav === product.id) ? (
-                          <Heart className="h-5 w-5" fill="red" />
-                        ) : (
-                          <Heart className="h-5 w-5" />
-                        )}
+                        <Heart
+                          className="h-5 w-5 shrink-0"
+                          fill={isFavourite ? 'currentColor' : 'none'}
+                          strokeWidth={2}
+                        />
                       </button>
                     </div>
                   </div>

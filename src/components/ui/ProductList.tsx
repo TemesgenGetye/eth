@@ -95,11 +95,12 @@ export default function ProductList({ products }: ProductProps) {
           ?.join('-');
         const pName = product?.name?.toLowerCase()?.split(' ')?.join('-');
         const pid = product?.id;
+        const isFavourite = favourite.some((fav) => fav === product.id);
 
         return (
           <li
             key={product.id}
-            className="relative cursor-pointer rounded-lg border-b border-b-gray-200 bg-white p-4 shadow-sm"
+            className="relative cursor-pointer rounded-lg border border-[#ddd] bg-white p-4 hover:shadow-sm"
             onClick={() =>
               navigate(`/${cName}/${scName}/${pName}`, { state: { pid } })
             }
@@ -164,8 +165,8 @@ export default function ProductList({ products }: ProductProps) {
                               {product.price.orignal}
                             </span>
                             <span>AED</span>
-                            <div className="text-lg text-red-500">
-                              {Number(product.price.discounted).toFixed(2)} AED
+                            <div className="text-lg text-blue-600">
+                              {Number(product.price.discounted).toFixed(2)} AED {" "}
                               {t('common.downpayment')}
                             </div>
                           </>
@@ -202,16 +203,28 @@ export default function ProductList({ products }: ProductProps) {
                       </p>
                     )}
                     <button
-                      className="h-7 w-7 text-red-500"
+                      type="button"
+                      aria-pressed={isFavourite}
+                      aria-label={
+                        isFavourite ? t('common.saved') : t('common.save')
+                      }
+                      title={
+                        isFavourite ? t('common.saved') : t('common.save')
+                      }
+                      className={`inline-flex items-center justify-center rounded-full p-2 ring-1 transition-colors ${
+                        isFavourite
+                          ? 'bg-blue-50 text-blue-600 ring-blue-200 hover:bg-blue-100'
+                          : 'bg-gray-100 text-gray-600 ring-gray-200 hover:bg-gray-200 hover:text-gray-800'
+                      }`}
                       onClick={(e) => {
                         handleFavourite(e, product?.id);
                       }}
                     >
-                      {favourite.some((fav) => fav === product.id) ? (
-                        <Heart className="h-5 w-5 " fill="red" />
-                      ) : (
-                        <Heart className="h-5 w-5" />
-                      )}
+                      <Heart
+                        className="h-5 w-5 shrink-0"
+                        fill={isFavourite ? 'currentColor' : 'none'}
+                        strokeWidth={2}
+                      />
                     </button>
                   </div>
                 </div>
