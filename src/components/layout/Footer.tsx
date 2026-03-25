@@ -122,7 +122,7 @@ const Footer = () => {
           </div>
 
           {/* UAE Column */}
-          <div
+          {/* <div
             onClick={() => {
               toast.success(
                 'we have products all around dubai search what ever you want'
@@ -174,7 +174,7 @@ const Footer = () => {
                 </a>
               </li>
             </ul>
-          </div>
+          </div> */}
 
           {/* Other Countries Column */}
           <div>
