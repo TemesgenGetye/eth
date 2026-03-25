@@ -31,6 +31,25 @@ type VerificationStep =
   | 'video-recording'
   | 'success';
 
+/** Phones/tablets (touch-primary): ID photos use rear camera; selfie video uses front. Desktop keeps user-facing webcam. */
+function shouldApplyMobileCameraFacing(): boolean {
+  if (typeof window === 'undefined') return false;
+  return window.matchMedia('(pointer: coarse)').matches;
+}
+
+function getFacingModeForStep(step: VerificationStep): 'user' | 'environment' {
+  if (!shouldApplyMobileCameraFacing()) {
+    return 'user';
+  }
+  if (step === 'camera-front' || step === 'camera-back') {
+    return 'environment';
+  }
+  if (step === 'video-recording') {
+    return 'user';
+  }
+  return 'user';
+}
+
 interface CapturedMedia {
   frontPhoto?: string;
   backPhoto?: string;
@@ -78,28 +97,55 @@ const VerificationBar = () => {
 
   // console.log('filterdCustomers', filterdCustomers);
 
-  // Initialize camera
-  const initializeCamera = useCallback(async () => {
-    try {
-      setCameraError(null);
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-          facingMode: 'user',
-        },
-        audio: step === 'video-recording',
-      });
+  // Initialize camera (pass forStep when opening after setState + setTimeout so constraints match the active flow)
+  const initializeCamera = useCallback(
+    async (forStep?: VerificationStep) => {
+      try {
+        setCameraError(null);
+        const effectiveStep = forStep ?? step;
+        const wantAudio = effectiveStep === 'video-recording';
+        const facingMode = getFacingModeForStep(effectiveStep);
 
-      streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
+        const requestStream = (facing: 'user' | 'environment') =>
+          navigator.mediaDevices.getUserMedia({
+            video: {
+              width: { ideal: 1280 },
+              height: { ideal: 720 },
+              facingMode: facing,
+            },
+            audio: wantAudio,
+          });
+
+        let stream: MediaStream;
+        try {
+          stream = await requestStream(facingMode);
+        } catch (firstError) {
+          if (
+            facingMode === 'environment' &&
+            (effectiveStep === 'camera-front' ||
+              effectiveStep === 'camera-back')
+          ) {
+            console.warn(
+              'Rear camera unavailable, falling back to user-facing camera',
+              firstError
+            );
+            stream = await requestStream('user');
+          } else {
+            throw firstError;
+          }
+        }
+
+        streamRef.current = stream;
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      } catch (error) {
+        console.error('Camera initialization failed:', error);
+        setCameraError('Unable to access camera. Please check permissions.');
       }
-    } catch (error) {
-      console.error('Camera initialization failed:', error);
-      setCameraError('Unable to access camera. Please check permissions.');
-    }
-  }, [step]);
+    },
+    [step]
+  );
 
   // Stop camera
   const stopCamera = useCallback(() => {
@@ -274,8 +320,9 @@ const VerificationBar = () => {
     // console.log(`Taking ${photoType} photo`);
 
     // Initialize camera when entering camera mode
+    const cameraStep = photoType === 'front' ? 'camera-front' : 'camera-back';
     setTimeout(() => {
-      initializeCamera();
+      initializeCamera(cameraStep);
     }, 100);
   };
 
@@ -310,7 +357,7 @@ const VerificationBar = () => {
     setStep(cameraStep);
     // console.log('Retrying photo capture');
     setTimeout(() => {
-      initializeCamera();
+      initializeCamera(cameraStep);
     }, 100);
   };
 
@@ -318,7 +365,7 @@ const VerificationBar = () => {
     setStep('video-recording');
     // console.log('Opening camera for video recording');
     setTimeout(() => {
-      initializeCamera();
+      initializeCamera('video-recording');
     }, 100);
   };
 
@@ -835,7 +882,7 @@ const VerificationBar = () => {
                 <button
                   type="button"
                   className="mt-2 text-sm text-blue-600 underline"
-                  onClick={initializeCamera}
+                  onClick={() => initializeCamera('camera-front')}
                 >
                   {t('common.tryAgain')}
                 </button>
@@ -930,7 +977,7 @@ const VerificationBar = () => {
                 <button
                   type="button"
                   className="mt-2 text-sm text-red-600 underline"
-                  onClick={initializeCamera}
+                  onClick={() => initializeCamera('camera-back')}
                 >
                   {t('common.tryAgain')}
                 </button>
@@ -1236,7 +1283,7 @@ const VerificationBar = () => {
                 <button
                   type="button"
                   className="mt-2 text-sm text-red-600 underline"
-                  onClick={initializeCamera}
+                  onClick={() => initializeCamera('video-recording')}
                 >
                   {t('common.tryAgain')}
                 </button>

@@ -406,7 +406,12 @@ export default function PostAdPage() {
                           placeholder={t('common.postAd.locationPlaceholder')}
                         />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent
+                        position="popper"
+                        side="bottom"
+                        sideOffset={6}
+                        avoidCollisions={false}
+                      >
                         {cities.map((city) => (
                           <SelectItem key={city} value={city}>
                             {city}

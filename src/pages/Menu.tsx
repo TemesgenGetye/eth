@@ -24,6 +24,10 @@ import supabase from '../services/supabase';
 import { useLanguage } from '../Context/Languge';
 import { useVerficationModal } from '../Context/VerficationModal';
 import toast from 'react-hot-toast';
+import {
+  CITY_FILTER_ALL,
+  getFlatCityListForCountry,
+} from '../data/ethiopiaCities';
 
 const Menu = () => {
   const { user } = useAuth();
@@ -31,7 +35,7 @@ const Menu = () => {
   const isVerified = customer?.verification_status === 'verified';
   const navigate = useNavigate();
   const [isCityExpanded, setIsCityExpanded] = useState(false);
-  const [selectedCity, setSelectedCity] = useState('Dubai');
+  const [selectedCity, setSelectedCity] = useState(CITY_FILTER_ALL);
   const { language, setLanguage, t } = useLanguage();
   const { setOpen } = useVerficationModal();
 
@@ -75,17 +79,24 @@ const Menu = () => {
       })
     : '';
 
+  const ethiopianCities = getFlatCityListForCountry('Ethiopia');
   const cities = [
-    { key: 'allCitiesUAE', value: t('common.menu.allCitiesUAE') },
-    { key: 'abuDhabi', value: t('common.menu.abuDhabi') },
-    { key: 'ajman', value: t('common.menu.ajman') },
-    { key: 'alAin', value: t('common.menu.alAin') },
-    { key: 'dubai', value: t('common.menu.dubai') },
-    { key: 'fujairah', value: t('common.menu.fujairah') },
-    { key: 'rasAlKhaimah', value: t('common.menu.rasAlKhaimah') },
-    { key: 'sharjah', value: t('common.menu.sharjah') },
-    { key: 'ummAlQuwain', value: t('common.menu.ummAlQuwain') },
+    {
+      key: CITY_FILTER_ALL,
+      label: t('common.filters.allCities'),
+      stored: CITY_FILTER_ALL,
+    },
+    ...ethiopianCities.map((name) => ({
+      key: name,
+      label: name,
+      stored: name,
+    })),
   ];
+
+  const selectedCityLabel =
+    selectedCity === CITY_FILTER_ALL
+      ? t('common.filters.allCities')
+      : selectedCity;
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
@@ -173,7 +184,7 @@ const Menu = () => {
         <MenuItem
           icon={MapPin}
           label={t('common.menu.city')}
-          value={selectedCity}
+          value={selectedCityLabel}
           collapsible
           isExpanded={isCityExpanded}
           onClick={() => setIsCityExpanded(!isCityExpanded)}
@@ -185,11 +196,11 @@ const Menu = () => {
                 key={city.key}
                 className="cursor-pointer border-t border-gray-100 p-4 hover:bg-gray-50"
                 onClick={() => {
-                  setSelectedCity(city.value);
+                  setSelectedCity(city.stored);
                   setIsCityExpanded(false);
                 }}
               >
-                {city.value}
+                {city.label}
               </div>
             ))}
           </div>
