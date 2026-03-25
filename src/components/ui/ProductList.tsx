@@ -156,17 +156,17 @@ export default function ProductList({ products }: ProductProps) {
                     <div className="flex items-center space-x-2">
                       <span className="text-lg font-bold md:text-2xl">
                         {product.price.orignal === product.price.discounted ? (
-                          <span>{product.price.orignal} AED</span>
+                          <span>{product.price.orignal} ETB</span>
                         ) : (
                           <>
-                            <span>{product.price.discounted} AED </span>
+                            <span>{product.price.discounted} ETB </span>
                             <span>•</span>
                             <span className="text-gray-500 line-through">
                               {product.price.orignal}
                             </span>
-                            <span>AED</span>
+                            <span>ETB</span>
                             <div className="text-lg text-blue-600">
-                              {Number(product.price.discounted).toFixed(2)} AED {" "}
+                              {Number(product.price.discounted).toFixed(2)} ETB {" "}
                               {t('common.downpayment')}
                             </div>
                           </>

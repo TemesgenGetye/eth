@@ -280,25 +280,25 @@ export default function Favourites() {
                           {product.price.discounted ===
                           product.price.orignal ? (
                             <span>
-                              {product.price.orignal} {t('common.aed')}
+                              {product.price.orignal} {t('common.etb')}
                             </span>
                           ) : (
                             <>
                               <span>
                                 {product.price.discounted}{' '}
-                                {t('common.aed')}{' '}
+                                {t('common.etb')}{' '}
                               </span>
                               <span>•</span>
                               <span className="text-gray-500 line-through">
                                 {product.price.orignal}
                               </span>
-                              <span> {t('common.aed')}</span>
+                              <span> {t('common.etb')}</span>
                               <div className="text-blue-600">
                                 {Number(
                                   product.price.orignal -
                                     product.price.discounted
                                 ).toFixed(2)}{' '}
-                                {t('common.aedDownpayment')}
+                                {t('common.etbDownpayment')}
                               </div>
                             </>
                           )}

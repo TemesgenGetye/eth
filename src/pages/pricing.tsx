@@ -39,7 +39,7 @@ export default function Pricing() {
                 </h3>
                 <div className="flex items-baseline gap-1">
                   <span className="text-sm text-gray-600">
-                    {t('common.aed')}
+                    {t('common.etb')}
                   </span>
                   <span className="text-4xl font-bold text-gray-900">229</span>
                   <span className="text-sm text-gray-600">*</span>
@@ -89,7 +89,7 @@ export default function Pricing() {
                 {t('common.pricing.basic')}
               </h3>
               <div className="flex items-baseline gap-1">
-                <span className="text-sm text-gray-600">{t('common.aed')}</span>
+                <span className="text-sm text-gray-600">{t('common.etb')}</span>
                 <span className="text-4xl font-bold text-gray-900">289</span>
                 <span className="text-sm text-gray-600">*</span>
               </div>
@@ -157,7 +157,7 @@ export default function Pricing() {
                 {t('common.pricing.extended')}
               </h3>
               <div className="flex items-baseline gap-1">
-                <span className="text-sm text-gray-600">{t('common.aed')}</span>
+                <span className="text-sm text-gray-600">{t('common.etb')}</span>
                 <span className="text-4xl font-bold text-gray-900">409</span>
                 <span className="text-sm text-gray-600">*</span>
               </div>

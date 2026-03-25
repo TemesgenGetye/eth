@@ -339,7 +339,7 @@ export default function PostAdPage() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="USD">USD</SelectItem>
-                        <SelectItem value="AED">AED</SelectItem>
+                        <SelectItem value="ETB">ETB</SelectItem>
                       </SelectContent>
                     </Select>
                   )}

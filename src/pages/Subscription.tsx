@@ -140,14 +140,14 @@ export default function Subscription() {
                               <div>
                                 Price:{' '}
                                 <span className="font-medium text-green-600">
-                                  AED {productData?.price?.orignal || 0}
+                                  ETB {productData?.price?.orignal || 0}
                                 </span>
                               </div>
                             </div>
                           </div>
                           <div className="text-right">
                             <div className="text-lg font-bold text-gray-900">
-                              AED {productData?.price?.orignal || 0}
+                              ETB {productData?.price?.orignal || 0}
                             </div>
                           </div>
                         </div>
@@ -177,7 +177,7 @@ export default function Subscription() {
                           {badge.label}
                         </span>
                         <span className="font-semibold text-blue-600">
-                          + AED {badge.price}
+                          + ETB {badge.price}
                         </span>
                       </div>
                     </button>
@@ -202,7 +202,7 @@ export default function Subscription() {
                         </button>
                       </div>
                       <span className="font-medium">
-                        AED {basePrice.toFixed(2)}
+                        ETB {basePrice.toFixed(2)}
                       </span>
                     </div>
 
@@ -216,7 +216,7 @@ export default function Subscription() {
                         >
                           <span className="text-gray-900">{badge?.label}</span>
                           <span className="font-medium">
-                            AED {badge?.price}.00
+                            ETB {badge?.price}.00
                           </span>
                         </div>
                       );
@@ -225,7 +225,7 @@ export default function Subscription() {
                     {/* VAT */}
                     <div className="flex items-center justify-between">
                       <span className="text-gray-900">VAT 5%</span>
-                      <span className="font-medium">AED {vat.toFixed(2)}</span>
+                      <span className="font-medium">ETB {vat.toFixed(2)}</span>
                     </div>
 
                     {/* Discount Code */}
@@ -249,7 +249,7 @@ export default function Subscription() {
                       <div className="flex items-center justify-between text-lg font-semibold">
                         <span className="text-gray-900">Total</span>
                         <span className="text-gray-900">
-                          AED {total.toFixed(2)}
+                          ETB {total.toFixed(2)}
                         </span>
                       </div>
                     </div>
@@ -259,7 +259,7 @@ export default function Subscription() {
                       onClick={() => setIsModalOpen(true)}
                       className="mt-6 w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
                     >
-                      Pay AED {total.toFixed(2)}
+                      Pay ETB {total.toFixed(2)}
                     </button>
                   </div>
                 </div>

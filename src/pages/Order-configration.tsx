@@ -76,7 +76,7 @@ export default function OrderConfirmationPage() {
                 {t('common.orderConfirmation.totalAmount')}
               </p>
               <p className="text-lg font-medium text-gray-900">
-                {calculateTotal()} {t('common.aed')}
+                {calculateTotal()} {t('common.etb')}
               </p>
             </div>
           </div>

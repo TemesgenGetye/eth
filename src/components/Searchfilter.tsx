@@ -330,7 +330,7 @@ function SearchFilters({
                 : 'border-gray-300 bg-white text-gray-700 hover:border-blue-400 hover:bg-blue-50'
             }`}
           >
-            Price (AED) <ChevronDown className="ml-2 inline-block h-4 w-4" />
+            Price (ETB) <ChevronDown className="ml-2 inline-block h-4 w-4" />
           </button>
           <button
             onClick={() => setIsYearOpen((state) => !state)}
@@ -379,7 +379,7 @@ function SearchFilters({
             <div className="h-screen bg-black bg-opacity-50">
               <div className="animate-slide-up absolute bottom-0 w-full translate-y-0 transform bg-white p-6 pb-24 shadow-xl transition-transform duration-300 ease-out">
                 <div className="-mt-1 mb-3 flex items-center justify-between border-b border-gray-200 pb-3">
-                  <p className="text-sm font-semibold">Price (AED)</p>
+                  <p className="text-sm font-semibold">Price (ETB)</p>
                   <button
                     className="rounded-full bg-black p-1 text-white"
                     onClick={() => setIsPriceOpen(false)}

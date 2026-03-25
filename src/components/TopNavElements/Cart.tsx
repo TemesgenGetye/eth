@@ -70,7 +70,7 @@ function Cart({
                           <div>
                             <p className="text-xs font-medium text-gray-900">
                               {item?.price?.discounted}
-                              <span className="font-semibold">{'AED'}</span>
+                              <span className="font-semibold">{'ETB'}</span>
                             </p>
                           </div>
                         </div>

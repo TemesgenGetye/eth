@@ -85,7 +85,7 @@ export default function Favourite({
                             <div>
                               <p className="text-xs font-medium text-gray-900">
                                 {product?.price?.orignal}
-                                <span className="font-semibold">{'AED'}</span>
+                                <span className="font-semibold">{'ETB'}</span>
                               </p>
                             </div>
                           </div>

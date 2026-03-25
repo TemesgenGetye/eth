@@ -81,7 +81,7 @@ function Notfication({
                           <div>
                             <p className="text-xs font-medium text-gray-900">
                               {item?.price} {'ADE'}
-                              <span className="font-semibold">{'AED'}</span>
+                              <span className="font-semibold">{'ETB'}</span>
                             </p>
                             <p className="text-xs font-medium text-gray-900">
                               {item.date}

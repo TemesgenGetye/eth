@@ -420,18 +420,18 @@ export default function CartPage() {
                         <div className="flex items-center space-x-2">
                           <span className="text-2xl font-bold">
                             {item?.price.discounted === item?.price.orignal ? (
-                              <span>{item?.price.orignal} AED</span>
+                              <span>{item?.price.orignal} ETB</span>
                             ) : (
                               <>
-                                <span>{item?.price.discounted} AED </span>
+                                <span>{item?.price.discounted} ETB </span>
                                 <span>•</span>
                                 <span className="text-gray-500 line-through">
                                   {item?.price.orignal}
                                 </span>
-                                <span>AED</span>
+                                <span>ETB</span>
                                 <div className="text-red-500">
                                   {item?.price.orignal - item?.price.discounted}{' '}
-                                  {t('common.aedDownpayment')}
+                                  {t('common.etbDownpayment')}
                                 </div>
                               </>
                             )}
@@ -481,7 +481,7 @@ export default function CartPage() {
                               item?.price.discounted *
                               (quantities[item?.id] || 1)
                             ).toFixed(2)}{' '}
-                            AED
+                            ETB
                           </span>
                         </div>
                       </div>
@@ -541,7 +541,7 @@ export default function CartPage() {
             <div className="mt-4 space-y-2">
               <div className="flex justify-between">
                 <span>{t('common.subtotal')}</span>
-                <span>{calculateTotal()} AED</span>
+                <span>{calculateTotal()} ETB</span>
               </div>
               <div className="flex justify-between">
                 <span>{t('common.shipping')}</span>
@@ -550,7 +550,7 @@ export default function CartPage() {
               <div className="flex justify-between border-t pt-2">
                 <span className="text-lg font-bold">{t('common.total')}</span>
                 <span className="text-lg font-bold">
-                  {calculateTotal()} AED
+                  {calculateTotal()} ETB
                 </span>
               </div>
             </div>

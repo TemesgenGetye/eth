@@ -280,14 +280,14 @@ export default function Detail() {
       {/* Price and Details Section */}
       <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="mb-2 text-2xl font-bold">AED {displayPrice}</h1>
+          <h1 className="mb-2 text-2xl font-bold">ETB {displayPrice}</h1>
           {displayDiscount > 0 && (
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-500 line-through">
-                AED {displayOriginalPrice}
+                ETB {displayOriginalPrice}
               </span>
               <span className="text-sm text-red-500">
-                -{Number(displayDiscount).toFixed(2)} AED
+                -{Number(displayDiscount).toFixed(2)} ETB
               </span>
             </div>
           )}

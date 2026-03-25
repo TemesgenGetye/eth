@@ -570,7 +570,7 @@ export default function CheckoutPage() {
                             </p>
                           </div>
                           <p className="text-sm font-medium text-gray-900">
-                            {item.prices.price} {t('common.aed')}
+                            {item.prices.price} {t('common.etb')}
                           </p>
                         </div>
                       ))}
@@ -611,7 +611,7 @@ export default function CheckoutPage() {
                   {t('common.itemsCount')} ({cart.length})
                 </span>
                 <span className="text-sm font-medium">
-                  {calculateSubtotal().toFixed(2)} {t('common.aed')}
+                  {calculateSubtotal().toFixed(2)} {t('common.etb')}
                 </span>
               </div>
 
@@ -622,7 +622,7 @@ export default function CheckoutPage() {
                 <span className="text-sm font-medium">
                   {calculateShipping() === 0
                     ? t('common.free')
-                    : `${calculateShipping().toFixed(2)} ${t('common.aed')}`}
+                    : `${calculateShipping().toFixed(2)} ${t('common.etb')}`}
                 </span>
               </div>
 
@@ -631,7 +631,7 @@ export default function CheckoutPage() {
                   {t('common.total')}
                 </span>
                 <span className="text-base font-bold text-gray-900">
-                  {calculateTotal()} {t('common.aed')}
+                  {calculateTotal()} {t('common.etb')}
                 </span>
               </div>
             </div>

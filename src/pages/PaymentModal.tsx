@@ -428,7 +428,7 @@ export default function PaymentModal({
                 <span className="ml-2">Processing...</span>
               </div>
             ) : (
-              `Pay - AED ${totalAmount.toFixed(2)}`
+              `Pay - ETB ${totalAmount.toFixed(2)}`
             )}
           </button>
         </form>
