@@ -139,7 +139,7 @@ export default function PopularCategories() {
                       </div>
                       <div className="mt-2 flex gap-2 text-base font-semibold">
                         <span className="text-blue-600">
-                          {product.price.currency}
+                          {t('common.etb')}
                         </span>
                         <span>{product.price.discounted}</span>
                       </div>
@@ -198,7 +198,7 @@ export default function PopularCategories() {
                       </div>
                       <div className="mt-2 flex gap-2 text-base font-semibold">
                         <span className="text-blue-600">
-                          {product.price.currency}
+                          {t('common.etb')}
                         </span>
                         <span>{product.price.discounted}</span>
                       </div>

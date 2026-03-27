@@ -79,7 +79,7 @@ function ListProductHorizontal({ cid }: { cid?: number }) {
                   <p className="mb-2 text-sm font-bold text-blue-600">
                     <span>{featured?.price.discounted}</span>
                     <span className="ml-1 text-[10px] text-gray-500">
-                      {featured?.price.currency}
+                      {t('common.etb')}
                     </span>
                   </p>
                   <p className="h-10 text-ellipsis text-sm text-gray-500">

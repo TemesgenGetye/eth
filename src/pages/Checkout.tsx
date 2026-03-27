@@ -25,7 +25,7 @@ export default function CheckoutPage() {
     city: '',
     state: '',
     zipCode: '',
-    country: 'UAE',
+    country: 'Ethiopia',
     paymentMethod: 'card',
     saveInfo: true,
   });
@@ -303,12 +303,7 @@ export default function CheckoutPage() {
                       required
                       className="w-full rounded-lg border border-gray-300 p-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     >
-                      <option value="UAE">United Arab Emirates</option>
-                      <option value="SA">Saudi Arabia</option>
-                      <option value="QA">Qatar</option>
-                      <option value="KW">Kuwait</option>
-                      <option value="OM">Oman</option>
-                      <option value="BH">Bahrain</option>
+                      <option value="Ethiopia">Ethiopia</option>
                     </select>
                   </div>
                 </div>

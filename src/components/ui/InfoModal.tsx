@@ -59,6 +59,11 @@ const countryFlags: {
     gradient: 'from-blue-900 via-white to-red-700',
     name: 'United Kingdom',
   },
+  Ethiopia: {
+    colors: ['#009B3A', '#FFCD00', '#D62828'],
+    gradient: 'from-green-700 via-yellow-400 to-red-600',
+    name: 'Ethiopia',
+  },
   Japan: {
     colors: ['#ffffff', '#BC002D'],
     gradient: 'from-white to-red-700',
@@ -93,7 +98,7 @@ const InfoModal: React.FC<InfoModalProps> = ({
           style={{
             backgroundImage: isCountryModal
               ? undefined
-              : `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/placeholder.svg?height=200&width=800&text=Dubai+Skyline')`,
+              : `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/placeholder.svg?height=200&width=800&text=Addis+Ababa+Skyline')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
@@ -130,12 +135,11 @@ const InfoModal: React.FC<InfoModalProps> = ({
                     ></div>
                   ))
                 ) : (
-                  // UAE flag (default)
+                  // Ethiopia flag (default)
                   <>
-                    <div className="h-2 bg-red-600"></div>
-                    <div className="h-2 bg-white"></div>
-                    <div className="h-2 bg-black"></div>
-                    <div className="h-2 bg-green-600"></div>
+                    <div className="h-2 bg-[#009B3A]"></div>
+                    <div className="h-2 bg-[#FFCD00]"></div>
+                    <div className="h-2 bg-[#D62828]"></div>
                   </>
                 )}
               </div>
@@ -193,40 +197,40 @@ const InfoModal: React.FC<InfoModalProps> = ({
             <div className="mt-8 rounded-2xl border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 p-6">
               <h3 className="mb-4 flex items-center gap-2 text-xl font-semibold text-gray-800">
                 <span>🏙️</span>
-                {t('common.servingAllDubai')}
+                {t('common.servingAllEthiopia')}
               </h3>
               <div className="grid grid-cols-2 gap-4 text-sm md:grid-cols-3">
                 <div className="flex items-center gap-2">
                   <span>🏢</span>
-                  <span>Dubai</span>
+                  <span>Addis Ababa</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span>🏖️</span>
-                  <span>Abu Dhabi</span>
+                  <span>Hawassa</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span>🏝️</span>
-                  <span>Ras Al Khaimah</span>
+                  <span>Adama</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span>🛍️</span>
-                  <span>Sharjah</span>
+                  <span>Jimma</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span>✈️</span>
-                  <span>Fujairah</span>
+                  <span>Dire Dawa</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span>🏗️</span>
-                  <span>Ajman</span>
+                  <span>Bahir Dar</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span>🏗️</span>
-                  <span>Umm Al Quwain</span>
+                  <span>Mekelle</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span>🏗️</span>
-                  <span>Al Ain </span>
+                  <span>Gondar</span>
                 </div>
               </div>
             </div>

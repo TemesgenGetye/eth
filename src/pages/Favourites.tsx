@@ -357,7 +357,7 @@ export default function Favourites() {
                     {product.description}
                   </p>
                   <div className="space-y-2 text-sm text-gray-500">
-                    {t('common.dubai')}
+                    {t('common.addisAbaba')}
                   </div>
                 </div>
               </div>

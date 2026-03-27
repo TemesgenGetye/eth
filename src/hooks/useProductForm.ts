@@ -15,7 +15,8 @@ const schema = yup.object().shape({
   price: yup.object({
     orignal: yup.number().required('Original price is required'),
     discounted: yup.number().nullable().default(0),
-    currency: yup.string().optional().default('USD'),
+    // Default currency is Ethiopian Birr for all new/edited ads.
+    currency: yup.string().optional().default('ETB'),
   }),
   stock: yup.number().optional().default(1),
   imgUrls: yup.array().optional().default([]),
@@ -64,7 +65,7 @@ export function useProductForm(
     defaultValues: {
       name: '',
       description: '',
-      price: { orignal: 0, discounted: 0, currency: 'USD' },
+      price: { orignal: 0, discounted: 0, currency: 'ETB' },
       stock: 1,
       imgUrls: [],
       category_id: undefined,
@@ -86,7 +87,8 @@ export function useProductForm(
           orignal:
             productData.price?.orignal || productData.price?.original || 0,
           discounted: productData.price?.discounted || 0,
-          currency: productData.price?.currency || 'USD',
+          // Force display currency to ETB even if old ads were saved with USD.
+          currency: 'ETB',
         },
         stock: productData.stock || 1,
         imgUrls: [], // We'll handle images separately
@@ -105,6 +107,9 @@ export function useProductForm(
     data: ProductData,
     status: 'live' | 'draft' = 'live'
   ) => {
+    // Enforce currency at submission time.
+    data.price.currency = 'ETB';
+
     // If discounted price is not provided or is 0, set it to the original price
     if (!data.price.discounted || data.price.discounted <= 0) {
       data.price.discounted = data.price.orignal;

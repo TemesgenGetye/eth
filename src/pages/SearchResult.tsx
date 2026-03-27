@@ -51,7 +51,7 @@ function SearchResult() {
       <div className="container mx-auto py-4 text-sm">
         <div className="flex items-center space-x-2 text-sm text-blue-600">
           <Link to="/" className="hover:underline">
-            Dubai
+            Addis Ababa
           </Link>
           <span className="text-gray-400 hover:underline">&gt;</span>
           <Link
@@ -84,7 +84,7 @@ function SearchResult() {
             {filteredProducts?.length
               ? filteredProducts?.[0]?.subcategory?.name
               : categoryName}{' '}
-            sale in dubai
+            sale in Addis Ababa
             {filteredProducts?.length
               ? ` • ${filteredProducts?.length} Ads`
               : ''}

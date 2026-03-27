@@ -83,7 +83,7 @@ const Menu = () => {
   const cities = [
     {
       key: CITY_FILTER_ALL,
-      label: t('common.filters.allCities'),
+      label: t('filters.allCities'),
       stored: CITY_FILTER_ALL,
     },
     ...ethiopianCities.map((name) => ({
@@ -95,7 +95,7 @@ const Menu = () => {
 
   const selectedCityLabel =
     selectedCity === CITY_FILTER_ALL
-      ? t('common.filters.allCities')
+      ? t('filters.allCities')
       : selectedCity;
 
   return (
@@ -165,7 +165,7 @@ const Menu = () => {
         />
         <QuickAction
           icon={Bell}
-          label={t('common.notifications')}
+          label={t('common.navigation.notifications')}
           href="/chats"
         />
       </div>
@@ -175,7 +175,7 @@ const Menu = () => {
         <MenuItem
           icon={Settings}
           label={t('common.menu.account')}
-          collapsible
+          onClick={() => navigate('/profile')}
         />
         <MenuItem icon={Lock} label={t('common.menu.security')} />
       </div>
@@ -198,6 +198,11 @@ const Menu = () => {
                 onClick={() => {
                   setSelectedCity(city.stored);
                   setIsCityExpanded(false);
+                  if (city.stored === CITY_FILTER_ALL) {
+                    navigate('/search');
+                    return;
+                  }
+                  navigate(`/search?keyword=${encodeURIComponent(city.stored)}`);
                 }}
               >
                 {city.label}
@@ -208,7 +213,11 @@ const Menu = () => {
         <MenuItem
           icon={Languages}
           label={t('common.menu.language')}
-          value={language === 'en' ? 'English' : 'العربية'}
+          value={
+            language === 'en'
+              ? t('common.switchToArabic')
+              : t('common.switchToEnglish')
+          }
           onClick={handleLanguageToggle}
         />
         <MenuItem icon={HelpCircle} label={t('common.help')} />

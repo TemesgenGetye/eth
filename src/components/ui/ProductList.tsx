@@ -236,7 +236,9 @@ export default function ProductList({ products }: ProductProps) {
                 <p className="line-clamp-2 pr-10 text-sm text-gray-600">
                   {product.description}
                 </p>
-                <div className="space-y-2 text-sm text-gray-500">{'dubai'}</div>
+                <div className="space-y-2 text-sm text-gray-500">
+                  {t('common.addisAbaba')}
+                </div>
                 {!product?.createdBy && (
                   <div className="flex items-center gap-1">
                     <VerifiedIcon className="h-5 w-5 text-[#40b740]" />
@@ -288,7 +290,7 @@ function SellerContact({ createdBy }: { createdBy: number | string }) {
 
   let waNum = customer.phoneNum?.replace(/\D/g, '');
   if (waNum && waNum.length === 10 && waNum.startsWith('0'))
-    waNum = '971' + waNum.slice(1);
+    waNum = '251' + waNum.slice(1);
 
   return (
     <div className="space-y-2">

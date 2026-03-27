@@ -68,6 +68,8 @@ export const CITY_FILTER_ALL = 'All Cities';
 
 const ALL_CITIES_SENTINELS = new Set([
   CITY_FILTER_ALL,
+  'All Cities (Ethiopia)',
+  // Legacy value kept for backwards compatibility with any stored filters.
   'All Cities (UAE)',
   '',
 ]);

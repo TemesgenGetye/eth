@@ -152,9 +152,9 @@ export default function OrderConfirmationPage() {
           <div className="rounded-lg bg-gray-50 p-4">
             <p className="font-medium">John Doe</p>
             <p>123 Main Street</p>
-            <p>Dubai, Dubai 12345</p>
-            <p>United Arab Emirates</p>
-            <p className="mt-2">+971 50 123 4567</p>
+            <p>Addis Ababa, Addis Ababa 12345</p>
+            <p>Ethiopia</p>
+            <p className="mt-2">+251 9 123 4567</p>
           </div>
         </div>
 

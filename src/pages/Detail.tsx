@@ -197,7 +197,7 @@ export default function Detail() {
           to={'/'}
           className="cursor-pointer text-blue-400 hover:text-blue-500 hover:underline"
         >
-          Dubai
+          Addis Ababa
         </Link>
         <span>›</span>
         <Link

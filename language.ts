@@ -54,7 +54,7 @@ const language = {
     company: 'Company',
     support: 'Support',
     languages: 'Languages',
-    switchToArabic: 'Switch to Arabic',
+    switchToArabic: 'التبديل إلى العربية',
     copyright: '© 888Market 2025, All Rights Reserved.',
     whatsapp: 'Whatsapp',
     english: 'English',

@@ -524,7 +524,7 @@ export default function CartPage() {
                       {item?.description}
                     </p>
                     <div className="space-y-2 text-sm text-gray-500">
-                      {'dubai'}
+                      Addis Ababa
                     </div>
                   </div>
                 </div>

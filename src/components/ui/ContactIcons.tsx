@@ -12,14 +12,14 @@ const ContactIcons: React.FC = () => (
       <Mail className="h-7 w-7 text-blue-500 transition-transform hover:scale-110" />
     </a>
     <a
-      href="https://wa.me/971501234567"
+      href="https://wa.me/25191234567"
       target="_blank"
       rel="noopener noreferrer"
       title="WhatsApp"
     >
       <MessageCircle className="h-7 w-7 text-green-500 transition-transform hover:scale-110" />
     </a>
-    <a href="tel:+971501234567" title="Phone">
+    <a href="tel:+25191234567" title="Phone">
       <Phone className="h-7 w-7 text-gray-700 transition-transform hover:scale-110" />
     </a>
     <a

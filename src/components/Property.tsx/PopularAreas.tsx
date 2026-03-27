@@ -2,52 +2,52 @@ import { useState } from 'react';
 
 const areas = [
   {
-    title: 'Downtown Dubai',
-    description: "Home to the world's tallest tower and biggest mall",
+    title: 'Kirkos (City Center)',
+    description: 'Home to major shopping streets, offices, and transport links',
     image:
       'https://images.unsplash.com/photo-1479839672679-a46483c0e7c8?q=80&w=3346&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     size: 'large',
   },
   {
-    title: 'The Palm Jumeirah',
-    description: 'Live on the 8th wonder of the world. Enough said!',
+    title: 'Bole (Airport Area)',
+    description: 'Addis Ababa’s business and aviation hub',
     image:
       'https://images.unsplash.com/photo-1470075801209-17f9ec0cada6?q=80&w=2912&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
   },
   {
-    title: 'Business Bay',
-    description: 'A centrally-located district adorning the Dubai creek',
+    title: 'Kazanchis',
+    description: 'A lively neighborhood known for markets, offices, and cafes',
     image:
       'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&auto=format&fit=crop',
   },
   {
-    title: 'Dubai Silicon Oasis',
-    description: 'A family-friendly suburb bursting with amenities',
+    title: 'Lideta',
+    description: 'A convenient, family-friendly area with everyday essentials',
     image:
       'https://images.unsplash.com/photo-1494522358652-f30e61a60313?w=800&auto=format&fit=crop',
   },
   {
-    title: 'JLT Jumeirah Lake Towers',
-    description: 'Walk freely among high rises overlooking lakes',
+    title: 'Yeka',
+    description: 'A growing zone with great access to city services',
     image:
       'https://images.unsplash.com/photo-1518684079-3c830dcef090?w=800&auto=format&fit=crop',
   },
   {
-    title: 'Dubai Marina',
-    description: 'Vibrant waterfront community with amazing views',
+    title: 'Arada',
+    description: 'A vibrant neighborhood close to popular landmarks',
     image:
       'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&auto=format&fit=crop',
     size: 'large',
   },
   {
-    title: 'International City',
-    description: 'An 800-hectare residential area inspired by countries',
+    title: 'Nifas Silk-Lafto',
+    description: 'A modern residential area with strong local community vibes',
     image:
       'https://images.unsplash.com/photo-1534008897995-27a23e859048?w=800&auto=format&fit=crop',
   },
   {
-    title: 'Jumeirah Beach Residence',
-    description: 'Live by the beach with stunning waterfront views',
+    title: 'Kolfe Keranio',
+    description: 'Green surroundings and local markets for daily needs',
     image:
       'https://images.unsplash.com/photo-1542361345-89e58247f2d5?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
   },
@@ -58,7 +58,7 @@ export default function PopularAreas() {
 
   return (
     <div className="mb-8">
-      <h2 className="mb-6 text-2xl font-semibold">Popular Areas in Ethipia</h2>
+      <h2 className="mb-6 text-2xl font-semibold">Popular Areas in Ethiopia</h2>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
         {areas.map((area, index) => (
           <div

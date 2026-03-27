@@ -338,7 +338,6 @@ export default function PostAdPage() {
                         <SelectValue placeholder="Select Currency" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="USD">USD</SelectItem>
                         <SelectItem value="ETB">ETB</SelectItem>
                       </SelectContent>
                     </Select>

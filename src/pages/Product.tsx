@@ -20,7 +20,7 @@ const ProductSkeleton = () => {
       <div className="container mx-auto py-4 text-sm">
         <div className="flex items-center space-x-2 text-sm text-blue-600">
           <Link to="/" className="hover:underline">
-            Dubai
+            Addis Ababa
           </Link>
           <span className="text-gray-400">&gt;</span>
           <div className="h-4 w-24 animate-pulse rounded bg-gray-200" />
@@ -163,7 +163,7 @@ function Product() {
       <div className="container mx-auto hidden py-4 text-sm md:block">
         <div className="flex items-center space-x-2 text-sm text-blue-600">
           <Link to="/" className="hover:underline">
-            Dubai
+            Addis Ababa
           </Link>
           <span className="text-gray-400">&gt;</span>
           <Link
@@ -183,7 +183,7 @@ function Product() {
       <div className="container p-2 md:mx-auto md:p-0">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">
-            {_filteredProducts?.[0]?.subcategory?.name} sale in dubai •{' '}
+            {_filteredProducts?.[0]?.subcategory?.name} sale in Addis Ababa •{' '}
             {_filteredProducts?.length} Ads
           </h2>
           <div className="flex items-center space-x-4"></div>
