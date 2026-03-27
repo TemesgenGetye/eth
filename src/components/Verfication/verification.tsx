@@ -1540,7 +1540,7 @@ const VerificationBar = () => {
   }
   console.log(customer?.verification_status);
 
-  if (customer?.verification_status === 'verified') return null;
+  if (customer?.verification_status === 'verified' || 'requested') return null;
   return (
     <>
       <div className="flex w-full flex-col gap-3 bg-blue-500 px-3 py-2.5 text-white sm:flex-row sm:items-center sm:justify-center sm:gap-4 sm:px-4 md:px-6">
